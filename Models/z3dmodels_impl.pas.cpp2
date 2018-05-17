@@ -1,0 +1,3688 @@
+/*==============================================================================*/ 
+/*== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==*/ 
+/*==============================================================================*/ 
+/*== Unit: z3DModels. Model interface support and instance management         ==*/ 
+/*==============================================================================*/ 
+
+
+
+
+
+
+       
+     
+    
+
+/*==============================================================================*/ 
+/*== 3DS file compatibility                                                   ==*/ 
+/*==============================================================================*/ 
+/*== Reads a 3DS file and converts it into a D3DX Mesh object                 ==*/ 
+/*==============================================================================*/ 
+
+
+
+            const  MAX3DS_ID_HEADER =  $4D4D; // File header
+        const  MAX3DS_ID_OBJECTINFO =  $3D3D; // Object information
+           const  MAX3DS_ID_VERSION =  $0002; // File version
+             const  MAX3DS_ID_SCALE =  $0100; // Scale
+      const  MAX3DS_ID_MESH_VERSION =  $3D3E; // Mesh version
+
+            const  MAX3DS_ID_OBJECT =  $4000; // Object
+       const  MAX3DS_ID_OBJECT_MESH =  $4100; // Mesh
+   const  MAX3DS_ID_OBJECT_VERTICES =  $4110; // Mesh vertices
+      const  MAX3DS_ID_OBJECT_FACES =  $4120; // Mesh faces
+   const  MAX3DS_ID_OBJECT_MATERIAL =  $4130; // Mesh material
+         const  MAX3DS_ID_OBJECT_UV =  $4140; // Mesh texture coords
+     const  MAX3DS_ID_OBJECT_MATRIX =  $4160; // Object transform
+      const  MAX3DS_ID_OBJECT_PIVOT =  $B020; // Object pivot
+
+             const  MAX3DS_ID_LIGHT =  $4600; // Scene light
+            const  MAX3DS_ID_CAMERA =  $4700; // Camera information
+          const  MAX3DS_ID_MATERIAL =  $AFFF; // Material information
+
+          const  MAX3DS_ID_KEYFRAME =  $B000; // Keyframe
+   const  MAX3DS_ID_KEYFRAME_OBJECT =  $B002; // Keyframe object
+
+             const  MAX3DS_ID_COLOR =  $0010; // Color
+       const  MAX3DS_ID_LIGHT_RANGE =  $465A; // Light range
+
+          const  MAX3DS_MAXVERTICES =  65536; // Max vertices
+
+  // 3DS loaded object vertex declaration (float3 POSITION, float2 TEXCOORD0)
+  Tz3D3DSObjectVD: array [0..2] of TD3DVertexElement9 =
+  (
+    (Stream: 0;   Offset: 0;   const D3DDECLTYPE_FLOAT3 _Type; 
+  const D3DDECLMETHOD_DEFAULT Method; 
+  const D3DDECLUSAGE_POSITION Usage; 
+ UsageIndex: 0),
+    (Stream: 0;   Offset: 12;  const D3DDECLTYPE_FLOAT2 _Type; 
+  const D3DDECLMETHOD_DEFAULT Method; 
+  const D3DDECLUSAGE_TEXCOORD Usage; 
+ UsageIndex: 0),
+    (Stream: $FF; Offset: 0;   const D3DDECLTYPE_UNUSED _Type; 
+ Method: TD3DDeclMethod(0);     Usage: TD3DDeclUsage(0);      UsageIndex: 0)
+  );
+
+
+  // 3DS loaded object vertex struct
+   typedef Tz3D3DSObjectVertex* Pz3D3DSObjectVertex;
+
+   struct Tz3D3DSObjectVertex
+{
+
+      TD3DXVector3 Position; 
+
+      TD3DXVector2 TexCoord; 
+
+ };
+
+   typedef Tz3D3DSObjectVertexArray* Pz3D3DSObjectVertexArray;
+
+     () Tz3D3DSObjectVertex Tz3D3DSObjectVertexArray[-1]; /*!< [0..999..999..999..999..-1] */
+
+
+    Word T3DSFaceIndices[3]; /*!< [0..3] */
+
+
+   typedef Tz3D3DSFile* Pz3D3DSFile;
+
+
+  // 3DS file chunk object
+   typedef Tz3D3DSFileChunk* Pz3D3DSFileChunk;
+
+   typedef object Tz3D3DSFileChunk
+    : Word;
+    Length: LongWord;
+    Start: LongWord;
+      typedef array<Pz3D3DSFileChunk> SubChunks;
+    Data: Pz3D3DSFile;
+
+      
+Integer NewSubChunk ();
+
+       
+Read (TStream &AStream 
+);
+
+
+     
+Destroy ();
+
+ };
+
+
+  // 3DS file mesh object
+   class Tz3D3DSMeshObject
+{
+public:
+
+      Cardinal NumVerts; 
+
+      Cardinal NumFaces; 
+
+      Cardinal NumCoords; 
+
+      Cardinal NumNormals; 
+
+      Boolean HasCoords; 
+
+       TD3DXVector3 BBMin; 
+ TD3DXVector3 BBMax; 
+
+
+      typedef array<T3DSFaceIndices> Faces;
+      typedef array<TD3DXVector2> Coords;
+      typedef array<TD3DXVector3> Vertices;
+
+     
+ComputeBounds ();
+
+ };
+
+
+  // 3DS file object
+   typedef object Tz3D3DSFile
+    : Pz3D3DSFileChunk;
+    MeshCount: Cardinal;
+      typedef array<Tz3D3DSMeshObject> Meshes;
+    BBMin, BBMax: TD3DXVector3;
+
+        
+ID3DXMesh Load (const string AFileName 
+);
+
+
+     
+Clear ();
+
+     
+ComputeBounds ();
+
+     
+CenterVertices ();
+
+ };
+
+
+
+/*==============================================================================*/ 
+/*== Model controller interface                                               ==*/ 
+/*==============================================================================*/ 
+/*== Global controller and manager for models                                 ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DModelController : public Tz3DLinked,Iz3DModelController
+{
+public:
+
+  private:
+      IInterfaceList FStaticModels; 
+
+      IInterfaceList FDynamicModels; 
+
+      Tz3DModelRenderOrder FStaticRenderOrder; 
+
+      Tz3DModelRenderOrder FDynamicRenderOrder; 
+
+      Iz3DVertexFormat FStaticModelVertexFormat; 
+
+      Iz3DVertexFormat FDynamicModelVertexFormat; 
+
+      Single FElapsedTime; 
+
+      Boolean FTEMP; 
+
+      Boolean FWaitingGPUProcessStaticLighting; 
+
+  protected:
+      
+Iz3DVertexFormat GetDynamicVertexFormat ();
+ ;
+      
+Iz3DVertexFormat GetStaticVertexFormat ();
+ ;
+      
+IInterfaceList GetDynamicModelList ();
+ ;
+      
+IInterfaceList GetStaticModelList ();
+ ;
+      
+Tz3DModelRenderOrder GetStaticRenderOrder ();
+ ;
+      
+Tz3DModelRenderOrder GetDynamicRenderOrder ();
+ ;
+      
+Integer GetStaticModelCount ();
+ ;
+      
+Integer GetDynamicModelCount ();
+ ;
+        
+Iz3DStaticModel GetStaticModel (const Integer AIndex 
+);
+ ;
+          
+SetStaticModel (const Integer AIndex ,
+const Iz3DStaticModel Value 
+);
+ ;
+        
+Iz3DDynamicModel GetDynamicModel (const Integer AIndex 
+);
+ ;
+          
+SetDynamicModel (const Integer AIndex ,
+const Iz3DDynamicModel Value 
+);
+ ;
+       
+z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+);
+ ; ;
+       
+z3DDestroyScenarioObjects (const Tz3DDestroyObjectCaller ACaller 
+);
+ ; ;
+     
+z3DDirectLightRender ();
+ ; ;
+     
+z3DFrameMove ();
+ ; ;
+     
+z3DFrameRender ();
+ ; ;
+     
+z3DLightingRender ();
+ ; ;
+       
+z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ; ;
+  public:
+         
+Tz3DModelController (const Iz3DBase AOwner = nil 
+);
+ ;
+      
+Iz3DStaticModel CreateStaticModel ();
+ ;
+      
+Iz3DDynamicModel CreateDynamicModel ();
+ ;
+       
+AddModel (const Iz3DModel AModel 
+);
+ ;
+       
+RemoveModel (const Iz3DModel AModel 
+);
+ ;
+          
+SortByDepth (const IInterfaceList AModels ,
+Tz3DModelRenderOrder &AOrder 
+);
+ ;
+     
+BuildStaticRenderOrder ();
+ ;
+     
+BuildDynamicRenderOrder ();
+ ;
+     
+BuildVertexFormats ();
+ ;
+     
+ProcessStaticLighting ();
+ ;
+     
+CreateScenarioObjects ();
+ ;
+     
+BuildRenderOrders ();
+ ;
+     
+DestroyScenarioObjects ();
+ ;
+          
+BuildRenderOrder (const IInterfaceList AModels ,
+Tz3DModelRenderOrder &AOrder 
+);
+ ;
+
+      
+Integer CurrentSceneInstances ();
+ ;
+      
+Integer CurrentVisibleInstances ();
+ ;
+      
+Integer CurrentScenePolygons ();
+ ;
+      
+Integer CurrentVisiblePolygons ();
+ ;
+  public:
+    /*[const AIndex: Integer]*/     /** \sa GetStaticModel For reading   \sa SetStaticModel For writing */
+Iz3DStaticModel StaticModels; 
+
+    /*[const AIndex: Integer]*/     /** \sa GetDynamicModel For reading   \sa SetDynamicModel For writing */
+Iz3DDynamicModel DynamicModels; 
+
+       /** \sa GetStaticRenderOrder For reading*/
+Tz3DModelRenderOrder StaticRenderOrder; 
+
+       /** \sa GetDynamicRenderOrder For reading*/
+Tz3DModelRenderOrder DynamicRenderOrder; 
+
+       /** \sa GetStaticModelCount For reading*/
+Integer StaticModelCount; 
+
+       /** \sa GetDynamicModelCount For reading*/
+Integer DynamicModelCount; 
+
+       /** \sa GetStaticVertexFormat For reading*/
+Iz3DVertexFormat StaticVertexFormat; 
+
+       /** \sa GetDynamicVertexFormat For reading*/
+Iz3DVertexFormat DynamicVertexFormat; 
+
+       /** \sa GetStaticModelList For reading*/
+IInterfaceList StaticModelList; 
+
+       /** \sa GetDynamicModelList For reading*/
+IInterfaceList DynamicModelList; 
+
+ };
+
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Model subset interface                                                   ==*/ 
+/*==============================================================================*/ 
+/*== Extension of world subset with exclusive methods for models              ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DModelSubset : public Tz3DScenarioObjectSubset,Iz3DModelSubset
+{
+public:
+
+  private:
+      Iz3DModel FModel; 
+
+  public:
+       
+Tz3DModelSubset (const Iz3DBase AOwner 
+);
+ ;
+ };
+
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Model interface                                                          ==*/ 
+/*==============================================================================*/ 
+/*== Manages a mesh and prepares it for renderization                         ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DModel : public Tz3DBase,Iz3DModel
+{
+public:
+
+  private:
+      Iz3DBoundingBox FBoundingBox; 
+
+      Iz3DBoundingBox FOSBoundingBox; 
+
+      Boolean FAutoGenerateTexCoords; 
+
+      Iz3DBoundingSphere FOSBoundingSphere; 
+
+      Iz3DBoundingSphere FBoundingSphere; 
+
+      Iz3DFloat3 FScale; 
+
+      Integer FFaceCount; 
+
+      Integer FBytesPerVertex; 
+
+      PWideChar FFileName; 
+
+      PWideChar FName; 
+
+      Tz3DModelInstancingMethod FInstancingMethod; 
+
+      Boolean FLockAspectRatio; 
+
+      Boolean FLockTexCoordsAspectRatio; 
+
+      Tz3DScenarioObjectShape FShape; 
+
+      IInterfaceList FSubsets; 
+
+      Single FTexCoordsScale; 
+
+      Integer FVertexCount; 
+
+      IInterfaceList FInstances; 
+
+      ID3DXMesh FMesh; 
+
+      Tz3DLODMeshes FLODMeshes; 
+
+      Boolean FComputeLightCoords; 
+
+      Tz3DModelMeshLOD FLockLOD; 
+
+  protected:
+        
+Integer GetLODFaceCount (const Tz3DModelMeshLOD ALOD 
+);
+ ;
+        
+Integer GetLODVertexCount (const Tz3DModelMeshLOD ALOD 
+);
+ ;
+      
+Iz3DVertexFormat GetVertexFormat ();
+ ;
+      
+PWideChar GetName ();
+ ;
+       
+SetName (const PWideChar Value 
+);
+ ;
+      
+Boolean GetComputeLightCoords ();
+ ;
+       
+SetComputeLightCoords (const Boolean Value 
+);
+ ;
+      
+Tz3DLODMeshes GetLODMeshes ();
+ ;
+      
+ID3DXMesh GetMesh ();
+ ;
+       
+SetFileName (const PWideChar Value 
+);
+ ;
+      
+IInterfaceList GetInstanceList ();
+ ;
+      
+IInterfaceList GetSubsetList ();
+ ;
+      
+Integer GetInstanceCount ();
+ ;
+      
+Iz3DBoundingBox GetOSBoundingBox ();
+ ;
+      
+Iz3DBoundingSphere GetOSBoundingSphere ();
+ ;
+      
+Iz3DFloat3 GetScale ();
+ ;
+      
+Integer GetBytesPerVertex ();
+ ;
+        
+Iz3DModelInstance GetInstance (const Integer AIndex 
+);
+ ;
+      
+Iz3DBoundingBox GetBoundingBox ();
+ ;
+      
+Boolean GetAutoGenerateTexCoords ();
+ ;
+      
+Iz3DBoundingSphere GetBoundingSphere ();
+ ;
+      
+Integer GetFaceCount ();
+ ;
+      
+PWideChar GetFileName ();
+ ;
+      
+Tz3DModelInstancingMethod GetInstancingMethod ();
+ ;
+      
+Boolean GetLockAspectRatio ();
+ ;
+      
+Boolean GetLockTexCoordsAspectRatio ();
+ ;
+      
+Tz3DScenarioObjectShape GetShape ();
+ ;
+      
+Integer GetSubsetCount ();
+ ;
+        
+Iz3DModelSubset GetSubsets (const Integer I 
+);
+ ;
+      
+Single GetTexCoordsScale ();
+ ;
+      
+Integer GetVertexCount ();
+ ;
+       
+SetAutoGenerateTexCoords (const Boolean Value 
+);
+ ;
+       
+SetInstancingMethod (const Tz3DModelInstancingMethod Value 
+);
+ ;
+       
+SetLockAspectRatio (const Boolean Value 
+);
+ ;
+       
+SetLockTexCoordsAspectRatio (const Boolean Value 
+);
+ ;
+       
+SetShape (const Tz3DScenarioObjectShape Value 
+);
+ ;
+       
+SetTexCoordsScale (const Single Value 
+);
+ ;
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+  public:
+          
+Pointer LockVertices (const DWORD AFlags = 0 
+);
+ ;
+     
+UnlockVertices ();
+ ;
+             
+Pointer LockLODVertices (const Tz3DModelMeshLOD ALOD ,
+const DWORD AFlags = 0 
+);
+ ;
+     
+UnlockLODVertices ();
+ ;
+          
+PWordArray LockIndices (const DWORD AFlags = 0 
+);
+ ;
+     
+UnlockIndices ();
+ ;
+             
+PWordArray LockLODIndices (const Tz3DModelMeshLOD ALOD ,
+const DWORD AFlags = 0 
+);
+ ;
+     
+UnlockLODIndices ();
+ ;
+     
+CreateModel ();
+ ; ;
+     
+CreateMesh ();
+ ;
+          
+CreateSubsets (const PD3DXMaterial AD3DXMtrls ,
+const Integer ACount 
+);
+ ;
+
+      
+Iz3DModelSubset AddSubset ();
+ ;
+       
+RemoveSubset (const Iz3DModelSubset ASubset 
+);
+ ;
+       
+RemoveInstance (const Iz3DModelInstance AInstance 
+);
+ ;
+
+     
+CreateLODMeshes ();
+ ;
+     
+GenerateTexCoords ();
+ ;
+       
+SetDeclaration (const PD3DVertexElement9 ADeclaration 
+);
+ ;
+     
+ComputeBounds ();
+ ; ;
+     
+CreateScenarioObjects ();
+ ;
+     
+DestroyScenarioObjects ();
+ ;
+     
+FrameMove ();
+ ; ;
+     
+FrameRender ();
+ ; ;
+     
+FrameRenderAmbient ();
+ ; ;
+     
+FrameRenderDirectLighting ();
+ ; ;
+                           
+RenderMesh (const Iz3DEffect AEffect ,
+const Tz3DModelMeshLOD ALOD = z3dmmlHigh ,
+const Boolean ASetMaterial = True ,
+const Boolean ADirectLighting = True 
+);
+ ;
+        
+Integer IndexOf (const Iz3DModelInstance AInstance 
+);
+ ;
+       
+LoadFromFile (const PWideChar AFileName 
+);
+ ;
+       
+SaveToFile (const PWideChar AFileName 
+);
+ ;
+  public:
+       /** \sa GetVertexCount For reading*/
+Integer VertexCount; 
+
+       /** \sa GetBytesPerVertex For reading*/
+Integer BytesPerVertex; 
+
+       /** \sa GetFaceCount For reading*/
+Integer FaceCount; 
+
+    /*[const ALOD: Tz3DModelMeshLOD]*/   /** \sa GetLODFaceCount For reading*/
+Integer LODFaceCount; 
+
+    /*[const ALOD: Tz3DModelMeshLOD]*/   /** \sa GetLODVertexCount For reading*/
+Integer LODVertexCount; 
+
+       /** \sa GetOSBoundingSphere For reading*/
+Iz3DBoundingSphere OSBoundingSphere; 
+
+       /** \sa GetOSBoundingBox For reading*/
+Iz3DBoundingBox OSBoundingBox; 
+
+    /*[const I: Integer]*/   /** \sa GetSubsets For reading*/
+Iz3DModelSubset Subsets; 
+
+       /** \sa GetSubsetCount For reading*/
+Integer SubsetCount; 
+
+    /*[const AIndex: Integer]*/   /** \sa GetInstance For reading*/
+Iz3DModelInstance Instances; 
+
+       /** \sa GetInstanceCount For reading*/
+Integer InstanceCount; 
+
+         /** \sa GetFileName For reading   \sa SetFileName For writing */
+PWideChar FileName; 
+
+       /** \sa GetMesh For reading*/
+ID3DXMesh Mesh; 
+
+       /** \sa GetLODMeshes For reading*/
+Tz3DLODMeshes LODMeshes; 
+
+         /** \sa GetComputeLightCoords For reading   \sa SetComputeLightCoords For writing */
+Boolean ComputeLightCoords; 
+
+         /** \sa GetName For reading   \sa SetName For writing */
+PWideChar Name; 
+
+       /** \sa GetVertexFormat For reading*/
+Iz3DVertexFormat VertexFormat; 
+
+         /** \sa GetShape For reading   \sa SetShape For writing */
+Tz3DScenarioObjectShape Shape; 
+
+       /** \sa GetScale For reading*/
+Iz3DFloat3 Scale; 
+
+       /** \sa GetBoundingSphere For reading*/
+Iz3DBoundingSphere BoundingSphere; 
+
+       /** \sa GetBoundingBox For reading*/
+Iz3DBoundingBox BoundingBox; 
+
+         /** \sa GetLockAspectRatio For reading   \sa SetLockAspectRatio For writing */
+Boolean LockAspectRatio; 
+
+         /** \sa GetInstancingMethod For reading   \sa SetInstancingMethod For writing */
+Tz3DModelInstancingMethod InstancingMethod; 
+
+         /** \sa GetAutoGenerateTexCoords For reading   \sa SetAutoGenerateTexCoords For writing */
+Boolean AutoGenerateTexCoords; 
+
+         /** \sa GetLockTexCoordsAspectRatio For reading   \sa SetLockTexCoordsAspectRatio For writing */
+Boolean LockTexCoordsAspectRatio; 
+
+         /** \sa GetTexCoordsScale For reading   \sa SetTexCoordsScale For writing */
+Single TexCoordsScale; 
+
+       /** \sa GetInstanceList For reading*/
+IInterfaceList InstanceList; 
+
+       /** \sa GetSubsetList For reading*/
+IInterfaceList SubsetList; 
+
+ };
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Static model interface                                                   ==*/ 
+/*==============================================================================*/ 
+/*== Adds lightmap support for a model                                        ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DStaticModel : public Tz3DModel,Iz3DStaticModel
+{
+public:
+
+  protected:
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+  public:
+      
+Iz3DModelStaticInstance CreateInstance ();
+ ;
+        
+Boolean ProcessStaticLighting (const Tz3DModelLightMapProcessStage AStage 
+);
+ ;
+ };
+
+
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Dynamic model interface                                                  ==*/ 
+/*==============================================================================*/ 
+/*== Prepares the model for interacting with world phyiscs                    ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DDynamicModel : public Tz3DModel,Iz3DDynamicModel
+{
+public:
+
+  protected:
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+  public:
+      
+Iz3DModelDynamicInstance CreateInstance ();
+ ;
+ };
+
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Model isntance nterface                                                  ==*/ 
+/*==============================================================================*/ 
+/*== Implements a world object and represents a version of the model on       ==*/ 
+/*== the world                                                                ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DModelInstance : public Tz3DScenarioObject,Iz3DModelInstance
+{
+public:
+
+  private:
+      Boolean FEnableShadows; 
+
+      Iz3DFloat3 FLookAt; 
+
+      Iz3DModel FModel; 
+
+        Iz3DMatrix FWorldMatrix; 
+ Iz3DMatrix FWorldViewMatrix; 
+ Iz3DMatrix FWorldViewProjMatrix; 
+
+      Tz3DModelMeshLOD FMeshLOD; 
+
+  protected:
+      
+Integer GetInstanceIndex ();
+ ;
+      
+Tz3DModelMeshLOD GetMeshLOD ();
+ ;
+       
+SetMeshLOD (const Tz3DModelMeshLOD Value 
+);
+ ;
+      
+Iz3DMatrix GetWorldMatrix ();
+ ;
+      
+Iz3DModel GetModel ();
+ ;
+      
+Boolean GetEnableShadows ();
+ ;
+      
+Iz3DFloat3 GetLookAt ();
+ ;
+       
+SetEnableShadows (const Boolean Value 
+);
+ ;
+       
+CenterChanged (const Iz3DBase Sender 
+);
+ ;
+      
+Tz3DScenarioObjectShape GetShape ();
+ ; ;
+      
+Integer GetSubsetCount ();
+ ; ;
+        
+Iz3DScenarioObjectSubset GetSubsets (const Integer AIndex 
+);
+ ; ;
+      
+Integer GetIndex ();
+ ;
+  public:
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+     
+FrameMove ();
+ ; ;
+     
+FrameRender ();
+ ; ;
+     
+FrameRenderAmbient ();
+ ; ;
+     
+FrameRenderDirectLighting ();
+ ; ;
+     
+ComputeTransforms ();
+ ;
+     
+ComputeViewTransforms ();
+ ;
+
+      
+Boolean CurrentlyVisible ();
+ ;
+     
+RenderDepth ();
+ ;
+     
+RenderAmbientLighting ();
+ ;
+     
+RenderShadowMap ();
+ ;
+     
+RenderDynamicLighting ();
+ ;
+     
+SetEffectCommonParams ();
+ ;
+
+     
+Show ();
+ ;
+     
+Hide ();
+ ;
+  public:
+       /** \sa GetModel For reading*/
+Iz3DModel Model; 
+
+       /** \sa GetWorldMatrix For reading*/
+Iz3DMatrix WorldMatrix; 
+
+         /** \sa GetMeshLOD For reading   \sa SetMeshLOD For writing */
+Tz3DModelMeshLOD MeshLOD; 
+
+       /** \sa GetInstanceIndex For reading*/
+Integer InstanceIndex; 
+
+       /** \sa GetLookAt For reading*/
+Iz3DFloat3 LookAt; 
+
+         /** \sa GetEnableShadows For reading   \sa SetEnableShadows For writing */
+Boolean EnableShadows; 
+
+ };
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Model static instance interface                                          ==*/ 
+/*==============================================================================*/ 
+/*== Prepares the model for rendering with static lighting using lightmaps    ==*/ 
+/*== and radiosity                                                            ==*/ 
+/*==============================================================================*/ 
+
+     class Tz3DModelStaticInstance : public Tz3DModelInstance,Iz3DScenarioStaticObject
+{
+public:
+
+  private:
+      Iz3DLightMap FLightMap; 
+
+  protected:
+      
+Iz3DLightMap GetLightMap ();
+ ;
+  public:
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+        
+Boolean ProcessStaticLighting (const Tz3DModelLightMapProcessStage AStage 
+);
+ ;
+     
+RenderStaticLighting ();
+ ;
+  public:
+       /** \sa GetLightMap For reading*/
+Iz3DLightMap LightMap; 
+
+ };
+
+
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Model dynamic instance interface                                         ==*/ 
+/*==============================================================================*/ 
+/*== Implements a world dynamic objects that interacts with world physics     ==*/ 
+/*==============================================================================*/ 
+
+     class Tz3DModelDynamicInstance : public Tz3DModelInstance,Iz3DScenarioDynamicObject
+{
+public:
+
+  private:
+      Iz3DFloat3 FAcceleration; 
+
+      Iz3DFloat3 FVelocity; 
+
+      Boolean FGround; 
+
+      Boolean FEnablePhysics; 
+
+      Single FPrevVelocityY; 
+
+  protected:
+      
+Iz3DFloat3 GetAcceleration ();
+ ;
+      
+Iz3DFloat3 GetVelocity ();
+ ;
+      
+Boolean GetGround ();
+ ;
+       
+SetGround (const Boolean Value 
+);
+ ;
+      
+Boolean GetEnablePhysics ();
+ ;
+       
+SetEnablePhysics (const Boolean Value 
+);
+ ;
+       
+VelocityChanged (const Iz3DBase ASender 
+);
+ ;
+  public:
+         
+Tz3DModelDynamicInstance (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+FrameMove ();
+ ; ;
+  public:
+       /** \sa GetAcceleration For reading*/
+Iz3DFloat3 Acceleration; 
+
+       /** \sa GetVelocity For reading*/
+Iz3DFloat3 Velocity; 
+
+         /** \sa GetGround For reading   \sa SetGround For writing */
+Boolean Ground; 
+
+         /** \sa GetEnablePhysics For reading   \sa SetEnablePhysics For writing */
+Boolean EnablePhysics; 
+
+ };
+
+
+
+
+// Controller management
+  
+Iz3DModelController z3DCreateModelController ();
+ ;
+   
+z3DSetCustomModelController (const Iz3DModelController AController 
+);
+ ;
+  
+Iz3DModelController z3DModelController ();
+ ;
+
+
+
+
+     
+     
+   
+/*
+var
+ GModelController: Iz3DModelController;
+
+  
+Iz3DModelController z3DCreateModelController ()
+{
+#ifndef DOXYGEN_SKIP
+  GModelController:= Tz3DModelController.Create;
+  Result:= GModelController;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomModelController (const Iz3DModelController AController 
+)
+{
+#ifndef DOXYGEN_SKIP
+  GModelController:= AController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DModelController z3DModelController ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= GModelController;
+#endif /* DOXYGEN_SKIP */
+};
+
+{ 3DS format }
+
+     
+SkipChunk (TStream &F ,
+longword Len 
+)
+{
+#ifndef DOXYGEN_SKIP
+  F.Seek(Len-6, soFromCurrent);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3D3DSFileChunk::~Tz3D3DSFileChunk ()
+
+/*
+var
+ I: integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to High(SubChunks) do
+  if SubChunks[I] <> nil thenbegin    SubChunks[I]^.Destroy;
+    FreeMem(SubChunks[I]);
+    SubChunks[I] := nil;
+ end
+  Setlength(SubChunks, 0);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+integer Tz3D3DSFileChunk::NewSubchunk ()
+{
+#ifndef DOXYGEN_SKIP
+  Setlength(SubChunks, High(SubChunks)+2);
+  New(subchunks[High(SubChunks)]);
+  SubChunks[High(SubChunks)].Data:= Self.Data;
+  Result:= High(SubChunks);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3D3DSFileChunk::Read (TStream &AStream 
+)
+
+/*
+var
+ S: string;
+    Ch: Char;
+    I: integer;
+    Version: Cardinal;
+    Temp: Single;
+    W: Word;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Start := AStream.Position;
+
+  AStream.ReadBuffer(ID, 2);
+  AStream.ReadBuffer(Length, 4);
+
+  case ID of
+
+
+    // Version information
+    MAX3DS_ID_VERSION:
+    begin      AStream.ReadBuffer(Version, 4);
+      if Version > 3 then
+        z3DTrace('Iz3D3DSFileChunk.Read: This file is from a later version of 3DS. It may not load correctly', z3dtkWarning);
+   end
+
+    // Mesh object vertices
+    MAX3DS_ID_OBJECT_VERTICES:
+    begin      if Data^.MeshCount > 0 then
+      with Data^.Meshes[Data^.MeshCount-1] dobegin        AStream.ReadBuffer(W, 2);
+        NumVerts:= W;
+        SetLength(Vertices, Numverts);
+        for I:= 0 to NumVerts-1 dobegin          AStream.ReadBuffer(Vertices[I], Sizeof(TD3DXVector3));
+          // Swap Z and Y to make it D3D compatible
+          Temp:= Vertices[I].y;
+          Vertices[I].y:= Vertices[I].z;
+          Vertices[I].z:= -Temp;
+       end
+     end
+   end
+
+    // Mesh object texture coordinates
+    MAX3DS_ID_OBJECT_UV:
+    begin      if Data^.MeshCount > 0 then
+      with Data^.Meshes[Data^.MeshCount-1] dobegin        AStream.ReadBuffer(W, 2);
+        NumCoords := W;
+        HasCoords:= True;
+        SetLength(Coords, NumCoords);
+        for I := 0 to NumCoords-1 do
+        AStream.ReadBuffer(Coords[I], Sizeof(TD3DXVector2));
+     end
+   end
+
+    // Mesh object face indices
+    MAX3DS_ID_OBJECT_FACES:
+    begin      if Data^.MeshCount > 0 then
+      with Data^.Meshes[Data^.MeshCount-1] dobegin        AStream.ReadBuffer(W, 2);
+        NumFaces := W;
+        SetLength(Faces, NumFaces);
+        For I := 0 to NumFaces-1 do
+        AStream.ReadBuffer(Faces[I], Sizeof(T3DSFaceIndices));
+     end
+   end
+
+    // Mesh object information
+    MAX3DS_ID_OBJECTINFO, MAX3DS_ID_HEADER, MAX3DS_ID_OBJECT_MESH:
+    begin      repeat
+        SubChunks[NewSubChunk]^.read(AStream);
+      until AStream.Position >= (Start+Length);
+   end
+
+    // Mesh object
+    MAX3DS_ID_OBJECT:
+    begin      with Data^ dobegin        Inc(MeshCount);
+        Setlength(Meshes, MeshCount);
+        Meshes[MeshCount-1] := Tz3D3DSMeshObject.Create;
+     end
+      repeat
+        AStream.ReadBuffer(Ch, 1); // Name of object
+        S := S + Ch;
+      until Ch = #0;
+      repeat
+        SubChunks[NewSubChunk]^.read(AStream);
+      until AStream.Position >= (Start+Length);
+   end
+
+  else
+    SkipChunk(AStream, Length);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+
+ 
+Tz3D3DSMeshObject::ComputeBounds ()
+
+/*
+var
+ I: integer;
+    Vert: TD3DXVector3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  BBMin.x := 99999;
+  BBMin.y := 99999;
+  BBMin.z := 99999;
+  BBMax.x := -99999;
+  BBMax.y := -99999;
+  BBMax.z := -99999;
+  for I := 0 to NumVerts-1 dobegin    Vert.x := Vertices[I].x;
+    Vert.y := Vertices[I].y;
+    Vert.z := Vertices[I].z;
+    if BBMin.x > Vert.x then BBMin.x := Vert.x;
+    if BBMin.y > Vert.y then BBMin.y := Vert.y;
+    if BBMin.z > Vert.z then BBMin.z := Vert.z;
+
+    if BBMax.x < Vert.x then BBMax.x := Vert.x;
+    if BBMax.y < Vert.y then BBMax.y := Vert.y;
+    if BBMax.z < Vert.z then BBMax.z := Vert.z;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3D3DSFile::CenterVertices ()
+
+/*
+var
+ FCenter: TD3DXVector3;
+    I, J: integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  ComputeBounds;
+  FCenter.x:= BBMin.x+FCenter.x/2;
+  FCenter.y:= BBMin.y+FCenter.y/2;
+  FCenter.z:= BBMin.z+FCenter.z/2;
+  for I:= 0 to MeshCount-1 dobegin    for J:= 0 to Meshes[I].NumVerts-1 do
+    with Meshes[I] dobegin       Vertices[J].x:= Vertices[J].x - FCenter.x;
+       Vertices[J].y:= Vertices[J].y - FCenter.y;
+       Vertices[J].z:= Vertices[J].z - FCenter.z;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3D3DSFile::ComputeBounds ()
+
+/*
+var
+ I: integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  BBMin.x := 99999;
+  BBMin.y := 99999;
+  BBMin.z := 99999;
+  BBMax.x := -99999;
+  BBMax.y := -99999;
+  BBMax.z := -99999;
+
+  for I := 0 to MeshCount-1 dobegin   Meshes[I].ComputeBounds;
+   if BBMin.x > Meshes[I].BBMin.x then BBmin.x := Meshes[I].Bbmin.x;
+   if BBMin.y > Meshes[I].BBMin.y then BBmin.y := Meshes[I].Bbmin.y;
+   if BBMin.z > Meshes[I].BBMin.z then BBmin.z := Meshes[I].Bbmin.z;
+
+   if BBMax.x < Meshes[I].BBMax.x then BBmax.x := Meshes[I].Bbmax.x;
+   if BBMax.y < Meshes[I].BBMax.y then BBmax.y := Meshes[I].Bbmax.y;
+   if BBMax.z < Meshes[I].BBMax.z then BBmax.z := Meshes[I].Bbmax.z;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3D3DSFile::Clear ()
+
+/*
+var
+ I: integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I := 0 to High(Meshes) do
+  with Meshes[I] dobegin    Setlength(Vertices, 0);
+    Setlength(Faces, 0);
+    Setlength(Coords, 0);
+    NumVerts:= 0;
+    NumFaces:= 0;
+    NumCoords:= 0;
+    Meshes[I].Free;
+ end
+  Setlength(Meshes, 0);
+  MeshCount := 0;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+ID3DXMesh Tz3D3DSFile::Load (const string AFileName 
+)
+
+/*
+var
+ FStream: TFilestream;
+    FIB: PWordArray;
+    FVB: Pz3D3DSObjectVertexArray;
+    FFaceCount, FVertexCount: Integer;
+    FCurrentV, FCurrentF, I, J: integer;
+    FVertices: array of TD3DXVector3;
+    FFaces: array of T3DSFaceIndices;
+    FCoords: array of TD3DXVector2;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not FileExists(AFileName) then
+    z3DTrace(PWideChar(WideString('Iz3D3DSFile.Load failed: File does not exist. Filename: '+ExtractFileName(AFileName))), z3dtkWarning);
+
+  // Load the 3DS file
+  try
+    try
+      Clear;
+      FStream:= TFileStream.Create(AFileName, fmOpenRead);
+      New(Chunk);
+      Chunk^.Data := @Self;
+      Chunk^.Read(TStream(FStream));
+    except
+      on E: Exception do
+      z3DTrace(PWideChar(WideString('Iz3D3DSFile.Load failed: Unknown exception raised while loading the 3DS file. Error message: '+E.Message)), z3dtkWarning);
+   end
+
+    if MeshCount = 0 then
+      z3DTrace('Iz3D3DSFile.Load failed: 3DS file does not contain any valid meshes', z3dtkWarning);
+
+    // Center all meshes
+    CenterVertices;
+
+    // Convert the meshes to D3D format
+    if MeshCount > 0 thenbegin      FFaceCount:= 0;
+      FVertexCount:= 0;
+      FCurrentV:= 0;
+      FCurrentF:= 0;
+
+      // Concatenate the vertices
+      for J:= 0 to MeshCount-1 dobegin        SetLength(FFaces, Length(FFaces)+Meshes[J].NumFaces);
+        for I:= 0 to Meshes[J].NumFaces-1 dobegin          FFaces[FCurrentF][0]:= Min(MAX3DS_MAXVERTICES-1, Meshes[J].Faces[I][0]+FVertexCount);
+          FFaces[FCurrentF][1]:= Min(MAX3DS_MAXVERTICES-1, Meshes[J].Faces[I][1]+FVertexCount);
+          FFaces[FCurrentF][2]:= Min(MAX3DS_MAXVERTICES-1, Meshes[J].Faces[I][2]+FVertexCount);
+          FFaces[FCurrentF][3]:= Min(MAX3DS_MAXVERTICES-1, Meshes[J].Faces[I][3]+FVertexCount);
+          Inc(FCurrentF);
+       end
+        SetLength(FVertices, Length(FVertices)+Meshes[J].NumVerts);
+        SetLength(FCoords, Length(FCoords)+Meshes[J].NumVerts);
+        for I:= 0 to Meshes[J].NumVerts-1 dobegin          FVertices[FCurrentV].x:= Meshes[J].Vertices[I].x;
+          FVertices[FCurrentV].y:= Meshes[J].Vertices[I].y;
+          FVertices[FCurrentV].z:= Meshes[J].Vertices[I].z;
+          if Meshes[J].HasCoords thenbegin            FCoords[FCurrentV].x:= Meshes[J].Coords[I].x;
+            FCoords[FCurrentV].y:= Meshes[J].Coords[I].y;
+         end
+          Inc(FCurrentV);
+       end
+        FFaceCount:= FFaceCount+Meshes[J].NumFaces;
+        FVertexCount:= FVertexCount+Meshes[J].NumVerts;
+     end
+
+      if FVertexCount > MAX3DS_MAXVERTICES thenbegin        z3DTrace('Iz3D3DSFile.Load: Imported 3DS file exceeds z3D vertex limit. Vertex buffer will be truncated', z3DtkWarning);
+        FVertexCount:= MAX3DS_MAXVERTICES;
+     end
+
+      // Create the D3D mesh
+      if FAILED(D3DXCreateMesh(FFaceCount, FVertexCount, D3DXMESH_MANAGED, @Tz3D3DSObjectVD, z3DCore_GetD3DDevice, Result)) then
+        z3DTrace('Iz3D3DSFile.Load failed: D3DXCreateMesh failed', z3dtkWarning);
+
+      // Copy the vertices from 3DS to D3D
+      if Result <> nil thenbegin        Result.LockVertexBuffer(0, Pointer(FVB));
+        Result.LockIndexBuffer(0, Pointer(FIB));
+        try
+          for I:= 0 to FFaceCount-1 dobegin            FIB[I*3]:= FFaces[I][0];
+            FIB[I*3+1]:= FFaces[I][1];
+            FIB[I*3+2]:= FFaces[I][2];
+         end
+          for I := 0 to FVertexCount-1 dobegin            FVB[I].Position.x:= FVertices[I].x;
+            FVB[I].Position.y:= FVertices[I].y;
+            FVB[I].Position.z:= FVertices[I].z;
+            if Length(FCoords) > 0 thenbegin              FVB[I].TexCoord.x:= FCoords[I].x;
+              FVB[I].TexCoord.y:= FCoords[I].y;
+           end
+         end
+        finally
+          Result.UnlockVertexBuffer;
+          Result.UnlockIndexBuffer;
+       end
+     end
+      
+   end
+  finally
+    FStream.Free;
+    Chunk^.Destroy;
+    Dispose(Chunk);
+    Chunk:= nil;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DModelController */ 
+
+ 
+Tz3DModelController::Tz3DModelController ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+
+  // Link this object to the desired events generated by the z3D Engine
+  ScenarioStage:= z3dssCreatingWorldObjects;
+  Notifications:= [z3dlnDevice, z3dlnFrameMove, z3dlnFrameRender, z3dlnLightingRender,
+    z3dlnDirectLightRender];
+
+  FStaticModels:= TInterfaceList.Create;
+  FModels:= TInterfaceList.Create;
+  FStaticModelVertexFormat:= z3DCreateVertexFormat;
+  FModelVertexFormat:= z3DCreateVertexFormat;
+  BuildVertexFormats;
+  FTEMP:= FALSE;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelController::AddModel (const Iz3DModel AModel 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if z3DSupports(AModel, Iz3DStaticModel) then
+  FStaticModels.Add(AModel) else FDynamicModels.Add(AModel);
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DModelController::SortByDepth (const IInterfaceList AModels ,
+Tz3DModelRenderOrder &AOrder 
+)
+
+/*
+var
+ I, FT0, FT1: Integer;
+    FSwapped: Boolean;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Use bubble sort to reorder Models front-to-back
+  if (z3DCore_GetTime-FElapsedTime) > 1 thenbegin    FSwapped:= True;
+    while FSwapped dobegin      FSwapped:= False;
+      for I:= 0 to Length(AOrder)-2 do
+      if (AModels[AOrder[I][0]] as Iz3DModel).Instances[AOrder[I][1]].Visible and
+      (AModels[AOrder[I+1][0]] as Iz3DModel).Instances[AOrder[I+1][1]].Visible and
+      ((AModels[AOrder[I][0]] as Iz3DModel).Instances[AOrder[I][1]].ViewCenter.Z >
+      (AModels[AOrder[I+1][0]] as Iz3DModel).Instances[AOrder[I+1][1]].ViewCenter.Z) thenbegin        FT0:= AOrder[I][0];
+        FT1:= AOrder[I][1];
+        AOrder[I][0]:= AOrder[I+1][0];
+        AOrder[I][1]:= AOrder[I+1][1];
+        AOrder[I+1][0]:= FT0;
+        AOrder[I+1][1]:= FT1;
+        FSwapped:= True;
+     end
+   end
+    FElapsedTime:= z3DCore_GetTime;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::BuildDynamicRenderOrder ()
+{
+#ifndef DOXYGEN_SKIP
+  SortByDepth(FModels, FRenderOrder);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::BuildStaticRenderOrder ()
+{
+#ifndef DOXYGEN_SKIP
+  SortByDepth(FStaticModels, FStaticRenderOrder);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DDynamicModel Tz3DModelController::CreateDynamicModel ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DDynamicModel.Create;
+  AddModel(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DModelController::BuildRenderOrder (const IInterfaceList AModels ,
+Tz3DModelRenderOrder &AOrder 
+)
+
+/*
+var
+ I, J: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  SetLength(AOrder, 0);
+  for I:= 0 to AModels.Count-1 do
+  for J:= 0 to (AModels[I] as Iz3DModel).InstanceCount-1 dobegin    SetLength(AOrder, Length(AOrder)+1);
+    SetLength(AOrder[Length(AOrder)-1], 2);
+    AOrder[Length(AOrder)-1][0]:= I;
+    AOrder[Length(AOrder)-1][1]:= J;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::CreateScenarioObjects ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FStaticModels.Count-1 do StaticModels[I].CreateScenarioObjects;
+  for I:= 0 to FDynamicModels.Count-1 do Models[I].CreateScenarioObjects;
+  BuildRenderOrders;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::DestroyScenarioObjects ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FDynamicModels.Count-1 do Models[I].DestroyScenarioObjects;
+  for I:= 0 to FStaticModels.Count-1 do StaticModels[I].DestroyScenarioObjects;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DStaticModel Tz3DModelController::CreateStaticModel ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DStaticModel.Create;
+  AddModel(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DDynamicModel Tz3DModelController::GetDynamicModel (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FModels[AIndex] as Iz3DDynamicModel;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelController::GetDynamicModelCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDynamicModels.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DModelRenderOrder Tz3DModelController::GetDynamicRenderOrder ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDynamicRenderOrder;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DStaticModel Tz3DModelController::GetStaticModel (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStaticModels[AIndex] as Iz3DStaticModel;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelController::GetStaticModelCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStaticModels.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DModelRenderOrder Tz3DModelController::GetStaticRenderOrder ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStaticRenderOrder;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelController::RemoveModel (const Iz3DModel AModel 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if z3DSupports(AModel, Iz3DStaticModel) then
+  FStaticModels.Remove(AModel) else FDynamicModels.Remove(AModel);
+  z3DModelController.BuildRenderOrders;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DModelController::SetDynamicModel (const Integer AIndex ,
+const Iz3DDynamicModel Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FModels[AIndex]:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DModelController::SetStaticModel (const Integer AIndex ,
+const Iz3DStaticModel Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FStaticModels[AIndex]:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+IInterfaceList Tz3DModelController::GetDynamicModelList ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDynamicModels;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+IInterfaceList Tz3DModelController::GetStaticModelList ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStaticModels;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::ProcessStaticLighting ()
+
+/*
+var
+ FKeepProcessing: Boolean;
+    I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if FTEMP then Exit;
+  FTEMP:= True;
+
+  // Generate the direct lighting and ambient lightmaps
+  for I:= 0 to StaticModelCount - 1 do
+  StaticModels[I].ProcessStaticLighting(z3dlmpsBeginGeneration);
+
+  // Generate the radiosity lightmaps
+  for I:= 0 to StaticModelCount - 1 do
+  StaticModels[I].ProcessStaticLighting(z3dlmpsBeginRadiosity);
+  FKeepProcessing:= True;
+  while FKeepProcessing dobegin    FKeepProcessing:= False;
+    for I:= 0 to StaticModelCount - 1 do
+    if StaticModels[I].ProcessStaticLighting(z3dlmpsBeginRadiosityBounce) then
+    FKeepProcessing:= True;
+    for I:= 0 to StaticModelCount - 1 do
+    StaticModels[I].ProcessStaticLighting(z3dlmpsEndRadiosityBounce);
+ end
+  for I:= 0 to StaticModelCount - 1 do
+  StaticModels[I].ProcessStaticLighting(z3dlmpsEndRadiosity);
+
+  // End the lightmap generation process
+  for I:= 0 to StaticModelCount - 1 do
+  StaticModels[I].ProcessStaticLighting(z3dlmpsEndGeneration);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::BuildVertexFormats ()
+{
+#ifndef DOXYGEN_SKIP
+  // Build the static model vertex format
+  with FStaticModelVertexFormat dobegin    BeginUpdate;
+    try
+      ClearElements;
+      AddElement(0, z3dvefFloat3, z3dvemDefault, z3dveuPosition, 0);
+      AddElement(0, z3dvefFloat3, z3dvemDefault, z3dveuNormal, 0);
+      AddElement(0, z3dvefFloat3, z3dvemDefault, z3dveuTangent, 0);
+      AddElement(0, z3dvefFloat2, z3dvemDefault, z3dveuTexCoord, 0);
+      AddElement(0, z3dvefFloat2, z3dvemDefault, z3dveuTexCoord, 1);
+    finally
+      EndUpdate;
+   end
+ end
+
+  // Build the dynamic model vertex format
+  with FModelVertexFormat dobegin    BeginUpdate;
+    try
+      ClearElements;
+      AddElement(0, z3dvefFloat3, z3dvemDefault, z3dveuPosition, 0);
+      AddElement(0, z3dvefFloat3, z3dvemDefault, z3dveuNormal, 0);
+      AddElement(0, z3dvefFloat3, z3dvemDefault, z3dveuTangent, 0);
+      AddElement(0, z3dvefFloat2, z3dvemDefault, z3dveuTexCoord, 0);
+    finally
+      EndUpdate;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::BuildRenderOrders ()
+{
+#ifndef DOXYGEN_SKIP
+  // Build the ordered access index list
+  BuildRenderOrder(FStaticModels, FStaticRenderOrder);
+  BuildRenderOrder(FModels, FRenderOrder);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelController::z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if ACaller <> z3dcocResetDevice then CreateScenarioObjects;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelController::z3DDestroyScenarioObjects (const Tz3DDestroyObjectCaller ACaller 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if ACaller <> z3ddocLostDevice then DestroyScenarioObjects;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::z3DFrameMove ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+  if not z3DGlobalEngine.Scenario.Enabled then Exit;
+  for I:= 0 to FStaticModels.Count-1 do StaticModels[I].FrameMove;
+  for I:= 0 to FDynamicModels.Count-1 do Models[I].FrameMove;
+  BuildRenderOrders;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::z3DFrameRender ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+
+  // Process the static lighting on the GPU if needed 
+  if FWaitingGPUProcessStaticLighting thenbegin    ProcessStaticLighting;
+    FWaitingGPUProcessStaticLighting:= False;
+ end
+
+  if not z3DGlobalEngine.Scenario.Enabled then Exit;
+  if z3DGlobalEngine.Renderer.RenderStage <> z3drsDepth then Exit;
+  
+  if Length(StaticRenderOrder) > 0 thenbegin    FStaticModelVertexFormat.Apply;
+    for I:= 0 to Length(StaticRenderOrder)-1 do
+    StaticModels[StaticRenderOrder[I][0]].Instances[StaticRenderOrder[I][1]].FrameRender;
+ end
+
+  if Length(RenderOrder) > 0 thenbegin    FDynamicModelVertexFormat.Apply;
+    for I:= 0 to Length(DynamicRenderOrder)-1 do
+    Models[RenderOrder[I][0]].Instances[RenderOrder[I][1]].FrameRender;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::z3DLightingRender ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+  if Length(StaticRenderOrder) > 0 thenbegin    FStaticModelVertexFormat.Apply;
+    for I:= 0 to Length(StaticRenderOrder)-1 do
+    StaticModels[StaticRenderOrder[I][0]].Instances[StaticRenderOrder[I][1]].FrameRenderAmbient;
+ end
+
+  if Length(RenderOrder) > 0 thenbegin    FDynamicModelVertexFormat.Apply;
+    for I:= 0 to Length(DynamicRenderOrder)-1 do
+    Models[RenderOrder[I][0]].Instances[RenderOrder[I][1]].FrameRenderAmbient;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelController::z3DDirectLightRender ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+  if Length(StaticRenderOrder) > 0 thenbegin    FStaticModelVertexFormat.Apply;
+    for I:= 0 to Length(StaticRenderOrder)-1 do
+    StaticModels[StaticRenderOrder[I][0]].Instances[StaticRenderOrder[I][1]].FrameRenderDirectLighting;
+ end
+
+  if Length(RenderOrder) > 0 thenbegin    FDynamicModelVertexFormat.Apply;
+    for I:= 0 to Length(DynamicRenderOrder)-1 do
+    Models[RenderOrder[I][0]].Instances[RenderOrder[I][1]].FrameRenderDirectLighting;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DVertexFormat Tz3DModelController::GetDynamicVertexFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDynamicModelVertexFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DVertexFormat Tz3DModelController::GetStaticVertexFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStaticModelVertexFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelController::z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if AStage = z3dssCreatingLightingSystem then FWaitingGPUProcessStaticLighting:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelController::CurrentVisibleInstances ()
+
+/*
+var
+ I, J: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= 0;
+  for I:= 0 to StaticModelCount-1 do
+  for J:= 0 to StaticModels[I].InstanceCount-1 do
+  if StaticModels[I].Instances[J].CurrentlyVisible then Inc(Result);
+  for I:= 0 to DynamicModelCount-1 do
+  for J:= 0 to DynamicModels[I].InstanceCount-1 do
+  if Models[I].Instances[J].CurrentlyVisible then Inc(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelController::CurrentSceneInstances ()
+
+/*
+var
+ I, J: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= 0;
+  for I:= 0 to StaticModelCount-1 do
+  for J:= 0 to StaticModels[I].InstanceCount-1 do
+  Inc(Result);
+  for I:= 0 to DynamicModelCount-1 do
+  for J:= 0 to DynamicModels[I].InstanceCount-1 do
+  Inc(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelController::CurrentScenePolygons ()
+
+/*
+var
+ I, J: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= 0;
+  for I:= 0 to StaticModelCount-1 do
+  for J:= 0 to StaticModels[I].InstanceCount-1 do
+  Inc(Result, StaticModels[I].FaceCount);
+  for I:= 0 to DynamicModelCount-1 do
+  for J:= 0 to DynamicModels[I].InstanceCount-1 do
+  Inc(Result, Models[I].LODFaceCount[Models[I].Instances[J].MeshLOD]);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelController::CurrentVisiblePolygons ()
+
+/*
+var
+ I, J: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= 0;
+  for I:= 0 to StaticModelCount-1 do
+  for J:= 0 to StaticModels[I].InstanceCount-1 do
+  if StaticModels[I].Instances[J].CurrentlyVisible then
+  Inc(Result, StaticModels[I].FaceCount);
+  for I:= 0 to DynamicModelCount-1 do
+  for J:= 0 to DynamicModels[I].InstanceCount-1 do
+  if Models[I].Instances[J].CurrentlyVisible then
+  Inc(Result, Models[I].LODFaceCount[Models[I].Instances[J].MeshLOD]);
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DModelSubset */ 
+
+   
+Tz3DModelSubset::Tz3DModelSubset (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FModel:= AOwner as Iz3DModel;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DModel */ 
+
+   
+Tz3DModel::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FOSBoundingBox:= z3DBoundingBox;
+  FBoundingBox:= z3DBoundingBox;
+  FAutoGenerateTexCoords:= True;
+  FOSBoundingSphere:= z3DBoundingSphere;
+  FBoundingSphere:= z3DBoundingSphere;
+  FScale:= z3DFloat3;
+  FFaceCount:= 0;
+  GetMem(FFileName, 255);
+  GetMem(FName, 255);
+  FInstancingMethod:= z3dimTransform;
+  FLockAspectRatio:= True;
+  FLockTexCoordsAspectRatio:= True;
+  FShape:= z3dsosCube;
+  FSubsets:= TInterfaceList.Create;
+  FTexCoordsScale:= 1;
+  FVertexCount:= 0;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::LoadFromFile (const PWideChar AFileName 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FileName:= AFileName;
+  CreateModel;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SaveToFile (const PWideChar AFileName 
+)
+{
+#ifndef DOXYGEN_SKIP
+/*  if LowerCase(ExtractFileExt(AFileName)) = '.'+LowerCase(z3dmfExtension) then
+  z3DFileSystemController.ModelFileSystem.SaveModel(Self, AFileName) else*/ 
+  if LowerCase(ExtractFileExt(AFileName)) = '.x' thenbegin    if FAILED(D3DXSaveMeshToXW(AFileName, FMesh, nil, nil, nil, 0, D3DXF_FILEFORMAT_BINARY)) thenbegin      z3DTrace('Iz3DModel.SaveToFile: D3DXSaveMeshToX failed', z3dtkWarning);
+      Exit;
+   end
+ endelsebegin    z3DTrace(PWideChar(WideString('Iz3DModel.SaveToFile: Unknown file extension ('+LowerCase(ExtractFileExt(AFileName))+')')), z3dtkWarning) 
+    Exit;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::CreateMesh ()
+
+/*
+var
+ FAdjacencyBuffer: ID3DXBuffer;
+    FSourceSubsetCount: Integer;
+    FMtrlBuffer: ID3DXBuffer;
+    F3DSFile: Tz3D3DSFile;
+    FD3DXMtrls: PD3DXMaterial;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Load the mesh from a file
+/*  if LowerCase(ExtractFileExt(FFileName)) = '.'+LowerCase(z3dmfExtension) then
+  z3DFileSystemController.ModelFileSystem.LoadModel(Self, FFileName) else*/ 
+  if LowerCase(ExtractFileExt(FFileName)) = '.x' thenbegin    if FAILED(D3DXLoadMeshFromXW(FFileName, D3DXMESH_MANAGED, z3DCore_GetD3DDevice,
+      @FAdjacencyBuffer, @FMtrlBuffer, nil, @FSourceSubsetCount, FMesh)) thenbegin      z3DTrace('Iz3DModel.CreateModel failed: D3DXLoadMeshFromX failed', z3dtkWarning);
+      Exit;
+   end
+ endelse
+  if LowerCase(ExtractFileExt(FFileName)) = '.3ds' thenbegin    try
+      FMesh:= F3DSFile.Load(FFileName) 
+      FSourceSubsetCount:= 1;
+    except
+      z3DTrace('Iz3DModel.CreateModel failed: 3DSFile.Load failed', z3dtkWarning);
+      Exit;
+   end
+ endelsebegin    z3DTrace(PWideChar(WideString('Iz3DModel.CreateModel failed: Unknown file extension ('+LowerCase(ExtractFileExt(FFileName))+')')), z3dtkWarning) 
+    Exit;
+ end
+  if FAdjacencyBuffer <> nil then
+  if FAILED(FMesh.OptimizeInplace(D3DXMESHOPT_COMPACT or D3DXMESHOPT_ATTRSORT or D3DXMESHOPT_VERTEXCACHE,
+    FAdjacencyBuffer.GetBufferPointer, nil, nil, nil)) thenbegin    z3DTrace('Iz3DModel.CreateModel failed: OptimizeInplace failed', z3DtkWarning);
+    Exit;
+ end
+
+  // Fill the mesh information
+  FVertexCount:= FMesh.GetNumVertices;
+  FFaceCount:= FMesh.GetNumFaces;
+  FBytesPerVertex:= FMesh.GetNumBytesPerVertex;
+
+  // Create the materials
+  if FMtrlBuffer <> nil thenbegin    FD3DXMtrls:= PD3DXMaterial(FMtrlBuffer.GetBufferPointer);
+    CreateSubsets(FD3DXMtrls, FSourceSubsetCount);
+ endelsebegin    GetMem(FD3DXMtrls, SizeOf(TD3DXMaterial)) 
+    FD3DXMtrls.MatD3D.Diffuse:= D3DXColor(1, 1, 1, 1);
+    FD3DXMtrls.pTextureFilename:= nil;
+    CreateSubsets(FD3DXMtrls, 1);
+ end
+  FAdjacencyBuffer:= nil;
+  FMtrlBuffer:= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::CreateModel ()
+{
+#ifndef DOXYGEN_SKIP
+  CreateMesh;
+  SetDeclaration(VertexFormat.GetDeclaration);
+  CreateLODMeshes;
+  ComputeBounds;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::CreateLODMeshes ()
+
+/*
+var
+ FOldAdjacency: PDWORD;
+    FNewAdjacency: PDWORD;
+    FD3DXTempMesh: ID3DXMesh;
+    FD3DXPMesh: ID3DXPMesh;
+    FVertexFactor: Integer;
+    FEpsilons: TD3DXWeldEpsilons;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if LODMeshes[z3dmmlHigh] <> nil then Exit;
+  try
+    GetMem(FOldAdjacency, SizeOf(DWORD) * Mesh.GetNumFaces * 3);
+    GetMem(FNewAdjacency, SizeOf(DWORD) * Mesh.GetNumFaces * 3);
+  except
+    on EOutOfMemory dobegin      z3DTrace('Iz3DModel.CreateLODMeshes failed (Out of memory)', z3DtkError);
+      Exit;
+   end
+ end
+  Mesh.GenerateAdjacency(1e-2, FOldAdjacency);
+
+  if FAILED(D3DXCleanMesh(D3DXCLEAN_SIMPLIFICATION, FMesh, FOldAdjacency, FD3DXTempMesh,
+  FNewAdjacency, nil)) then z3DTrace('Iz3DModel.CreateLODMeshes failed: D3DXCleanMesh failed', z3DtkError);
+  if (FD3DXTempMesh = Mesh) thenbegin    if FAILED(FMesh.CloneMesh(FMesh.GetOptions or D3DXMESH_MANAGED, Pointer(VertexFormat.GetDeclaration),
+    z3DCore_GetD3DDevice, FD3DXTempMesh)) then z3DTrace('Iz3DModel.CreateLODMeshes failed: D3DXCloneMesh failed', z3DtkError);
+    FD3DXTempMesh.GenerateAdjacency(1e-2, FNewAdjacency);
+ end
+
+  ZeroMemory(@FEpsilons, SizeOf(TD3DXWeldEpsilons));
+  if FAILED(D3DXWeldVertices(FD3DXTempMesh, 0, @FEpsilons, FNewAdjacency, FNewAdjacency, nil, nil)) then
+  z3DTrace('Iz3DModel.CreateLODMeshes failed: D3DXWeldVertices failed', z3DtkError);
+
+  if FAILED(D3DXValidMesh(FD3DXTempMesh, FNewAdjacency, nil)) then
+  z3DTrace('Iz3DModel.CreateLODMeshes failed: D3DXValidMesh failed', z3DtkError);
+
+  if FAILED(D3DXGeneratePMesh(FD3DXTempMesh, FNewAdjacency, nil, nil, 1, D3DXMESHSIMP_VERTEX, FD3DXPMesh)) then
+  z3DTrace('Iz3DModel.CreateLODMeshes failed: D3DXGeneratePMesh failed', z3DtkError);
+
+  // Create hi-res mesh
+  if FAILED(FD3DXPMesh.ClonePMesh(D3DXMESH_MANAGED or D3DXMESH_VB_SHARE, Pointer(VertexFormat.GetDeclaration), z3DCore_GetD3DDevice,
+  FLODMeshes[z3dmmlHigh])) then z3DTrace('Iz3DModel.CreateLODMeshes failed: Could not create hi-res mesh (ClonePMesh failed)', z3DtkError);
+
+  // Create mid-res mesh
+  FVertexFactor:= (FD3DXPMesh.GetMaxVertices - FD3DXPMesh.GetMinVertices) div 2;
+  if FAILED(FD3DXPMesh.ClonePMesh(D3DXMESH_MANAGED or D3DXMESH_VB_SHARE, Pointer(VertexFormat.GetDeclaration), z3DCore_GetD3DDevice,
+  FLODMeshes[z3dmmlMid])) then z3DTrace('Iz3DModel.CreateLODMeshes failed: Could not create mid-res mesh (ClonePMesh failed)', z3DtkError);
+  if FAILED(FLODMeshes[z3dmmlMid].TrimByVertices(FD3DXPMesh.GetMinVertices + FVertexFactor, FD3DXPMesh.GetMinVertices + FVertexFactor, nil, nil)) then
+  z3DTrace('Iz3DModel.CreateLODMeshes failed: Could not trim mid-res mesh (TrimByVertices failed)', z3DtkError);
+  if FAILED(FLODMeshes[z3dmmlMid].OptimizeBaseLOD(D3DXMESHOPT_VERTEXCACHE, nil)) then
+  z3DTrace('Iz3DModel.CreateLODMeshes failed: Could not optimize mid-res mesh (OptimizeBaseLOD failed)', z3DtkError);
+
+  // Create low-res mesh
+  if FAILED(FD3DXPMesh.ClonePMesh(D3DXMESH_MANAGED or D3DXMESH_VB_SHARE, Pointer(VertexFormat.GetDeclaration), z3DCore_GetD3DDevice,
+  FLODMeshes[z3dmmlLow])) then z3DTrace('Iz3DModel.CreateLODMeshes failed: Could not create low-res mesh (ClonePMesh failed)', z3DtkError);
+  if FAILED(FLODMeshes[z3dmmlLow].TrimByVertices(FD3DXPMesh.GetMinVertices, FD3DXPMesh.GetMinVertices, nil, nil)) then
+  z3DTrace('Iz3DModel.CreateLODMeshes failed: Could not trim low-res mesh (TrimByVertices failed)', z3DtkError);
+  if FAILED(FLODMeshes[z3dmmlLow].OptimizeBaseLOD(D3DXMESHOPT_VERTEXCACHE, nil)) then
+  z3DTrace('Iz3DModel.CreateLODMeshes failed: Could not optimize low-res mesh (OptimizeBaseLOD failed)', z3DtkError);
+
+  // Set the LOD meshes resolution
+  FLODMeshes[z3dmmlHigh].SetNumVertices(FD3DXPMesh.GetMaxVertices);
+  FLODMeshes[z3dmmlMid].SetNumVertices(FD3DXPMesh.GetMinVertices + FVertexFactor);
+  FLODMeshes[z3dmmlLow].SetNumVertices(FD3DXPMesh.GetMinVertices);
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DModel::CreateSubsets (const PD3DXMaterial AD3DXMtrls ,
+const Integer ACount 
+)
+
+/*
+var
+ I: Integer;
+    FSubset: Iz3DModelSubset;
+    FExistent: Boolean;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if AD3DXMtrls = nil thenbegin    z3DTrace('Iz3DModel.CreateSubsets failed (FD3DXMtrls is NULL)', z3DtkError);
+    Exit;
+ end
+  if ACount <= 0 thenbegin    z3DTrace('Iz3DModel.CreateSubsets ignored (Subset count is 0)');
+    Exit;
+ end
+  for I:= 0 to ACount - 1 dobegin    if FSubsets.Count > I thenbegin      FSubset:= FSubsets[I] as Iz3DModelSubset;
+      FExistent:= True;
+   endelsebegin      FSubset:= Tz3DModelSubset.Create(Self) 
+      FSubsets.Add(FSubset);
+      FExistent:= False;
+   end
+    if FSubset.Material <> nil thenbegin      with PD3DXMaterialArray(AD3DXMtrls)[I].MatD3D dobegin        if not FExistent thenbegin          FSubset.Material.ColorDiffuse.From(Diffuse);
+          FSubset.Material.ColorEmissive.From(Emissive);
+          FSubset.Material.SpecularAmount:= Power / 100;
+       end
+     end
+
+      // Enable the texture if the mesh has one
+      z3DMaterialController.MaterialTextureFormat.Expand(FSubset.Material.Texture.FileName, z3DWideBuffer);
+      if not FileExists(z3DWideBuffer) and
+      (PD3DXMaterialArray(AD3DXMtrls)[I].pTextureFilename <> nil) thenbegin        StringToWideChar(ExtractFilePath(FFileName)+PD3DXMaterialArray(AD3DXMtrls)[I].pTextureFilename, FSubset.Material.Texture.FileName, 255);
+        FSubset.Material.Texture.Enabled:= FileExists(FSubset.Material.Texture.FileName);
+     endelse FSubset.Material.Texture.Enabled:= FileExists(z3DWideBuffer) 
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::GenerateTexCoords ()
+
+
+                  
+GetCoords (const TD3DXVector2 AV1 ,
+const TD3DXVector2 AV2 ,
+const TD3DXVector2 AV3 ,
+Single &AMinU ,
+Single &AMaxU ,
+Single &AMinV ,
+Single &AMaxV ,
+Single &ADeltaU ,
+Single &ADeltaV 
+)
+{
+#ifndef DOXYGEN_SKIP
+    // Get the texture min and max coordinates
+    AMinU:= AV1.x;
+    AMaxU:= AMinU;
+    AMinV:= AV1.y;
+    AMaxV:= AMinV;
+    if AV2.x < AMinU then AMinU:= AV2.x;
+    if AV2.y < AMinV then AMinV:= AV2.y;
+    if AV2.x > AMaxU then AMaxU:= AV2.x;
+    if AV2.y > AMaxV then AMaxV:= AV2.y;
+    if AV3.x < AMinU then AMinU:= AV3.x;
+    if AV3.y < AMinV then AMinV:= AV3.y;
+    if AV3.x > AMaxU then AMaxU:= AV3.x;
+    if AV3.y > AMaxV then AMaxV:= AV3.y;
+    ADeltaU:= (AMaxU - AMinU);
+    ADeltaV:= (AMaxV - AMinV);
+ 
+#endif /* DOXYGEN_SKIP */
+};
+/*
+var
+ I, J: Integer;
+    FVB: Pointer;
+    FStaticVB: Pz3DStaticModelVertexArray;
+    FDynamicVB: Pz3DDynamicModelVertexArray;
+    FIB: PWordArray;
+    FNormal: Iz3DFloat3;
+    FFactorU, FFactorV, FUMin, FVMin, FUMax, FVMax, FUDelta, FVDelta: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FVB:= LockVertices;
+  FIB:= LockIndices;
+  try
+    if Self is Tz3DStaticModel thenbegin      FStaticVB:= Pz3DStaticModelVertexArray(FVB);
+      for I:= 0 to FaceCount-1 dobegin        FFactorU:= 1;
+        FFactorV:= 1;
+        FNormal:= z3DGetNormal(z3DFloat3.From(FStaticVB[FIB[I*3]].Position),
+        z3DFloat3.From(FStaticVB[FIB[I*3+1]].Position), z3DFloat3.From(FStaticVB[FIB[I*3+2]].Position));
+        FNormal.Normalize;
+        if (Abs(FNormal.X) > Abs(FNormal.Y)) and (Abs(FNormal.X) > Abs(FNormal.Z)) thenbegin          if BoundingBox.Dimensions.Y < BoundingBox.Dimensions.Z then
+          FFactorU:= BoundingBox.Dimensions.Y / BoundingBox.Dimensions.Z else
+          FFactorV:= BoundingBox.Dimensions.Z / BoundingBox.Dimensions.Y;
+          for J:= 0 to 2 dobegin            FStaticVB[FIB[I*3+J]].TexCoord.x:= (FStaticVB[FIB[I*3+J]].Position.y);
+            FStaticVB[FIB[I*3+J]].TexCoord.y:= (FStaticVB[FIB[I*3+J]].Position.z);
+         end
+       endelse
+        if (Abs(FNormal.Y) > Abs(FNormal.X)) and (Abs(FNormal.Y) > Abs(FNormal.Z)) thenbegin          if BoundingBox.Dimensions.X < BoundingBox.Dimensions.Z then
+          FFactorU:= BoundingBox.Dimensions.X / BoundingBox.Dimensions.Z else
+          FFactorV:= BoundingBox.Dimensions.Z / BoundingBox.Dimensions.X 
+          for J:= 0 to 2 dobegin            FStaticVB[FIB[I*3+J]].TexCoord.x:= (FStaticVB[FIB[I*3+J]].Position.x);
+            FStaticVB[FIB[I*3+J]].TexCoord.y:= (FStaticVB[FIB[I*3+J]].Position.z);
+         end
+       endelsebegin          if BoundingBox.Dimensions.X < BoundingBox.Dimensions.Y then
+          FFactorU:= BoundingBox.Dimensions.X / BoundingBox.Dimensions.Y else
+          FFactorV:= BoundingBox.Dimensions.Y / BoundingBox.Dimensions.X 
+          for J:= 0 to 2 dobegin            FStaticVB[FIB[I*3+J]].TexCoord.x:= (FStaticVB[FIB[I*3+J]].Position.x);
+            FStaticVB[FIB[I*3+J]].TexCoord.y:= (FStaticVB[FIB[I*3+J]].Position.y);
+         end
+       end
+
+        // Obtain the absolute texcoords
+        GetCoords(FStaticVB[FIB[I*3]].TexCoord, FStaticVB[FIB[I*3+1]].TexCoord,
+        FStaticVB[FIB[I*3+2]].TexCoord, FUMin, FUMax, FVMin, FVMax, FUDelta, FVDelta);
+
+        for J:= 0 to 2 dobegin          FStaticVB[FIB[I*3+J]].TexCoord.x:= ((FStaticVB[FIB[I*3+J]].TexCoord.x - FUMin) / FUDelta) * FTexCoordsScale * FFactorU;
+          FStaticVB[FIB[I*3+J]].TexCoord.y:= ((FStaticVB[FIB[I*3+J]].TexCoord.y - FUMin) / FUDelta) * FTexCoordsScale * FFactorV;
+       end
+     end
+   endelsebegin      FVB:= Pz3DModelVertexArray(FVB) 
+      for I:= 0 to FaceCount-1 dobegin        FFactorU:= 1;
+        FFactorV:= 1;
+        FNormal:= z3DGetNormal(z3DFloat3.From(FVB[FIB[I*3]].Position),
+        z3DFloat3.From(FVB[FIB[I*3+1]].Position), z3DFloat3.From(FVB[FIB[I*3+2]].Position));
+        FNormal.Normalize;
+        if (Abs(FNormal.X) > Abs(FNormal.Y)) and (Abs(FNormal.X) > Abs(FNormal.Z)) thenbegin          if BoundingBox.Dimensions.Y < BoundingBox.Dimensions.Z then
+          FFactorU:= BoundingBox.Dimensions.Y / BoundingBox.Dimensions.Z else
+          FFactorV:= BoundingBox.Dimensions.Z / BoundingBox.Dimensions.Y;
+          for J:= 0 to 2 dobegin            FVB[FIB[I*3+J]].TexCoord.x:= (FVB[FIB[I*3+J]].Position.y);
+            FVB[FIB[I*3+J]].TexCoord.y:= (FVB[FIB[I*3+J]].Position.z);
+         end
+       endelse
+        if (Abs(FNormal.Y) > Abs(FNormal.X)) and (Abs(FNormal.Y) > Abs(FNormal.Z)) thenbegin          if BoundingBox.Dimensions.X < BoundingBox.Dimensions.Z then
+          FFactorU:= BoundingBox.Dimensions.X / BoundingBox.Dimensions.Z else
+          FFactorV:= BoundingBox.Dimensions.Z / BoundingBox.Dimensions.X 
+          for J:= 0 to 2 dobegin            FVB[FIB[I*3+J]].TexCoord.x:= (FVB[FIB[I*3+J]].Position.x);
+            FVB[FIB[I*3+J]].TexCoord.y:= (FVB[FIB[I*3+J]].Position.z);
+         end
+       endelsebegin          if BoundingBox.Dimensions.X < BoundingBox.Dimensions.Y then
+          FFactorU:= BoundingBox.Dimensions.X / BoundingBox.Dimensions.Y else
+          FFactorV:= BoundingBox.Dimensions.Y / BoundingBox.Dimensions.X 
+          for J:= 0 to 2 dobegin            FVB[FIB[I*3+J]].TexCoord.x:= (FVB[FIB[I*3+J]].Position.x);
+            FVB[FIB[I*3+J]].TexCoord.y:= (FVB[FIB[I*3+J]].Position.y);
+         end
+       end
+
+        // Obtain the absolute texcoords
+        GetCoords(FVB[FIB[I*3]].TexCoord, FVB[FIB[I*3+1]].TexCoord,
+        FVB[FIB[I*3+2]].TexCoord, FUMin, FUMax, FVMin, FVMax, FUDelta, FVDelta);
+
+        for J:= 0 to 2 dobegin          FVB[FIB[I*3+J]].TexCoord.x:= ((FVB[FIB[I*3+J]].TexCoord.x - FUMin) / FUDelta) * FTexCoordsScale * FFactorU;
+          FVB[FIB[I*3+J]].TexCoord.y:= ((FVB[FIB[I*3+J]].TexCoord.y - FUMin) / FUDelta) * FTexCoordsScale * FFactorV;
+       end
+     end
+   end
+
+  finally
+    UnlockVertices;
+    UnlockIndices;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBoundingBox Tz3DModel::GetBoundingBox ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBoundingBox;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DModel::GetAutoGenerateTexCoords ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAutoGenerateTexCoords;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBoundingSphere Tz3DModel::GetBoundingSphere ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBoundingSphere;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModel::GetFaceCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFaceCount;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DModel::GetFileName ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFileName;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DModelInstance Tz3DModel::GetInstance (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FInstances[AIndex] as Iz3DModelInstance;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DModelInstancingMethod Tz3DModel::GetInstancingMethod ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FInstancingMethod;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DModel::GetLockAspectRatio ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLockAspectRatio;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DModel::GetLockTexCoordsAspectRatio ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLockTexCoordsAspectRatio;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DScenarioObjectShape Tz3DModel::GetShape ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShape;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModel::GetSubsetCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSubsets.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DModelSubset Tz3DModel::GetSubsets (const Integer I 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSubsets[I] as Iz3DModelSubset;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DModel::GetTexCoordsScale ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTexCoordsScale;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModel::GetVertexCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FVertexCount;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+PWordArray Tz3DModel::LockIndices (const DWORD AFlags 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FAILED(FMesh.LockIndexBuffer(AFlags, Pointer(Result))) thenbegin    z3DTrace('Iz3DModel.LockIndices failed: Could not lock index buffer', z3DtkWarning);
+    Exit;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Pointer Tz3DModel::LockVertices (const DWORD AFlags 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FAILED(FMesh.LockVertexBuffer(AFlags, Pointer(Result))) thenbegin    z3DTrace('Iz3DModel.LockVertices failed: Could not lock vertex buffer', z3DtkWarning);
+    Exit;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetAutoGenerateTexCoords (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAutoGenerateTexCoords:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetDeclaration (const PD3DVertexElement9 ADeclaration 
+)
+
+/*
+var
+ FTempMesh: ID3DXMesh;
+    FHadNormal, FHadTexCoord, FHadLightCoord, FHadTangent: Boolean;
+    FIndex: Integer;
+    FOldDecl, FNewDecl: TFVFDeclaration;
+    FHaveNormal, FHaveTexCoord, FHaveLightCoord, FHaveTangent: Boolean;
+    FNewMesh: ID3DXMesh;
+    FAdjacency: PDWORD;
+    FPartialEdgeThreshold: Single;
+    FSingularPointThreshold: Single;
+    FNormalEdgeThreshold: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if z3DTraceCondition(FMesh = nil, 'Iz3DModel.SetDeclaration failed (FMesh is NULL)', z3DtkWarning) then Exit;
+  if FAILED(FMesh.CloneMesh(FMesh.GetOptions, ADeclaration, z3DCore_GetD3DDevice, FTempMesh)) thenbegin    z3DTrace('Iz3DModel.SetDeclaration failed (CloneMesh failed)', z3DtkWarning);
+    Exit;
+ end
+
+  // Compute normals and tangents if requested
+  FHadNormal:= False;
+  FHadTexCoord:= False;
+  FHadLightCoord:= False;
+  FHadTangent:= False;
+  if SUCCEEDED(FMesh.GetDeclaration(FOldDecl)) thenbegin    for FIndex:= 0 to D3DXGetDeclLength(@FOldDecl) - 1 dobegin      if (FOldDecl[FIndex].Usage = D3DDECLUSAGE_NORMAL) then FHadNormal:= True;
+      if (FOldDecl[FIndex].Usage = D3DDECLUSAGE_TEXCOORD) and (FOldDecl[FIndex].UsageIndex = 0) then FHadTexCoord:= True;
+      if (FOldDecl[FIndex].Usage = D3DDECLUSAGE_TEXCOORD) and (FOldDecl[FIndex].UsageIndex = 1) then FHadLightCoord:= True;
+      if (FOldDecl[FIndex].Usage = D3DDECLUSAGE_TANGENT) then FHadTangent:= True;
+   end
+ endelse z3DTrace('Iz3DModel.SetDeclaration: Could not retrieve original declaration') 
+  FHaveNormal:= False;
+  FHaveTexCoord:= False;
+  FHaveLightCoord:= False;
+  FHaveTangent:= False;
+  if SUCCEEDED(FTempMesh.GetDeclaration(FNewDecl)) thenbegin    for FIndex:= 0 to D3DXGetDeclLength(@FNewDecl) - 1 dobegin      if (FNewDecl[FIndex].Usage = D3DDECLUSAGE_NORMAL) then FHaveNormal:= True;
+      if (FNewDecl[FIndex].Usage = D3DDECLUSAGE_TEXCOORD) and (FNewDecl[FIndex].UsageIndex = 0) then FHaveTexCoord:= True;
+      if (FNewDecl[FIndex].Usage = D3DDECLUSAGE_TEXCOORD) and (FNewDecl[FIndex].UsageIndex = 1) then FHaveLightCoord:= True;
+      if (FNewDecl[FIndex].Usage = D3DDECLUSAGE_TANGENT) then FHaveTangent:= True;
+   end
+ endelse z3DTrace('Iz3DModel.SetDeclaration: Could not retrieve new declaration') 
+
+  FMesh:= FTempMesh;
+
+  // Compute normals
+  if not FHadNormal and FHaveNormal then
+  if FAILED(D3DXComputeNormals(FMesh, nil)) then
+  z3DTrace('Iz3DModel.SetDeclaration: D3DXComputeNormals failed', z3DtkWarning);
+
+  // Optimize vertices for tangents
+  if FHaveNormal and not FHadTangent and FHaveTangent thenbegin    try
+      GetMem(FAdjacency, SizeOf(DWORD) * FMesh.GetNumFaces * 3);
+    except
+      on EOutOfMemory dobegin        z3DTrace('Iz3DModel.SetDeclaration failed (Out of memory)', z3DtkError);
+        Exit;
+     end
+   end
+    FMesh.GenerateAdjacency(1e-6, FAdjacency);
+    FPartialEdgeThreshold:= 0.01;
+    FSingularPointThreshold:= 0.25;
+    FNormalEdgeThreshold:= 0.01;
+    if FAILED(D3DXComputeTangentFrameEx(FMesh, DWORD(D3DDECLUSAGE_TEXCOORD), 0,
+    DWORD(D3DDECLUSAGE_TANGENT), 0, D3DX_DEFAULT, 0, DWORD(D3DDECLUSAGE_NORMAL), 0,
+    0, FAdjacency, FPartialEdgeThreshold, FSingularPointThreshold, FNormalEdgeThreshold, FNewMesh, nil)) then
+    z3DTrace('Iz3DModel.SetDeclaration: D3DXComputeTangentFrameEx failed', z3DtkWarning) else
+    FMesh:= FNewMesh;
+    FreeMem(FAdjacency);
+ end
+
+  // Compute texcoords
+  if not FHadTexCoord and FHaveTexCoord and FAutoGenerateTexCoords then
+  GenerateTexCoords;
+
+  // Save a flag indicating that light coords need to be computed
+  FComputeLightCoords:= not FHadLightCoord and FHaveLightCoord;
+
+  // Compute tangent frame
+  if FHaveNormal and not FHadTangent and FHaveTangent thenbegin    try
+      GetMem(FAdjacency, SizeOf(DWORD) * FMesh.GetNumFaces * 3);
+    except
+      on EOutOfMemory dobegin        z3DTrace('Iz3DModel.SetDeclaration failed (Out of memory)', z3DtkError);
+        Exit;
+     end
+   end
+    FMesh.GenerateAdjacency(1e-6, FAdjacency);
+    FPartialEdgeThreshold:= 0.01;
+    FSingularPointThreshold:= 0.25;
+    FNormalEdgeThreshold:= 0.01;
+    if FAILED(D3DXComputeTangentFrameEx(FMesh, DWORD(D3DDECLUSAGE_TEXCOORD), 0,
+    DWORD(D3DDECLUSAGE_TANGENT), 0, D3DX_DEFAULT, 0, DWORD(D3DDECLUSAGE_NORMAL), 0,
+    D3DXTANGENT_CALCULATE_NORMALS, FAdjacency, FPartialEdgeThreshold, FSingularPointThreshold,
+    FNormalEdgeThreshold, FNewMesh, nil)) then
+    z3DTrace('Iz3DModel.SetDeclaration: D3DXComputeTangentFrameEx failed', z3DtkWarning) else
+    FMesh:= FNewMesh;
+    FreeMem(FAdjacency);
+ end
+
+  // Refresh current vertex values
+  FVertexCount:= FMesh.GetNumVertices;
+  FFaceCount:= FMesh.GetNumFaces;
+  FBytesPerVertex:= FMesh.GetNumBytesPerVertex;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetInstancingMethod (const Tz3DModelInstancingMethod Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FInstancingMethod:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetLockAspectRatio (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLockAspectRatio:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetLockTexCoordsAspectRatio (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLockTexCoordsAspectRatio:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetShape (const Tz3DScenarioObjectShape Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FShape <> Value thenbegin    FShape:= Value;
+    ComputeBounds;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetTexCoordsScale (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FTexCoordsScale:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::UnlockIndices ()
+{
+#ifndef DOXYGEN_SKIP
+  FMesh.UnlockIndexBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::UnlockVertices ()
+{
+#ifndef DOXYGEN_SKIP
+  FMesh.UnlockVertexBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::CreateScenarioObjects ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  CreateModel;
+  for I:= 0 to InstanceCount-1 do Instances[I].ComputeTransforms;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::DestroyScenarioObjects ()
+{
+#ifndef DOXYGEN_SKIP
+  FMesh:= nil;
+  FLODMeshes[z3dmmlLow]:= nil;
+  FLODMeshes[z3dmmlMid]:= nil;
+  FLODMeshes[z3dmmlHigh]:= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::FrameMove ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FInstances.Count-1 do Instances[I].FrameMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::FrameRender ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to InstanceCount-1 do Instances[I].FrameRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::FrameRenderAmbient ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to InstanceCount-1 do Instances[I].FrameRenderAmbient;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::FrameRenderDirectLighting ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to InstanceCount-1 do Instances[I].FrameRenderDirectLighting;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModel::GetBytesPerVertex ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBytesPerVertex;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DModel::GetScale ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FScale;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::ComputeBounds ()
+{
+#ifndef DOXYGEN_SKIP
+  if FMesh = nil then Exit;
+  FOSBoundingSphere.ComputeFromMesh(FMesh);
+  FOSBoundingBox.ComputeFromMesh(FMesh);
+  if Shape = z3dsosSphere thenbegin    BoundingBox.LowerLeft.X:= - BoundingSphere.Radius;
+    BoundingBox.LowerLeft.Y:= BoundingBox.LowerLeft.X;
+    BoundingBox.LowerLeft.Z:= BoundingBox.LowerLeft.X;
+    BoundingBox.UpperRight.X:= BoundingSphere.Radius;
+    BoundingBox.UpperRight.Y:= BoundingBox.UpperRight.X;
+    BoundingBox.UpperRight.Z:= BoundingBox.UpperRight.X;
+    Scale.X:= FBoundingSphere.Radius / FOSBoundingSphere.Radius;
+    Scale.Y:= Scale.X;
+    Scale.Z:= Scale.X;
+ endelsebegin    BoundingSphere.Radius:= Max(Max(BoundingBox.Dimensions.X, BoundingBox.Dimensions.Y), BoundingBox.Dimensions.Z) / 2 
+    Scale.X:= (BoundingBox.UpperRight.X - BoundingBox.LowerLeft.X) / (FOSBoundingBox.UpperRight.X - FOSBoundingBox.LowerLeft.X);
+    Scale.Y:= (BoundingBox.UpperRight.Y - BoundingBox.LowerLeft.Y) / (FOSBoundingBox.UpperRight.Y - FOSBoundingBox.LowerLeft.Y);
+    Scale.Z:= (BoundingBox.UpperRight.Z - BoundingBox.LowerLeft.Z) / (FOSBoundingBox.UpperRight.Z - FOSBoundingBox.LowerLeft.Z);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                   
+Tz3DModel::RenderMesh (const Iz3DEffect AEffect ,
+const Tz3DModelMeshLOD ALOD = z3dmmlHigh ,
+const Boolean ASetMaterial = True ,
+const Boolean ADirectLighting = True 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  if FMesh = nil then CreateModel;
+
+  if not ASetMaterial then AEffect.Commit;
+  for I:= 0 to SubsetCount-1 dobegin    if ASetMaterial thenbegin    
+      // Set the material properties
+      AEffect.Color['GMaterialDiffuseColor']:= Subsets[I].Material.ColorDiffuse;
+      AEffect.Float3['GMaterialEmissiveColor']:= Subsets[I].Material.ColorEmissive;
+      if ADirectLighting and z3DLightingController.CurrentLight.Effects.Specular then
+      AEffect.Param['GMaterialSpecularAmount']:= Subsets[I].Material.SpecularAmount;
+
+      // Set the material texture
+      if Subsets[I].Material.Texture.Enabled thenbegin        AEffect.Texture['GMaterialTexture']:= Subsets[I].Material.Texture;
+        if ADirectLighting and z3DLightingController.CurrentLight.Effects.NormalMapping then
+        AEffect.Texture['GNormalMapTexture']:= Subsets[I].Material.Texture.NormalMapTexture;
+     endelsebegin        AEffect.Texture['GMaterialTexture']:= z3DMaterialController.DefaultTexture 
+        if ADirectLighting and z3DLightingController.CurrentLight.Effects.NormalMapping then
+        AEffect.Texture['GNormalMapTexture']:= z3DMaterialController.DefaultTexture.NormalMapTexture;
+     end
+
+      // Apply current changes
+      AEffect.Commit;
+   end
+
+    // Draw the mesh
+    if Self is Tz3DStaticModel then FMesh.DrawSubset(I) else
+    LODMeshes[ALOD].DrawSubset(I);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBoundingBox Tz3DModel::GetOSBoundingBox ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOSBoundingBox;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBoundingSphere Tz3DModel::GetOSBoundingSphere ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOSBoundingSphere;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModel::GetInstanceCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FInstances.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DModelSubset Tz3DModel::AddSubset ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DModelSubset.Create(Self);
+  FSubsets.Add(Result); 
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::RemoveSubset (const Iz3DModelSubset ASubset 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FSubsets.Remove(ASubset);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::RemoveInstance (const Iz3DModelInstance AInstance 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FInstances.Remove(AInstance);
+  z3DModelController.BuildRenderOrders;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+IInterfaceList Tz3DModel::GetInstanceList ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FInstances;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+IInterfaceList Tz3DModel::GetSubsetList ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSubsets;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetFileName (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(WideCharToString(Value), FFileName, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+ID3DXMesh Tz3DModel::GetMesh ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMesh;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DLODMeshes Tz3DModel::GetLODMeshes ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLODMeshes;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DModel::GetComputeLightCoords ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FComputeLightCoords;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetComputeLightCoords (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FComputeLightCoords:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DModel::GetName ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FName;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Integer Tz3DModel::IndexOf (const Iz3DModelInstance AInstance 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FInstances.IndexOf(AInstance);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModel::SetName (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(WideCharToString(Value), FName, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DVertexFormat Tz3DModel::GetVertexFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  if z3DSupports(Self, Iz3DStaticModel) then
+  Result:= z3DModelController.StaticVertexFormat else
+  Result:= z3DModelController.DynamicVertexFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Pointer Tz3DModel::LockLODVertices (const Tz3DModelMeshLOD ALOD ,
+const DWORD AFlags 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLockLOD:= ALOD;
+  if FAILED(FLODMeshes[ALOD].LockVertexBuffer(AFlags, Pointer(Result))) thenbegin    z3DTrace('Iz3DModel.LockLODVertices failed: Could not lock vertex buffer', z3DtkWarning);
+    Exit;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::UnlockLODVertices ()
+{
+#ifndef DOXYGEN_SKIP
+  FLODMeshes[FLockLOD].UnlockVertexBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Integer Tz3DModel::GetLODFaceCount (const Tz3DModelMeshLOD ALOD 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FLODMeshes[ALOD] = nil then Result:= 0 else
+  Result:= FLODMeshes[ALOD].GetNumFaces;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Integer Tz3DModel::GetLODVertexCount (const Tz3DModelMeshLOD ALOD 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FLODMeshes[ALOD] = nil then Result:= 0 else
+  Result:= FLODMeshes[ALOD].GetNumVertices;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+PWordArray Tz3DModel::LockLODIndices (const Tz3DModelMeshLOD ALOD ,
+const DWORD AFlags 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLockLOD:= ALOD;
+  if FAILED(FLODMeshes[ALOD].LockIndexBuffer(AFlags, Pointer(Result))) thenbegin    z3DTrace('Iz3DModel.LockLODIndices failed: Could not lock index buffer', z3DtkWarning);
+    Exit;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModel::UnlockLODIndices ()
+{
+#ifndef DOXYGEN_SKIP
+  FLODMeshes[FLockLOD].UnlockIndexBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DModelInstance */ 
+
+   
+Tz3DModelInstance::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FModel:= AOwner as Iz3DModel;
+  FEnableShadows:= True;
+  FLookAt:= z3DFloat3;
+  FLookAt.OnChange:= CenterChanged;
+  Center.OnChange:= CenterChanged;
+  FWorldMatrix:= z3DMatrix;
+  FWorldViewMatrix:= z3DMatrix;
+  FWorldViewProjMatrix:= z3DMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::ComputeTransforms ()
+
+/*
+var
+ FRotation: Iz3DMatrix;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FRotation:= z3DMatrix.RotateX(FLookAt.X);
+  if FLookAt.Y <> 0 then FRotation.Multiply(z3DMatrix.RotateY(FLookAt.Y));
+  if FLookAt.Z <> 0 then FRotation.Multiply(z3DMatrix.RotateZ(FLookAt.Z));
+  if Model.Shape = z3dsosSphere thenbegin    FWorldMatrix.Translation((Center.X / Model.Scale.X) - Model.OSBoundingSphere.Center.X,
+    (Center.Y / Model.Scale.Y) - Model.OSBoundingSphere.Center.Y,
+    (Center.Z / Model.Scale.Z) - Model.OSBoundingSphere.Center.Z);
+ endelsebegin    FWorldMatrix.Translation(Center.X / Model.Scale.X - (Model.OSBoundingBox.LowerLeft.X + Model.OSBoundingBox.UpperRight.X) * 0.5,
+    Center.Y / Model.Scale.Y - (Model.OSBoundingBox.LowerLeft.Y + Model.OSBoundingBox.UpperRight.Y) * 0.5,
+    Center.Z / Model.Scale.Z - (Model.OSBoundingBox.LowerLeft.Z + Model.OSBoundingBox.UpperRight.Z) * 0.5) 
+ end
+  BoundingSphere.Radius:= Model.BoundingSphere.Radius;
+  BoundingSphere.Center.From(Center);
+  BoundingBox.LowerLeft.From(Model.BoundingBox.LowerLeft);
+  BoundingBox.UpperRight.From(Model.BoundingBox.UpperRight);
+  BoundingBox.Center.From(Center);
+  FWorldMatrix.Multiply(FRotation).Multiply(z3DMatrix.Scale(Model.Scale));
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::FrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  ComputeTransforms;
+  ComputeViewTransforms;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::FrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  RenderDepth;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::FrameRenderAmbient ()
+{
+#ifndef DOXYGEN_SKIP
+  case z3DLightingController.Stage of
+
+
+    // Static ambient ligting
+    z3dlrsStaticAmbient:
+      if (Self is Tz3DModelStaticInstance) and Tz3DModelStaticInstance(Self).LightMap.Enabled and
+      Tz3DModelStaticInstance(Self).LightMap.Options.EnableAmbient then
+        RenderAmbientLighting;
+
+    // Dynamic ambient ligting
+    z3dlrsDynamicAmbient:
+      if (Self is Tz3DModelInstance) or not (Tz3DModelStaticInstance(Self).LightMap.Enabled and
+      Tz3DModelStaticInstance(Self).LightMap.Options.EnableAmbient) then
+        RenderAmbientLighting;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::FrameRenderDirectLighting ()
+{
+#ifndef DOXYGEN_SKIP
+  case z3DLightingController.CurrentLight.Stage of
+
+
+    // Static shadow mapping
+    z3ddlrsStaticShadows:
+      if EnableShadows and (Self is Tz3DModelStaticInstance) then
+        RenderShadowMap;
+
+    // Static lighting
+    z3ddlrsStaticLighting:
+      if Self is Tz3DModelStaticInstance and Tz3DModelStaticInstance(Self).LightMap.Enabled then
+        Tz3DModelStaticInstance(Self).RenderStaticLighting;
+
+    // Dynamic shadow mapping
+    z3ddlrsDynamicShadows:
+      if EnableShadows and not ((Self is Tz3DModelStaticInstance) and z3DLightingController.CurrentLight.Static) then
+        RenderShadowMap;
+
+    // Dynamic lighting
+    z3ddlrsDynamicLighting:
+      if not ((Self is Tz3DModelStaticInstance) and Tz3DModelStaticInstance(Self).LightMap.Enabled and
+      z3DLightingController.CurrentLight.Static) then
+        RenderDynamicLighting;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DModelInstance::GetEnableShadows ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableShadows;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DModelInstance::GetLookAt ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLookAt;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DModel Tz3DModelInstance::GetModel ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FModel;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelInstance::SetEnableShadows (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableShadows:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::RenderAmbientLighting ()
+{
+#ifndef DOXYGEN_SKIP
+  if not CurrentlyVisible then Exit;
+  if (Self is Tz3DModelStaticInstance) and Tz3DModelStaticInstance(Self).LightMap.Enabled and
+  Tz3DModelStaticInstance(Self).LightMap.Options.EnableAmbient then
+  z3DLightingController.Effect.Texture['GLightMapLightTexture']:=
+  Tz3DModelStaticInstance(Self).LightMap.AmbientTexture.Texture;
+  SetEffectCommonParams;
+  Model.RenderMesh(z3DLightingController.Effect, FMeshLOD, True, False);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::RenderDynamicLighting ()
+{
+#ifndef DOXYGEN_SKIP
+  if not CurrentlyVisible then Exit;
+  if (z3DLightingController.CurrentLight.Style <> z3dlsDirectional) and
+  (z3DFloat3.From(Center).Subtract(z3DLightingController.CurrentLight.Position).Length >
+  z3DLightingController.CurrentLight.Range + Model.BoundingSphere.Radius) then Exit;
+  SetEffectCommonParams;
+  Model.RenderMesh(z3DLightingController.Effect, FMeshLOD, True, True);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::RenderShadowMap ()
+{
+#ifndef DOXYGEN_SKIP
+  if (z3DLightingController.CurrentLight.Style <> z3dlsDirectional) and
+  (z3DFloat3.From(Center).Subtract(z3DLightingController.CurrentLight.Position).Length >
+  z3DLightingController.CurrentLight.Range + Model.BoundingSphere.Radius) then Exit;
+  SetEffectCommonParams;
+  Model.RenderMesh(z3DLightingController.Effect, FMeshLOD, False, False);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::RenderDepth ()
+{
+#ifndef DOXYGEN_SKIP
+  if not CurrentlyVisible then Exit;
+  SetEffectCommonParams;
+  Model.RenderMesh(z3DGlobalEngine.CoreEffect, FMeshLOD, False, False);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::SetEffectCommonParams ()
+{
+#ifndef DOXYGEN_SKIP
+  if z3DGlobalEngine.Renderer.RenderStage = z3drsDepth thenbegin    z3DGlobalEngine.CoreEffect.Matrix['GWorldViewMatrix']:= FWorldViewMatrix;
+    z3DGlobalEngine.CoreEffect.Matrix['GWorldViewProjectionMatrix']:= FWorldViewProjMatrix;
+ endelsebegin    z3DLightingController.Effect.Matrix['GWorldMatrix']:= FWorldMatrix 
+    z3DLightingController.Effect.Matrix['GWorldViewMatrix']:= FWorldViewMatrix;
+    z3DLightingController.Effect.Matrix['GWorldViewProjectionMatrix']:= FWorldViewProjMatrix;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::ComputeViewTransforms ()
+{
+#ifndef DOXYGEN_SKIP
+  FWorldViewMatrix.From(FWorldMatrix).Multiply(z3DGlobalEngine.ViewMatrix);
+  FWorldViewProjMatrix.From(FWorldViewMatrix).Multiply(z3DGlobalEngine.ProjectionMatrix);
+  ViewCenter.XYZ:= Center.XYZ;
+  ViewCenter.W:= 1;
+  ViewCenter.Transform(z3DGlobalEngine.ViewMatrix).Transform(z3DGlobalEngine.ProjectionMatrix);
+
+  // Set the current LOD mesh based on camera distance
+  if ViewCenter.Z-BoundingSphere.Radius > 10 then MeshLOD:= z3dmmlLow else
+  if ViewCenter.Z-BoundingSphere.Radius > 5 then MeshLOD:= z3dmmlMid else
+  MeshLOD:= z3dmmlHigh;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelInstance::CenterChanged (const Iz3DBase Sender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if z3DGlobalEngine.Scenario.Enabled then ComputeTransforms;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DModelInstance::CurrentlyVisible ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= (ViewCenter.Z > -Model.BoundingSphere.Radius) and
+  (ViewCenter.Z < z3DGlobalEngine.Scenario.Bounds.Radius * 2 + Model.BoundingSphere.Radius);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DModelInstance::GetWorldMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWorldMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DScenarioObjectShape Tz3DModelInstance::GetShape ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Model.Shape;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelInstance::GetSubsetCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Model.SubsetCount;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DScenarioObjectSubset Tz3DModelInstance::GetSubsets (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Model.Subsets[AIndex];
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::Hide ()
+{
+#ifndef DOXYGEN_SKIP
+  Visible:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelInstance::Show ()
+{
+#ifndef DOXYGEN_SKIP
+  Visible:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DModelMeshLOD Tz3DModelInstance::GetMeshLOD ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMeshLOD;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelInstance::SetMeshLOD (const Tz3DModelMeshLOD Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMeshLOD:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelInstance::GetInstanceIndex ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Model.IndexOf(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DModelInstance::GetIndex ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FModel.IndexOf(Self as Iz3DModelInstance);
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DStaticModel */ 
+
+  
+Iz3DModelStaticInstance Tz3DStaticModel::CreateInstance ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DModelStaticInstance.Create(Self);
+  FInstances.Add(Result as Iz3DModelInstance);
+  z3DModelController.BuildRenderOrders;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DStaticModel::Init ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FInstances:= TInterfaceList.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DStaticModel::ProcessStaticLighting (const Tz3DModelLightMapProcessStage AStage 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= False;
+  for I:= 0 to InstanceCount - 1 do
+  if (Instances[I] as Iz3DModelStaticInstance).ProcessStaticLighting(AStage) then
+  Result:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DDynamicModel */ 
+
+  
+Iz3DModelDynamicInstance Tz3DDynamicModel::CreateInstance ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DModelDynamicInstance.Create(Self);
+  FInstances.Add(Result as Iz3DModelInstance);
+  z3DModelController.BuildRenderOrders;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDynamicModel::Init ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FInstances:= TInterfaceList.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DModelStaticInstance */ 
+
+   
+Tz3DModelStaticInstance::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if z3DLightMapController <> nil then
+  FLightMap:= z3DLightMapController.CreateLightMap;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLightMap Tz3DModelStaticInstance::GetLightMap ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLightMap;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelStaticInstance::RenderStaticLighting ()
+{
+#ifndef DOXYGEN_SKIP
+  if (ViewCenter.Z < -Model.BoundingSphere.Radius) or
+  (ViewCenter.Z > z3DGlobalEngine.Scenario.Bounds.Radius * 2 + Model.BoundingSphere.Radius) then Exit;
+  if (z3DLightingController.CurrentLight.Style <> z3dlsDirectional) and
+  (z3DFloat3.From(Center).Subtract(z3DLightingController.CurrentLight.Position).Length >
+  z3DLightingController.CurrentLight.Range + Model.BoundingSphere.Radius) then Exit;
+  if LightMap.Enabled thenbegin    z3DLightingController.Effect.Texture['GLightMapLightTexture']:= LightMap.LightTextures[z3DLightingController.CurrentLight.Index].Texture;
+    z3DLightingController.Effect.Param['GEnableRadiosity']:= LightMap.Options.EnableRadiosity;
+    if LightMap.Options.EnableRadiosity then
+    z3DLightingController.Effect.Texture['GLightMapRadiosityTexture']:= LightMap.RadiosityTextures[z3DLightingController.CurrentLight.Index].Texture;
+ end
+  SetEffectCommonParams;
+  Model.RenderMesh(z3DLightingController.Effect, FMeshLOD, True, True);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DModelStaticInstance::ProcessStaticLighting (const Tz3DModelLightMapProcessStage AStage 
+)
+
+/*
+var
+ FAdjacency: Tz3DDWordArray;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= False;
+  if not LightMap.Enabled then Exit;
+  case AStage of
+
+
+    // Create the lightmap and compute UV coordinates if needed
+    z3dlmpsBeginGeneration:
+    begin      if not LightMap.Generated thenbegin        StringToWideChar(Model.Name+IntToStr(Model.IndexOf(Self as Iz3DModelInstance)), z3DWideBuffer, 255);
+        LightMap.UniqueName:= z3DWideBuffer;
+        try
+          SetLength(FAdjacency, SizeOf(DWORD) * Model.FaceCount * 3);
+        except
+          on EOutOfMemory dobegin            z3DTrace('Iz3DModel.ProcessStaticLighting failed (Out of memory)', z3DtkError);
+            Exit;
+         end
+       end
+        Model.Mesh.GenerateAdjacency(1e-6, @FAdjacency[0]);
+     end
+      Result:= LightMap.BeginGeneration(Self, @FAdjacency, Model.ComputeLightCoords);
+      Model.ComputeLightCoords:= False;
+   end
+
+    // Begin the radiosity computation
+    z3dlmpsBeginRadiosity:
+      if not LightMap.Generated then LightMap.BeginRadiosity;
+
+    // Begin a new radiosity bounce computation
+    z3dlmpsBeginRadiosityBounce:
+      if not LightMap.Generated then Result:= LightMap.PerformRadiosityBounce;
+
+    // End the last radiosity bounce computation
+    z3dlmpsEndRadiosityBounce:
+      if not LightMap.Generated then LightMap.EndRadiosityBounce;
+
+    // End the radiosity computation
+    z3dlmpsEndRadiosity:
+      if not LightMap.Generated then LightMap.EndRadiosity;
+
+    // End the radiosity computation
+    z3dlmpsEndGeneration:
+      if not LightMap.Generated then LightMap.EndGeneration;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DModelDynamicInstance */ 
+
+     
+Tz3DModelDynamicInstance::Tz3DModelDynamicInstance (const Iz3DBase AOwner = nil 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FAcceleration:= z3DFloat3;
+  FVelocity:= z3DFloat3;
+  FVelocity.OnChange:= VelocityChanged;
+  FGround:= False;
+  FEnablePhysics:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DModelDynamicInstance::FrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  ComputeTransforms;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DModelDynamicInstance::GetAcceleration ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAcceleration;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DModelDynamicInstance::GetEnablePhysics ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnablePhysics;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DModelDynamicInstance::GetGround ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGround;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DModelDynamicInstance::GetVelocity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FVelocity;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelDynamicInstance::SetEnablePhysics (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnablePhysics:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DModelDynamicInstance::SetGround (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FGround:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Tz3DModelDynamicInstance::VelocityChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if SameValue(FVelocity.Y, FPrevVelocityY, 0.005) and (FVelocity.Y > 0.005) thenbegin    FPrevVelocityY:= FVelocity.Y;
+    FGround:= False;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+// finished
+

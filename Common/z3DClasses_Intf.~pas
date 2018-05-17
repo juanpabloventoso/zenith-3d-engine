@@ -1,0 +1,271 @@
+///============================================================================///
+///= Zenith 3D Engine - Developed by Juan Pablo Ventoso                       =///
+///============================================================================///
+///= Unit: z3DClasses. Main classes for z3D objects                           =///
+///============================================================================///
+
+unit z3DClasses_Intf;
+
+interface
+
+uses
+  Windows, Classes, Direct3D9;
+
+const
+  // NULL GUID. Used to pass a null GUID to as a parameter
+  GUID_NULL: TGUID = '{00000000-0000-0000-0000-000000000000}';
+
+type
+
+  Iz3DBase = interface;
+
+  Tz3DBaseObjectEvent = procedure(const ASender: Iz3DBase) of object; stdcall;
+  Tz3DBaseCallbackEvent = procedure(const ASender: Iz3DBase); stdcall;
+
+
+/// RTTI Emulation types.
+
+/// Implements methods for getting and settings property values from runtime
+/// mode on a interface-based environment.
+
+  Tz3DRTTIPropertyKind = (z3dpkInteger, z3dpkFloat, z3dpkAnsiChar, z3dpkWideChar,
+    z3dpkArray, z3dpkRecord, z3dpkInterface, z3dpkDynArray, z3dpkIntEvent,
+    z3dpkCallbackEvent, z3dpkSet, z3dpkUnknown);
+
+  Pz3DRTTIProperty = ^Tz3DRTTIProperty;
+  Tz3DRTTIProperty = packed record
+    Name: PAnsiChar;
+    Kind: Tz3DRTTIPropertyKind;
+  end;
+
+  Pz3DRTTIPropertyList = ^Tz3DRTTIPropertyList;
+  Tz3DRTTIPropertyList = array of Tz3DRTTIProperty;
+
+/// z3D base interface.
+
+/// Implements methods for initialization and cleanup and holds a reference
+/// to its owner (if any) as a Pointer type to avoid mutual reference
+/// counting.
+
+  Iz3DBase = interface(IUnknown)['{07C50756-F9A5-4AE5-8602-58F0A04FA83D}']
+    /// Returns the owner interface, if any
+    function GetOwner: Iz3DBase; stdcall;
+    /// Initializes the internal variables and interfaces
+    /// and prepares the interface to work properly
+    procedure Init(const AOwner: Iz3DBase = nil); stdcall;
+    /// Releases reference to interfaces and frees internal memory
+    procedure Cleanup; stdcall;
+
+    /// RTTI Emulation
+    /// Returns a list of properties for this interface
+    function RTTIGetPropertyList: Tz3DRTTIPropertyList;
+
+    function RTTIGetIntValue(const AProperty: PAnsiChar): Integer;
+    function RTTIGetFloatValue(const AProperty: PAnsiChar): Single;
+    function RTTIGetACharValue(const AProperty: PAnsiChar): PAnsiChar;
+    function RTTIGetWCharValue(const AProperty: PAnsiChar): PWideChar;
+    function RTTIGetIntfValue(const AProperty: PAnsiChar): IInterface;
+
+    procedure RTTISetIntValue(const AProperty: PAnsiChar; const AValue: Integer);
+    procedure RTTISetACharValue(const AProperty: PAnsiChar; const AValue: PAnsiChar);
+    procedure RTTISetWCharValue(const AProperty: PAnsiChar; const AValue: PWideChar);
+    procedure RTTISetIntfValue(const AProperty: PAnsiChar; const AValue: IInterface);
+
+    /// Owner interface, if any
+    property Owner: Iz3DBase read GetOwner;
+  end;
+
+
+
+
+
+
+  /// Device settings struct
+  Pz3DDeviceSettings = ^Tz3DDeviceSettings;
+  Tz3DDeviceSettings = record
+    AdapterOrdinal: LongWord;
+    DeviceType: TD3DDevType;
+    AdapterFormat: TD3DFormat;
+    BehaviorFlags: DWORD;
+    PresentParams: TD3DPresentParameters;
+  end;
+
+  Tz3DStartScenarioStage = (z3dssCreatingScenario, z3dssCreatingScenarioObjects,
+    z3dssCreatingScene, z3dssCreatingSceneObjects, z3dssCreatingLightingSystem);
+
+  Tz3DCreateObjectCaller = (z3dcocCreateDevice, z3dcocResetDevice, z3dcocStartScenario);
+  Tz3DDestroyObjectCaller = (z3ddocDestroyDevice, z3ddocLostDevice, z3ddocStopScenario);
+
+  Tz3DLinkNotification = (z3dlnDevice, z3dlnFrameMove, z3dlnGPUPrecomputation,
+    z3dlnFrameRender, z3dlnLightingRender, z3dlnDirectLightRender, z3dlnGUIRender,
+    z3dlnMessages, z3dlnKeyboard);
+
+  Tz3DLinkNotifications = set of Tz3DLinkNotification;
+
+/// z3D linked interface.
+
+/// This interface can access to the common z3D Engine events such as device
+/// creation, frame move or scenario render.
+/// The z3D Engine will call this events on any object that implements this
+/// interface and that registers with the engine by calling
+/// z3DEngine.AddLink().
+
+  Iz3DLinked = interface(Iz3DBase)['{F092F9D0-8C3D-424C-BF9C-9A3DBB734B63}']
+    /// Returns if the interface works only when a scenario is enabled
+    function GetScenarioLevel: Boolean; stdcall;
+    /// Sets if the interface works only when a scenario is enabled
+    procedure SetScenarioLevel(const Value: Boolean); stdcall;
+    /// If ScenarioLevel is TRUE, returns the creation stage for this interface
+    function GetScenarioStage: Tz3DStartScenarioStage; stdcall;
+    /// If ScenarioLevel is TRUE, sets the creation stage for this interface
+    procedure SetScenarioStage(const AStage: Tz3DStartScenarioStage); stdcall;
+    /// Returns the notifications that this interface needs to receive
+    function GetNotifications: Tz3DLinkNotifications; stdcall;
+    /// Sets the notifications that this interface needs to receive
+    procedure SetNotifications(const ANotifications: Tz3DLinkNotifications); stdcall;
+
+    /// Device creation notification
+    procedure z3DCreateDevice; stdcall;
+    /// Device destruction notification
+    procedure z3DDestroyDevice; stdcall;
+    /// Device reset notification
+    procedure z3DResetDevice; stdcall;
+    /// Device lost notification
+    procedure z3DLostDevice; stdcall;
+
+    /// Device confirmation notification
+    procedure z3DConfirmDevice(const ACaps: TD3DCaps9; const AAdapterFormat,
+      ABackBufferFormat: TD3DFormat; var AAccept: Boolean); stdcall;
+    /// Device modification notification
+    procedure z3DModifyDevice(var ADeviceSettings: Tz3DDeviceSettings; const ACaps: TD3DCaps9); stdcall;
+
+    /// Scenario start notification
+    procedure z3DStartScenario(const AStage: Tz3DStartScenarioStage); stdcall;
+    /// Scenario stop notification
+    procedure z3DStopScenario; stdcall;
+    /// Objects creation notification
+    procedure z3DCreateScenarioObjects(const ACaller: Tz3DCreateObjectCaller); stdcall;
+    /// Objects destruction notification
+    procedure z3DDestroyScenarioObjects(const ACaller: Tz3DDestroyObjectCaller); stdcall;
+
+    /// Frame move notification
+    procedure z3DFrameMove; stdcall;
+    /// GPU precomputation notification.
+    /// Before the scenario runs, a precomputation event is called
+    /// to perform offline GPU processing
+    procedure z3DGPUPrecomputation; stdcall;
+    /// Frame render notification
+    procedure z3DFrameRender; stdcall;
+    /// Lighting render notification (ambient)
+    procedure z3DLightingRender; stdcall;
+    /// Direct light render notification (light)
+    procedure z3DDirectLightRender; stdcall;
+    /// GUI render notification
+    procedure z3DGUIRender; stdcall;
+
+    /// Message notification
+    procedure z3DMessage(const AWnd: HWnd; const AMsg: LongWord; const AwParam: wParam;
+      const AlParam: lParam; var ADefault: Boolean; var AResult: lResult); stdcall;
+    /// Keyboard notification
+    procedure z3DKeyboard(const AChar: LongWord; const AKeyDown, AAltDown: Boolean); stdcall;
+
+    /// If ScenarioLevel is TRUE, creation stage for this interface
+    property ScenarioStage: Tz3DStartScenarioStage read GetScenarioStage write SetScenarioStage;
+    /// Notifications that this interface needs to receive
+    property Notifications: Tz3DLinkNotifications read GetNotifications write SetNotifications;
+    /// TRUE when the interface works only when a scenario is enabled, FALSE otherwise
+    property ScenarioLevel: Boolean read GetScenarioLevel write SetScenarioLevel;
+  end;
+
+/// z3D renderable interface.
+
+  Iz3DRenderable = interface(Iz3DLinked)['{F092F9D0-8C3D-424C-BF9C-9A3DBB734B63}']
+    /// Returns if the interface works only when a scenario is enabled
+    function GetScenarioLevel: Boolean; stdcall;
+    /// Sets if the interface works only when a scenario is enabled
+    procedure SetScenarioLevel(const Value: Boolean); stdcall;
+    /// If ScenarioLevel is TRUE, returns the creation stage for this interface
+    function GetScenarioStage: Tz3DStartScenarioStage; stdcall;
+    /// If ScenarioLevel is TRUE, sets the creation stage for this interface
+    procedure SetScenarioStage(const AStage: Tz3DStartScenarioStage); stdcall;
+    /// Returns the notifications that this interface needs to receive
+    function GetNotifications: Tz3DLinkNotifications; stdcall;
+    /// Sets the notifications that this interface needs to receive
+    procedure SetNotifications(const ANotifications: Tz3DLinkNotifications); stdcall;
+
+    /// Device creation notification
+    procedure z3DCreateDevice; stdcall;
+    /// Device destruction notification
+    procedure z3DDestroyDevice; stdcall;
+    /// Device reset notification
+    procedure z3DResetDevice; stdcall;
+    /// Device lost notification
+    procedure z3DLostDevice; stdcall;
+
+    /// Device confirmation notification
+    procedure z3DConfirmDevice(const ACaps: TD3DCaps9; const AAdapterFormat,
+      ABackBufferFormat: TD3DFormat; var AAccept: Boolean); stdcall;
+    /// Device modification notification
+    procedure z3DModifyDevice(var ADeviceSettings: Tz3DDeviceSettings; const ACaps: TD3DCaps9); stdcall;
+
+    /// Scenario start notification
+    procedure z3DStartScenario(const AStage: Tz3DStartScenarioStage); stdcall;
+    /// Scenario stop notification
+    procedure z3DStopScenario; stdcall;
+    /// Objects creation notification
+    procedure z3DCreateScenarioObjects(const ACaller: Tz3DCreateObjectCaller); stdcall;
+    /// Objects destruction notification
+    procedure z3DDestroyScenarioObjects(const ACaller: Tz3DDestroyObjectCaller); stdcall;
+
+    /// Frame move notification
+    procedure z3DFrameMove; stdcall;
+    /// GPU precomputation notification.
+    /// Before the scenario runs, a precomputation event is called
+    /// to perform offline GPU processing
+    procedure z3DGPUPrecomputation; stdcall;
+    /// Frame render notification
+    procedure z3DFrameRender; stdcall;
+    /// Lighting render notification (ambient)
+    procedure z3DLightingRender; stdcall;
+    /// Direct light render notification (light)
+    procedure z3DDirectLightRender; stdcall;
+    /// GUI render notification
+    procedure z3DGUIRender; stdcall;
+
+    /// Message notification
+    procedure z3DMessage(const AWnd: HWnd; const AMsg: LongWord; const AwParam: wParam;
+      const AlParam: lParam; var ADefault: Boolean; var AResult: lResult); stdcall;
+    /// Keyboard notification
+    procedure z3DKeyboard(const AChar: LongWord; const AKeyDown, AAltDown: Boolean); stdcall;
+
+    /// If ScenarioLevel is TRUE, creation stage for this interface
+    property ScenarioStage: Tz3DStartScenarioStage read GetScenarioStage write SetScenarioStage;
+    /// Notifications that this interface needs to receive
+    property Notifications: Tz3DLinkNotifications read GetNotifications write SetNotifications;
+    /// TRUE when the interface works only when a scenario is enabled, FALSE otherwise
+    property ScenarioLevel: Boolean read GetScenarioLevel write SetScenarioLevel;
+  end;
+
+
+
+
+
+
+
+  /// Major.Minor.Release.Build
+  Tz3DFileVersion = array[0..3] of Integer;
+
+/// z3D persistent interface.
+/// This interface implements a load and a save method to persist in a file
+/// and holds properties related to the file format and version.
+
+  Iz3DPersistent = interface(Iz3DBase)['{CCFB1344-FD15-4C22-AEA2-92935B6841DF}']
+    /// Loads itself from a file
+    procedure LoadFromFile(const AFileName: PWideChar); stdcall;
+    /// Saves itself to a file
+    procedure SaveToFile(const AFileName: PWideChar); stdcall;
+  end;
+
+implementation
+
+end.

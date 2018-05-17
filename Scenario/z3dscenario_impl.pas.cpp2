@@ -1,0 +1,1565 @@
+
+
+
+
+
+       
+     
+
+
+
+
+/*==============================================================================*/ 
+/*== Scenario interface                                                       ==*/ 
+/*==============================================================================*/ 
+/*== Contains the attributes that are applied to the global scene. It also    ==*/ 
+/*== begins the render chain and allows to disable the world rendering        ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DScenario : public Tz3DBase,Iz3DScenario
+{
+public:
+
+  private:
+      Iz3DBoundingSphere FBounds; 
+
+      Boolean FEnabled; 
+
+      Boolean FProjectionChanged; 
+
+      IInterfaceList FWorlds; 
+
+      IInterfaceList FEntities; 
+
+      Tz3DScenarioKind FKind; 
+
+  protected:
+      
+Tz3DScenarioKind GetKind ();
+ ;
+       
+SetKind (const Tz3DScenarioKind Value 
+);
+ ;
+        
+Iz3DScenarioEntity GetEntities (const Integer AIndex 
+);
+ ;
+      
+Integer GetEntityCount ();
+ ;
+      
+Integer GetWorldCount ();
+ ;
+        
+Iz3DWorld GetWorlds (const Integer AIndex 
+);
+ ;
+      
+Iz3DBoundingSphere GetBounds ();
+ ;
+      
+Boolean GetProjectionChanged ();
+ ;
+       
+SetProjectionChanged (const Boolean Value 
+);
+ ;
+      
+Boolean GetEnabled ();
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+     
+ResetDevice ();
+ ;
+     
+FrameRender ();
+ ;
+       
+PropertyChanged (const Iz3DBase ASender 
+);
+ ;
+         
+Init (const Iz3DBase AOwner = nil 
+);
+ ; ;
+  public:
+      
+Iz3DWorld CreateWorld ();
+ ;
+       
+AddEntity (const Iz3DScenarioEntity AEntity 
+);
+ ;
+       
+RemoveEntity (const Iz3DScenarioEntity AEntity 
+);
+ ;
+        
+Integer IndexOf (const Iz3DScenarioEntity AEntity 
+);
+ ;
+  public:
+         /** \sa GetKind For reading   \sa SetKind For writing */
+Tz3DScenarioKind Kind; 
+
+    /*[const AIndex: Integer]*/   /** \sa GetEntities For reading*/
+Iz3DScenarioEntity Entities; 
+
+       /** \sa GetEntityCount For reading*/
+Integer EntityCount; 
+
+    /*[const AIndex: Integer]*/   /** \sa GetWorlds For reading*/
+Iz3DWorld Worlds; 
+
+       /** \sa GetWorldCount For reading*/
+Integer WorldCount; 
+
+         /** \sa GetProjectionChanged For reading   \sa SetProjectionChanged For writing */
+Boolean ProjectionChanged; 
+
+         /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+       /** \sa GetBounds For reading*/
+Iz3DBoundingSphere Bounds; 
+
+ };
+
+
+
+/*==============================================================================*/ 
+/*== Fog interface                                                            ==*/ 
+/*==============================================================================*/ 
+/*== Controller for the fog effect of the scenario                            ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DFog : public Tz3DLinked,Iz3DFog
+{
+public:
+
+  private:
+      Boolean FEnabled; 
+
+      Single FRangeMin; 
+
+      Single FRangeMax; 
+
+      Single FDensity; 
+
+      Iz3DFloat3 FColor; 
+
+      Boolean FUniform; 
+
+  protected:
+      
+Boolean GetUniform ();
+ ;
+       
+SetUniform (const Boolean Value 
+);
+ ;
+       
+SetDensity (const Single Value 
+);
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+       
+SetRangeMin (const Single Value 
+);
+ ;
+       
+SetRangeMax (const Single Value 
+);
+ ;
+      
+Iz3DFloat3 GetColor ();
+ ;
+      
+Single GetDensity ();
+ ;
+      
+Single GetRangeMin ();
+ ;
+      
+Single GetRangeMax ();
+ ;
+      
+Boolean GetEnabled ();
+ ;
+       
+PropertyChanged (const Iz3DBase ASender 
+);
+ ;
+       
+z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ; ;
+  public:
+     
+Show ();
+ ;
+     
+Hide ();
+ ;
+         
+Tz3DFog (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+       /** \sa GetColor For reading*/
+Iz3DFloat3 Color; 
+
+         /** \sa GetRangeMin For reading   \sa SetRangeMin For writing */
+Single RangeMin; 
+
+         /** \sa GetRangeMax For reading   \sa SetRangeMax For writing */
+Single RangeMax; 
+
+         /** \sa GetDensity For reading   \sa SetDensity For writing */
+Single Density; 
+
+         /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+         /** \sa GetUniform For reading   \sa SetUniform For writing */
+Boolean Uniform; 
+
+ };
+
+
+    class Tz3DWorld : public Tz3DBase,Iz3DWorld
+{
+public:
+
+  private:
+      IInterfaceList FEntities; 
+
+      Single FGravity; 
+
+      Iz3DFloat3 FWindSpeed; 
+
+      Iz3DBoundingSphere FBounds; 
+
+      Iz3DFloat3 FAmbientColor; 
+
+      Iz3DFog FFog; 
+
+  protected:
+      
+Iz3DFloat3 GetAmbientColor ();
+ ;
+      
+Iz3DFog GetFog ();
+ ;
+      
+Iz3DBoundingSphere GetBounds ();
+ ;
+      
+Iz3DFloat3 GetWindSpeed ();
+ ;
+       
+AddEntity (const Iz3DScenarioEntity AEntity 
+);
+ ;
+       
+RemoveEntity (const Iz3DScenarioEntity AEntity 
+);
+ ;
+        
+Iz3DScenarioEntity GetEntities (const Integer I 
+);
+ ;
+          
+SetEntities (const Integer I ,
+const Iz3DScenarioEntity Value 
+);
+ ;
+      
+Single GetGravity ();
+ ;
+       
+SetGravity (const Single Value 
+);
+ ;
+      
+Integer GetEntityCount ();
+ ;
+        
+Integer IndexOf (const Iz3DScenarioEntity AEntity 
+);
+ ;
+  public:
+         
+Tz3DWorld (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+       /** \sa GetBounds For reading*/
+Iz3DBoundingSphere Bounds; 
+
+         /** \sa GetGravity For reading   \sa SetGravity For writing */
+Single Gravity; 
+
+    /*[const I: Integer]*/     /** \sa GetEntities For reading   \sa SetEntities For writing */
+Iz3DScenarioEntity Entities; 
+
+       /** \sa GetEntityCount For reading*/
+Integer EntityCount; 
+
+       /** \sa GetWindSpeed For reading*/
+Iz3DFloat3 WindSpeed; 
+
+       /** \sa GetAmbientColor For reading*/
+Iz3DFloat3 AmbientColor; 
+
+       /** \sa GetFog For reading*/
+Iz3DFog Fog; 
+
+ };
+
+
+
+    class Tz3DMaterial : public Tz3DBase,Iz3DMaterial
+{
+public:
+
+  private:
+      Single FDensity; 
+
+      Single FElasticity; 
+
+      Iz3DFloat4 FColorDiffuse; 
+
+      Iz3DFloat3 FColorEmissive; 
+
+      Single FSpecularAmount; 
+
+      Single FRoughness; 
+
+      Tz3DMaterialEmissiveMode FEmissiveMode; 
+
+      PWideChar FSounds; 
+
+      Iz3DMaterialTexture FTexture; 
+
+      Single FReflectivity; 
+
+      PWideChar FFileName; 
+
+  protected:
+      
+PWideChar GetFileName ();
+ ;
+       
+SetFileName (const PWideChar Value 
+);
+ ;
+      
+Iz3DMaterialTexture GetTexture ();
+ ;
+      
+Single GetReflectivity ();
+ ;
+       
+SetReflectivity (const Single Value 
+);
+ ;
+      
+Single GetRoughness ();
+ ;
+       
+SetRoughness (const Single Value 
+);
+ ;
+      
+PWideChar GetSounds ();
+ ;
+       
+SetSounds (const PWideChar Value 
+);
+ ;
+      
+Tz3DMaterialEmissiveMode GetEmissiveMode ();
+ ;
+       
+SetEmissiveMode (const Tz3DMaterialEmissiveMode Value 
+);
+ ;
+      
+Single GetDensity ();
+ ;
+      
+Single GetElasticity ();
+ ;
+      
+Iz3DFloat4 GetColorDiffuse ();
+ ;
+      
+Iz3DFloat3 GetColorEmissive ();
+ ;
+      
+Single GetSpecularAmount ();
+ ;
+       
+SetDensity (const Single Value 
+);
+ ;
+       
+SetElasticity (const Single Value 
+);
+ ;
+       
+SetColorDiffuse (const Iz3DFloat4 Value 
+);
+ ;
+       
+SetColorEmissive (const Iz3DFloat3 Value 
+);
+ ;
+       
+SetSpecularAmount (const Single Value 
+);
+ ;
+  public:
+         
+Tz3DMaterial (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DMaterial ();
+ ;
+       
+LoadFromFile (const PWideChar AFileName 
+);
+ ;
+       
+SaveToFile (const PWideChar AFileName 
+);
+ ;
+  public:
+         /** \sa GetSounds For reading   \sa SetSounds For writing */
+PWideChar Sounds; 
+
+         /** \sa GetFileName For reading   \sa SetFileName For writing */
+PWideChar FileName; 
+
+         /** \sa GetDensity For reading   \sa SetDensity For writing */
+Single Density; 
+
+         /** \sa GetElasticity For reading   \sa SetElasticity For writing */
+Single Elasticity; 
+
+         /** \sa GetRoughness For reading   \sa SetRoughness For writing */
+Single Roughness; 
+
+       /** \sa GetTexture For reading*/
+Iz3DMaterialTexture Texture; 
+
+         /** \sa GetColorDiffuse For reading   \sa SetColorDiffuse For writing */
+Iz3DFloat4 ColorDiffuse; 
+
+         /** \sa GetColorEmissive For reading   \sa SetColorEmissive For writing */
+Iz3DFloat3 ColorEmissive; 
+
+         /** \sa GetSpecularAmount For reading   \sa SetSpecularAmount For writing */
+Single SpecularAmount; 
+
+         /** \sa GetReflectivity For reading   \sa SetReflectivity For writing */
+Single Reflectivity; 
+
+         /** \sa GetEmissiveMode For reading   \sa SetEmissiveMode For writing */
+Tz3DMaterialEmissiveMode EmissiveMode; 
+
+ };
+
+
+    class Tz3DMaterialController : public Tz3DLinked,Iz3DMaterialController
+{
+public:
+
+  private:
+      Iz3DMaterialTexture FDefaultTexture; 
+
+      IInterfaceList FMaterials; 
+
+      Iz3DObjectFileFormat FMaterialFormat; 
+
+      Iz3DObjectFileFormat FMaterialTextureFormat; 
+
+      Iz3DObjectFileFormat FMaterialSoundFormat; 
+
+  protected:
+      
+Iz3DObjectFileFormat GetMaterialFormat ();
+ ;
+      
+Iz3DObjectFileFormat GetMaterialTextureFormat ();
+ ;
+      
+Iz3DObjectFileFormat GetMaterialSoundFormat ();
+ ;
+      
+Integer GetMaterialCount ();
+ ;
+        
+Iz3DMaterial GetMaterials (const Integer AIndex 
+);
+ ;
+      
+Iz3DMaterialTexture GetDefaultTexture ();
+ ;
+       
+z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+);
+ ; ;
+  public:
+         
+Tz3DMaterialController (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+CreateScenarioObjects ();
+ ;
+      
+Iz3DMaterial CreateMaterial ();
+ ;
+        
+Iz3DMaterial CreateMaterialFromFile (const PWideChar AFileName 
+);
+ ;
+       
+RemoveMaterial (const Iz3DMaterial AMaterial 
+);
+ ;
+  public:
+       /** \sa GetMaterialFormat For reading*/
+Iz3DObjectFileFormat MaterialFormat; 
+
+       /** \sa GetMaterialTextureFormat For reading*/
+Iz3DObjectFileFormat MaterialTextureFormat; 
+
+       /** \sa GetMaterialSoundFormat For reading*/
+Iz3DObjectFileFormat MaterialSoundFormat; 
+
+       /** \sa GetDefaultTexture For reading*/
+Iz3DMaterialTexture DefaultTexture; 
+
+    /*[const AIndex: Integer]*/   /** \sa GetMaterials For reading*/
+Iz3DMaterial Materials; 
+
+       /** \sa GetMaterialCount For reading*/
+Integer MaterialCount; 
+
+ };
+
+
+  
+Iz3DScenario z3DCreateScenario ();
+ ;
+  
+Iz3DScenario z3DGlobalScenario ();
+ ;
+   
+z3DSetCustomScenario (const Iz3DScenario AScenario 
+);
+ ;
+
+  
+Iz3DMaterialController z3DCreateMaterialController ();
+ ;
+  
+Iz3DMaterialController z3DMaterialController ();
+ ;
+   
+z3DSetCustomMaterialController (const Iz3DMaterialController AController 
+);
+ ;
+
+
+
+     
+      
+  
+/*
+var
+
+  GScenario: Iz3DScenario;
+  GMaterialController: Iz3DMaterialController;
+
+
+  
+Iz3DScenario z3DCreateScenario ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  GScenario:= Tz3DScenario.Create;
+  Result:= GScenario;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DScenario z3DGlobalScenario ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= GScenario;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomScenario (const Iz3DScenario AScenario 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  GScenario:= AScenario;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMaterialController z3DCreateMaterialController ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  if GMaterialController = nil then
+  GMaterialController:= Tz3DMaterialController.Create;
+  Result:= GMaterialController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMaterialController z3DMaterialController ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= GMaterialController;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomMaterialController (const Iz3DMaterialController AController 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  GMaterialController:= AController;
+#endif /* DOXYGEN_SKIP */
+};
+
+
+{ Tz3DScenario }
+
+   
+Tz3DScenario::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FWorlds:= TInterfaceList.Create;
+  FEntities:= TInterfaceList.Create;
+  FEnabled:= False;
+  FBounds:= z3DBoundingSphere;
+  FBounds.Radius:= 500;
+  FProjectionChanged:= True;
+  GScenario:= Self;
+  FKind:= z3dskSingleWorldMixed;
+  if WorldCount = 0 then CreateWorld;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DScenario::FrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Enabled then Exit;
+  // Render the scene
+  z3DGlobalEngine.NotifyLinks_z3DFrameRender;
+
+  // Render the current ambient system
+  if z3DLightingController <> nil thenbegin    if z3DGlobalEngine.Renderer.EnableMSAA then
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iTrue);
+    try
+      z3DLightingController.RenderAmbient;
+    finally
+      if z3DGlobalEngine.Renderer.EnableMSAA then
+      z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iFalse);
+   end
+ end
+
+  // Render the current lighting system
+  if z3DLightingController <> nil then z3DLightingController.RenderLighting;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DScenario::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DScenario::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnabled <> Value thenbegin    if Value thenbegin      z3DGlobalEngine.StartScenario(z3dssCreatingScenario);
+      z3DGlobalEngine.StartScenario(z3dssCreatingScenarioObjects);
+      z3DGlobalEngine.StartScenario(z3dssCreatingWorld);
+      z3DGlobalEngine.StartScenario(z3dssCreatingWorldObjects);
+      z3DGlobalEngine.StartScenario(z3dssCreatingLightingSystem);
+   endelse
+    z3DGlobalEngine.NotifyLinks_z3DEndScenario 
+    FEnabled:= Value;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DScenario::GetProjectionChanged ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FProjectionChanged;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DScenario::SetProjectionChanged (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FProjectionChanged:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DScenario::ResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  ProjectionChanged:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DScenario::PropertyChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+
+#endif /* DOXYGEN_SKIP */
+};
+  
+Iz3DBoundingSphere Tz3DScenario::GetBounds ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBounds;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DScenario::GetWorldCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWorlds.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DWorld Tz3DScenario::GetWorlds (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWorlds[AIndex] as Iz3DWorld;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DWorld Tz3DScenario::CreateWorld ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DWorld.Create;
+  FWorlds.Add(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DScenario::AddEntity (const Iz3DScenarioEntity AEntity 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEntities.Add(AEntity);
+  // TODO JP: HARDCODED
+  Worlds[0].AddEntity(AEntity);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DScenario::RemoveEntity (const Iz3DScenarioEntity AEntity 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEntities.Remove(AEntity);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DScenarioEntity Tz3DScenario::GetEntities (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEntities[AIndex] as Iz3DScenarioEntity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DScenario::GetEntityCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEntities.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Integer Tz3DScenario::IndexOf (const Iz3DScenarioEntity AEntity 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEntities.IndexOf(AEntity);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DScenarioKind Tz3DScenario::GetKind ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FKind;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DScenario::SetKind (const Tz3DScenarioKind Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FKind <> Value thenbegin    FKind:= Value;
+    case FKind of
+
+      z3dskEmpty: FWorlds.Clear;
+      z3dskSingleWorldIndoor, z3dskSingleWorldOutdoor, z3dskSingleWorldMixed:
+        while FWorlds.Count > 1 do FWorlds.Delete(FWorlds.Count-1);
+      z3dskMultipleWorlds: ;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+{ Tz3DFog }
+
+ 
+Tz3DFog::Tz3DFog ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+
+  // Link this object to all the events generated by the z3D Engine
+  Notifications:= [z3dlnDevice];
+
+  FEnabled:= True;
+  FColor:= z3DFloat3(0.65, 0.79, 0.94);
+  FColor.OnChange:= PropertyChanged;
+  FRangeMin:= 0.0001;
+  FRangeMax:= 0.25;
+  FDensity:= 0.5;
+  FUniform:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFog::SetDensity (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FDensity <> Value thenbegin    FDensity:= Value;
+    z3DGlobalEngine.CoreEffect.Param['GFogDensity']:= FDensity;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFog::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnabled <> Value thenbegin    FEnabled:= Value;
+    if FEnabled then
+    z3DStartScenario(z3dssCreatingScenario);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFog::SetRangeMax (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FRangeMax <> Value thenbegin    FRangeMax:= Value;
+    z3DGlobalEngine.CoreEffect.Param['GFogRangeMax']:= FRangeMax;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFog::SetRangeMin (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FRangeMin <> Value thenbegin    FRangeMin:= Value;
+    z3DGlobalEngine.CoreEffect.Param['GFogRangeMin']:= FRangeMin;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFog::Hide ()
+{
+#ifndef DOXYGEN_SKIP
+  SetEnabled(False);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFog::Show ()
+{
+#ifndef DOXYGEN_SKIP
+  SetEnabled(True);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFog::GetColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFog::GetDensity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDensity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFog::GetRangeMax ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRangeMax;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFog::GetRangeMin ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRangeMin;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFog::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFog::PropertyChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.CoreEffect.Color3['GFogColor']:= FColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFog::z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if (AStage = z3dssCreatingScenario) and Enabled thenbegin    z3DGlobalEngine.CoreEffect.Color3['GFogColor']:= FColor;
+    z3DGlobalEngine.CoreEffect.Param['GFogDensity']:= FDensity;
+    z3DGlobalEngine.CoreEffect.Param['GFogRangeMax']:= FRangeMax;
+    z3DGlobalEngine.CoreEffect.Param['GFogRangeMin']:= FRangeMin;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFog::GetUniform ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FUniform;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFog::SetUniform (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FUniform:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+{ Tz3DWorld }
+
+   
+Tz3DWorld::AddEntity (const Iz3DScenarioEntity AEntity 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if IndexOf(AEntity) = -1 then FEntities.Add(AEntity);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DWorld::Tz3DWorld ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FBounds:= z3DBoundingSphere;
+  FBounds.Radius:= z3DGlobalScenario.Bounds.Radius;
+  FEntities:= TInterfaceList.Create;
+  FAmbientColor:= z3DFloat3(0.2, 0.17, 0.35);
+  FFog:= Tz3DFog.Create;
+  FGravity:= 9.8;
+  FWindSpeed:= z3DFloat3(3, 0, 5);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DWorld::GetAmbientColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAmbientColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBoundingSphere Tz3DWorld::GetBounds ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBounds;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DScenarioEntity Tz3DWorld::GetEntities (const Integer I 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEntities[I] as Iz3DScenarioEntity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DWorld::GetEntityCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEntities.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFog Tz3DWorld::GetFog ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFog;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DWorld::GetGravity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGravity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DWorld::GetWindSpeed ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWindSpeed;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Integer Tz3DWorld::IndexOf (const Iz3DScenarioEntity AEntity 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEntities.IndexOf(AEntity);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DWorld::RemoveEntity (const Iz3DScenarioEntity AEntity 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEntities.Remove(AEntity);
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DWorld::SetEntities (const Integer I ,
+const Iz3DScenarioEntity Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEntities[I]:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DWorld::SetGravity (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FGravity:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+{ Tz3DMaterial }
+
+ 
+Tz3DMaterial::Tz3DMaterial ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  GetMem(FFileName, 255);
+  FDensity:= 1;
+  FReflectivity:= 0.75;
+  FElasticity:= 0.5;
+  GetMem(FSounds, 255);
+  FTexture:= z3DCreateMaterialTexture;
+  FTexture.Enabled:= False;
+  FRoughness:= 0.5;
+  FEmissiveMode:= z3dmemInnerLight;
+  FColorDiffuse:= z3DFloat4(1, 1, 1, 1);
+  FColorEmissive:= z3DFloat3;
+  FSpecularAmount:= 0;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DMaterial::~Tz3DMaterial ()
+{
+#ifndef DOXYGEN_SKIP
+  FreeMem(FSounds);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat4 Tz3DMaterial::GetColorDiffuse ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FColorDiffuse;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DMaterial::GetColorEmissive ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FColorEmissive;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMaterial::GetDensity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDensity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMaterial::GetElasticity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FElasticity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DMaterialEmissiveMode Tz3DMaterial::GetEmissiveMode ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEmissiveMode;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DMaterial::GetFileName ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFileName;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMaterial::GetReflectivity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FReflectivity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMaterial::GetRoughness ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRoughness;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DMaterial::GetSounds ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSounds;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMaterial::GetSpecularAmount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSpecularAmount;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMaterialTexture Tz3DMaterial::GetTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTexture;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::LoadFromFile (const PWideChar AFileName 
+)
+
+/*
+var
+ FFile: Iz3DObjectFile;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FFile:= z3DFileSystemController.CreateTypedObjectFile(AFileName, fmOpenRead,
+    z3DMaterialController.MaterialFormat);
+  Density:= FFile.ReadFloat;
+  Elasticity:= FFile.ReadFloat;
+  Sounds:= FFile.ReadString;
+  FFile.ReadFloat4(ColorDiffuse);
+  Roughness:= FFile.ReadFloat;
+  Texture.FileName:= FFile.ReadString;
+  Texture.Enabled:= Boolean(FFile.ReadInteger);
+  FFile.ReadFloat3(ColorEmissive);
+  Reflectivity:= FFile.ReadFloat;
+  EmissiveMode:= Tz3DMaterialEmissiveMode(FFile.ReadInteger);
+  SpecularAmount:= FFile.ReadFloat;
+  FileName:= AFileName;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SaveToFile (const PWideChar AFileName 
+)
+
+/*
+var
+ FFile: Iz3DObjectFile;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FFile:= z3DFileSystemController.CreateTypedObjectFile(AFileName, fmCreate or fmOpenWrite,
+    z3DMaterialController.MaterialFormat);
+
+  FFile.WriteVariant(Density);
+  FFile.WriteVariant(Elasticity);
+  FFile.WriteString(Sounds);
+  FFile.WriteFloat4(ColorDiffuse);
+  FFile.WriteVariant(Roughness);
+  FFile.WriteString(Texture.FileName);
+  FFile.WriteVariant(Integer(Texture.Enabled));
+  FFile.WriteFloat3(ColorEmissive);
+  FFile.WriteVariant(Reflectivity);
+  FFile.WriteVariant(Integer(EmissiveMode));
+  FFile.WriteVariant(SpecularAmount);
+  FileName:= AFileName;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetColorDiffuse (const Iz3DFloat4 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FColorDiffuse:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetColorEmissive (const Iz3DFloat3 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FColorEmissive:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetDensity (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDensity:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetElasticity (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FElasticity:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetEmissiveMode (const Tz3DMaterialEmissiveMode Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEmissiveMode:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetFileName (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(WideCharToString(Value), FFileName, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetReflectivity (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FReflectivity:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetRoughness (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRoughness:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetSounds (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(WideCharToString(Value), FSounds, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterial::SetSpecularAmount (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FSpecularAmount:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DMaterialController */ 
+
+ 
+Tz3DMaterialController::Tz3DMaterialController ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+
+  // Link this object to the desired events generated by the z3D Engine
+  Notifications:= [z3dlnDevice];
+  ScenarioStage:= z3dssCreatingWorldObjects;
+
+
+  FMaterials:= TInterfaceList.Create;
+  FDefaultTexture:= z3DCreateMaterialTexture;
+  FDefaultTexture.Source:= z3dtsNew;
+  FDefaultTexture.Width:= 4;
+  FDefaultTexture.Height:= 4;
+  FDefaultTexture.Format:= D3DFMT_A8R8G8B8;
+  FMaterialFormat:= z3DFileSystemController.CreateObjectFormat;
+  FMaterialFormat.Description:= 'Zenith Material File';
+  FMaterialFormat.Extension:= 'zMaterial';
+  FMaterialFormat.DefaultFolder:= fsMaterialsFolder;
+  FMaterialFormat.Header:= 'ZMATERIAL';
+  FMaterialTextureFormat:= z3DFileSystemController.CreateObjectFormat;
+  FMaterialTextureFormat.Description:= 'Zenith Material Texture File';
+  FMaterialTextureFormat.Extension:= 'dds';
+  FMaterialTextureFormat.DefaultFolder:= fsMaterialTexturesFolder;
+  FMaterialSoundFormat:= z3DFileSystemController.CreateObjectFormat;
+  FMaterialSoundFormat.Description:= 'Zenith Material Sound File';
+  FMaterialSoundFormat.Extension:= 'wav';
+  FMaterialSoundFormat.DefaultFolder:= fsMaterialSoundsFolder;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMaterial Tz3DMaterialController::CreateMaterial ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DMaterial.Create;
+  FMaterials.Add(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMaterial Tz3DMaterialController::CreateMaterialFromFile (const PWideChar AFileName 
+)
+
+/*
+var
+ I: Integer;
+    FLower: string;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // If the material already exists, don't load it again
+  FLower:= LowerCase(WideCharToString(AFileName));
+  for I:= 0 to MaterialCount-1 do
+  if LowerCase(WideCharToString(Materials[I].FileName)) = FLower thenbegin    Result:= Materials[I];
+    Break;
+ end
+  if Result = nil thenbegin    Result:= CreateMaterial;
+    Result.LoadFromFile(AFileName);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DMaterialController::CreateScenarioObjects ()
+
+/*
+var
+ I, J: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FDefaultTexture.BeginDraw;
+  try
+    for I:= 0 to 3 do
+    for J:= 0 to 3 do
+    FDefaultTexture.SetPixel(I, J, z3DFloat3(1, 1, 1));
+  finally
+    FDefaultTexture.EndDraw;
+    FDefaultTexture.GenerateNormalMap;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMaterialTexture Tz3DMaterialController::GetDefaultTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDefaultTexture;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DObjectFileFormat Tz3DMaterialController::GetMaterialFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaterialFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DObjectFileFormat Tz3DMaterialController::GetMaterialTextureFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaterialTextureFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DObjectFileFormat Tz3DMaterialController::GetMaterialSoundFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaterialSoundFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DMaterialController::GetMaterialCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaterials.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMaterial Tz3DMaterialController::GetMaterials (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaterials[AIndex] as Iz3DMaterial;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterialController::RemoveMaterial (const Iz3DMaterial AMaterial 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMaterials.Remove(AMaterial);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMaterialController::z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if ACaller in [z3dcocResetDevice, z3dcocStartScenario] then
+  CreateScenarioObjects;
+#endif /* DOXYGEN_SKIP */
+};
+
+// finished
+

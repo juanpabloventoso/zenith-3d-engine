@@ -1,0 +1,537 @@
+{==============================================================================}
+{== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==}
+{==============================================================================}
+{== Unit: z3DLighting. z3D lighting and shadowing system core                ==}
+{==============================================================================}
+
+unit z3DLighting_Intf;
+
+interface
+
+uses Windows, z3DMath_Intf, z3DComponents_Intf, z3DScenario_Intf,
+  SysUtils, z3DCore_Intf, Direct3D9, z3DClasses_Intf;
+
+type
+
+  Tz3DLightingRenderStage = (z3dlrsStaticAmbient, z3dlrsSSAO, z3dlrsDynamicAmbient);
+
+  Tz3DDirectLightRenderStage = (z3ddlrsStaticShadows, z3ddlrsDynamicShadows,
+    z3ddlrsStaticLighting, z3ddlrsDynamicLighting);
+
+  Tz3DLightingRenderEvent = procedure(const AStage: Tz3DLightingRenderStage); stdcall;
+
+{==============================================================================}
+{== Light effects interface                                                  ==}
+{==============================================================================}
+{== Provides a way to configure the effects of a light source on the         ==}
+{== surrounding world like shadows, specular reflections and glow            ==}
+{==============================================================================}
+
+  Iz3DLight = interface;
+
+  Tz3DDirectLightRenderEvent = procedure(const AStage: Tz3DDirectLightRenderStage;
+    const ALight: Iz3DLight);
+
+  Iz3DLightEffects = interface(Iz3DBase)['{362D39C9-A515-4CD2-BDAB-7E081D5B30B2}']
+    function GetMultiSampleGlow: Boolean; stdcall;
+    procedure SetMultiSampleGlow(const Value: Boolean); stdcall;
+    function GetGlowFactor: Single; stdcall;
+    procedure SetGlowFactor(const Value: Single); stdcall;
+    function GetGlow: Boolean; stdcall;
+    procedure SetGlow(const Value: Boolean); stdcall;
+    procedure SetDynamicShadows(const Value: Boolean); stdcall;
+    procedure SetNormalMapping(const Value: Boolean); stdcall;
+    procedure SetSpecular(const Value: Boolean); stdcall;
+    procedure SetStaticShadows(const Value: Boolean); stdcall;
+    procedure SetStaticPenumbra(const Value: Boolean); stdcall;
+    function GetDynamicShadows: Boolean; stdcall;
+    function GetNormalMapping: Boolean; stdcall;
+    function GetSpecular: Boolean; stdcall;
+    function GetStaticPenumbra: Boolean; stdcall;
+    function GetStaticShadows: Boolean; stdcall;
+
+    property Specular: Boolean read GetSpecular write SetSpecular;
+    property StaticShadows: Boolean read GetStaticShadows write SetStaticShadows;
+    property DynamicShadows: Boolean read GetDynamicShadows write SetDynamicShadows;
+    property NormalMapping: Boolean read GetNormalMapping write SetNormalMapping;
+    property StaticPenumbra: Boolean read GetStaticPenumbra write SetStaticPenumbra;
+    property Glow: Boolean read GetGlow write SetGlow;
+    property GlowFactor: Single read GetGlowFactor write SetGlowFactor;
+    property MultiSampleGlow: Boolean read GetMultiSampleGlow write SetMultiSampleGlow;
+  end;
+
+{==============================================================================}
+{== Light interface                                                          ==}
+{==============================================================================}
+{== Represents a light source into the world and controls its properties     ==}
+{== like intensity, spot angle and position                                  ==}
+{==============================================================================}
+
+  Tz3DLightStyle = (z3dlsDiffuse, z3dlsPoint, z3dlsSpot, z3dlsDirectional);
+
+  Iz3DLight = interface(Iz3DBase)['{D6054A45-55A6-4A7E-8FB7-861D9D0445BD}']
+    function GetFrustum: Iz3DFrustum; stdcall;
+    function GetStage: Tz3DDirectLightRenderStage; stdcall;
+    function GetName: PWideChar; stdcall;
+    procedure SetName(const Value: PWideChar); stdcall;
+    function GetDynamicMode: Boolean; stdcall;
+    function GetIndex: Integer; stdcall;
+    function GetAngle: Single; stdcall;
+    function GetColor: Iz3DFloat3; stdcall;
+    function GetEffects: Iz3DLightEffects; stdcall;
+    function GetEnabled: Boolean; stdcall;
+    function GetIntensity: Single; stdcall;
+    function GetOnRender: Tz3DDirectLightRenderEvent; stdcall;
+    function GetRange: Single; stdcall;
+    function GetSharpness: Single; stdcall;
+    function GetSize: Single; stdcall;
+    function GetStatic: Boolean; stdcall;
+    function GetStyle: Tz3DLightStyle; stdcall;
+    procedure SetDynamicMode(const Value: Boolean); stdcall;
+    procedure SetOnRender(const Value: Tz3DDirectLightRenderEvent); stdcall;
+    procedure SetSize(const Value: Single); stdcall;
+    procedure SetStyle(const Value: Tz3DLightStyle); stdcall;
+    procedure SetRange(const Value: Single); stdcall;
+    procedure SetAngle(const Value: Single); stdcall;
+    procedure SetSharpness(const Value: Single); stdcall;
+    procedure SetEnabled(const Value: Boolean); stdcall;
+    procedure SetIntensity(const Value: Single); stdcall;
+    procedure SetStatic(const Value: Boolean); stdcall;
+    procedure ResetDevice; stdcall;
+    procedure BuildDynamicShadowMap; stdcall;
+    procedure BuildStaticShadowMap; stdcall;
+    procedure BuildShadowMap(const ATarget: Iz3DBaseTexture; const ADepth: Iz3DSurface;
+      const AStatic: Boolean = False); stdcall;
+    procedure RenderPrecomputation; stdcall;
+    procedure RenderWorld; stdcall;
+    procedure RenderSource; stdcall;
+    procedure SetLightingTechnique; stdcall;
+    procedure MeasureLightEffectParams; stdcall;
+    procedure UpdateLightingParams; stdcall;
+    procedure UpdateSourceParams; stdcall;
+    procedure StartScenario; stdcall;
+    procedure TurnOn; stdcall;
+    procedure TurnOff; stdcall;
+    procedure CreateDepthMap; stdcall;
+
+    property Frustum: Iz3DFrustum read GetFrustum;
+    property Color: Iz3DFloat3 read GetColor;
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property Effects: Iz3DLightEffects read GetEffects;
+    property Static: Boolean read GetStatic write SetStatic;
+    property DynamicMode: Boolean read GetDynamicMode write SetDynamicMode;
+    property Name: PWideChar read GetName write SetName;
+    property Index: Integer read GetIndex;
+    property Style: Tz3DLightStyle read GetStyle write SetStyle;
+    property Intensity: Single read GetIntensity write SetIntensity;
+    property Range: Single read GetRange write SetRange;
+    property Sharpness: Single read GetSharpness write SetSharpness;
+    property Angle: Single read GetAngle write SetAngle;
+    property Size: Single read GetSize write SetSize;
+    property Stage: Tz3DDirectLightRenderStage read GetStage;
+    property OnRender: Tz3DDirectLightRenderEvent read GetOnRender write SetOnRender;
+  end;
+
+{==============================================================================}
+{== Screen Space Ambient Occlusion interface                                 ==}
+{==============================================================================}
+{== Controller for the SSAO effect                                           ==}
+{==============================================================================}
+
+  Tz3DSSAOQuality = (z3dssaoqLow, z3dssaoqMedium, z3dssaoqHigh);
+
+  Iz3DSSAO = interface(Iz3DBase)['{0027DE4E-6E3C-4CA8-B122-2B3A3D4AF129}']
+    function GetSampleFactor: Single; stdcall;
+    procedure SetSampleFactor(const Value: Single); stdcall;
+    function GetQuality: Tz3DSSAOQuality; stdcall;
+    procedure SetQuality(const Value: Tz3DSSAOQuality); stdcall;
+    function GetAmount: Single; stdcall;
+    procedure SetAmount(const Value: Single); stdcall;
+    function GetEnabled: Boolean; stdcall;
+    procedure SetEnabled(const Value: Boolean); stdcall;
+
+    procedure ComputeOcclusion; stdcall;
+
+    property Amount: Single read GetAmount write SetAmount;
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property Quality: Tz3DSSAOQuality read GetQuality write SetQuality;
+    property SampleFactor: Single read GetSampleFactor write SetSampleFactor;
+  end;
+
+{==============================================================================}
+{== Lights interface                                                         ==}
+{==============================================================================}
+{== Holds every light source and manages its shared properties and objects.  ==}
+{== It also allows to add, access and remove light sources                   ==}
+{==============================================================================}
+
+  Tz3DShadowQuality = (z3dsqLow, z3dsqHigh);
+
+  Iz3DLightingController = interface(Iz3DBase)['{245A0C58-ABDE-4D18-B3E6-1E62D389CE58}']
+    function GetOpaqueMode: Boolean; stdcall;
+    function GetStage: Tz3DLightingRenderStage; stdcall;
+    function GetDirShadowMapAreaSize: Single; stdcall;
+    procedure SetDirShadowMapAreaSize(const Value: Single); stdcall;
+    function GetDirShadowMapOffset: Single; stdcall;
+    function GetShadowMapOffset: Single; stdcall;
+    procedure SetDirShadowMapOffset(const Value: Single); stdcall;
+    procedure SetShadowMapOffset(const Value: Single); stdcall;
+    function GetCurrentLight: Iz3DLight; stdcall;
+    function GetSSAO: Iz3DSSAO; stdcall;
+    function GetShadowQuality: Tz3DShadowQuality; stdcall;
+    function GetUseHWShadows: Boolean; stdcall;
+    procedure SetShadowQuality(const Value: Tz3DShadowQuality); stdcall;
+    procedure SetUseHWShadows(const Value: Boolean); stdcall;
+    function GetTempDepthMap: Iz3DRenderTexture; stdcall;
+    function GetTempDirDepthMap: Iz3DRenderTexture; stdcall;
+    function GetDirDepthMap: Iz3DRenderTexture; stdcall;
+    function GetCubeDepthMap: Iz3DCubeRenderTexture; stdcall;
+    function GetDepthMap: Iz3DRenderTexture; stdcall;
+    function GetDepthBuffer: Iz3DDepthBuffer; stdcall;
+    function GetLightCount: Integer; stdcall;
+    function GetShader: Iz3DShader; stdcall;
+    function GetLights(const AIndex: Integer): Iz3DLight; stdcall;
+    procedure SetLights(const AIndex: Integer; const Value: Iz3DLight); stdcall;
+    procedure RenderPrecomputation; stdcall;
+    procedure RenderAmbient; stdcall;
+    procedure RenderLighting; stdcall;
+
+    procedure RenderOpaqueStage; stdcall;
+    procedure RenderTranslucentStage; stdcall;
+
+    procedure RenderLightSources; stdcall;
+    procedure CreateScenarioObjects; stdcall;
+    function DepthMapSize: Integer; stdcall;
+    function DirectionalDepthMapSize: Integer; stdcall;
+
+    function CreateLight: Iz3DLight; stdcall;
+    procedure RemoveLight(const ALight: Iz3DLight); stdcall;
+    function IndexOfLight(const ALight: Iz3DLight): Integer; stdcall;
+
+    property OpaqueMode: Boolean read GetOpaqueMode;
+    property Lights[const AIndex: Integer]: Iz3DLight read GetLights write SetLights; default;
+    property LightCount: Integer read GetLightCount;
+    property CurrentLight: Iz3DLight read GetCurrentLight;
+    property DepthMap: Iz3DRenderTexture read GetDepthMap;
+    property TempDepthMap: Iz3DRenderTexture read GetTempDepthMap;
+    property TempDirDepthMap: Iz3DRenderTexture read GetTempDirDepthMap;
+    property DirDepthMap: Iz3DRenderTexture read GetDirDepthMap;
+    property CubeDepthMap: Iz3DCubeRenderTexture read GetCubeDepthMap;
+    property DepthBuffer: Iz3DDepthBuffer read GetDepthBuffer;
+    property Shader: Iz3DShader read GetShader;
+    property DirShadowMapAreaSize: Single read GetDirShadowMapAreaSize write SetDirShadowMapAreaSize;
+    property ShadowMapOffset: Single read GetShadowMapOffset write SetShadowMapOffset;
+    property DirShadowMapOffset: Single read GetDirShadowMapOffset write SetDirShadowMapOffset;
+    property ShadowQuality: Tz3DShadowQuality read GetShadowQuality write SetShadowQuality;
+    property UseHWShadows: Boolean read GetUseHWShadows write SetUseHWShadows;
+    property SSAO: Iz3DSSAO read GetSSAO;
+    property Stage: Tz3DLightingRenderStage read GetStage;
+  end;
+
+{==============================================================================}
+{== LightMap interfaces                                                      ==}
+{==============================================================================}
+{== Creates, loads and manages static lightmaps for world objects.           ==}
+{==============================================================================}
+
+  Tz3DRay = packed record
+    Origin: Iz3DFloat3;
+    Direction: Iz3DFloat3;
+    Length: Single;
+  end;
+
+  Pz3DLightMapLuxel = ^Tz3DLightMapLuxel;
+
+  Tz3DBounceCollision = packed record
+    Collision: Boolean;   // True if collision found
+    Target: Iz3DScenarioStaticObject; // Index of collision object
+    Distance: Single;     // Distance from origin to collision
+    PlaneIndex: Integer;  // Index of the distribution plane that has collided
+    Luxel: Pz3DLightMapLuxel;
+    Determinant: Single;  // The spheric interpolation determinant
+  end;
+  Tz3DBounceCollisions = array of array of Tz3DBounceCollision;
+
+  Tz3DLightMapLuxel = packed record
+    // Position and normal
+    Position: Iz3DFloat3;
+    Normal: Iz3DFloat3;
+    // Color information (ambient, direct lighting and radiosity)
+    RadiosityColors: array of array of Iz3DFloat3;
+    RadiositySamples: array of array of Single;
+    // Stored radiosity objectives for each sample
+    Collisions: Tz3DBounceCollisions;
+    CollisionTested: Boolean;
+  end;
+  Tz3DLightMapLuxels = array of array of Tz3DLightMapLuxel;
+
+  Tz3DFloat3Array = array of Iz3DFloat3;
+  Tz3DFloat2Array = array of Iz3DFloat2;
+
+  Tz3DTriangle = array[0..2] of Iz3DFloat3;
+
+  // Lightmap plane information
+  Pz3DLightMapPlane = ^Tz3DLightMapPlane;
+  Tz3DLightMapPlane = packed record
+    OffsetU, OffsetV, Width, Height: Integer;
+    Origin, Edge1, Edge2, Normal: Iz3DFloat3;
+
+    Lights: Tz3DFloat2Array;
+    FUMin, FUMax, FVMin, FVMax, FUDelta, FVDelta: Single;
+
+    ID: Integer;
+    RefCount: Integer;
+    Generated: Boolean;
+    Luxels: Tz3DLightMapLuxels;
+  end;
+  Tz3DLightMapDistribution = array of Tz3DLightMapPlane;
+
+  // Lightmap texture information
+  Tz3DLightMapTexture = packed record
+    Texture: Iz3DTexture;
+    Name: PWideChar;
+    Created: Boolean;
+    Loaded: Boolean;
+    Saved: Boolean;
+  end;
+  Tz3DLightMapTextures = array of Tz3DLightMapTexture;
+
+{==============================================================================}
+{== Lightmap packing node interface                                          ==}
+{==============================================================================}
+{== Represents an individual lightmap into the packing tree and holds the    ==}
+{== child lightmap nodes                                                     ==}
+{==============================================================================}
+
+  Iz3DLightMapPackNode = interface(Iz3DBase)['{DE1CB2D7-8C3B-4C51-AB36-7E7CAAB5C0E5}']
+    function GetChilds(const I: Integer): Iz3DLightMapPackNode; stdcall;
+    function GetID: Integer; stdcall;
+    function GetRect: TRect; stdcall;
+    procedure SetChilds(const I: Integer; const Value: Iz3DLightMapPackNode); stdcall;
+    procedure SetID(const Value: Integer); stdcall;
+    procedure SetRect(const Value: TRect); stdcall;
+    
+    property Rect: TRect read GetRect write SetRect;
+    property ID: Integer read GetID write SetID;
+    property Childs[const I: Integer]: Iz3DLightMapPackNode read GetChilds write SetChilds;
+  end;
+
+  Iz3DLightMap = interface;
+
+{==============================================================================}
+{== Ray tracer interface                                                     ==}
+{==============================================================================}
+{== Allows to perform ray tracing operations on the world for any purposes.  ==}
+{== The main features are reflections, refractions, penumbra and bouncing    ==}
+{==============================================================================}
+
+  Iz3DRayTracer = interface(Iz3DBase)['{E9526C46-1563-4225-8593-F43D2F7C9EF1}']
+    function GetRadiosityBuffer0: Iz3DTexture; stdcall;
+    function GetRadiosityBuffer1: Iz3DTexture; stdcall;
+    function GetPenumbraDetailFactor: Integer; stdcall;
+    procedure SetPenumbraDetailFactor(const Value: Integer); stdcall;
+    function GetRadiositySamples: Integer; stdcall;
+    procedure SetRadiositySamples(const Value: Integer); stdcall;
+    function GetAOSamples: Integer; stdcall;
+    procedure SetAOSamples(const Value: Integer); stdcall;
+    function GetPenumbra: Boolean; stdcall;
+    function GetShadows: Boolean; stdcall;
+    procedure SetPenumbra(const Value: Boolean); stdcall;
+    procedure SetShadows(const Value: Boolean); stdcall;
+    function GetNormalLerp: Boolean; stdcall;
+    function GetNormalLerpExponent: Single; stdcall;
+    procedure SetNormalLerp(const Value: Boolean); stdcall;
+    procedure SetNormalLerpExponent(const Value: Single); stdcall;
+
+    procedure BeginGPUTracing(const ASetCull: Boolean = False); stdcall;
+    procedure EndGPUTracing(const ASetCull: Boolean = False); stdcall;
+    procedure BeginAOTracing; stdcall;
+    procedure EndAOTracing; stdcall;
+    procedure BeginRadiosityTracing(const ALightMap: Iz3DLightMap); stdcall;
+    procedure EndRadiosityTracing; stdcall;
+
+    procedure RayTraceLightMap(const ALightMap: Iz3DLightMap); stdcall;
+    procedure RayTraceLightMapRadiosity(const ALightMap: Iz3DLightMap; const ALevel: Integer); stdcall;
+    procedure RayTraceLightMapRadiosity_GPU(const ALightMap: Iz3DLightMap; const ALevel: Integer); stdcall;
+    procedure NormalizeLightMapRadiosity(const ALightMap: Iz3DLightMap;
+      const ALevel: Integer); stdcall;
+
+    function RayIntersectTriangle(const ARay: Tz3DRay; const ATriangle: Tz3DTriangle; var ADistance: Single): Boolean; stdcall;
+    function RayIntersectVertex(const AObject1, AObject2: Iz3DScenarioObject;
+      const ARay: Tz3DRay; var ADistance: Single): Boolean; stdcall;
+    function RayIntersectPlane(const ARay: Tz3DRay; const APlane: Tz3DTriangle; var ADistance: Single): Boolean; stdcall;
+    function RayIntersectBoundingSphere(const ARay: Tz3DRay; const ASphere: Iz3DBoundingSphere;
+      var ADistance: Single): Boolean; stdcall;
+    function RayIntersectBoundingBox(const ARay: Tz3DRay; const ABox: Iz3DBoundingBox;
+      var ADistance: Single; const ATEvaluation: Boolean = True): Boolean; stdcall;
+    function RayIntersectBound(const AObject1, AObject2: Iz3DScenarioObject; const ARay:
+      Tz3DRay; var ADistance: Single; const ATEvaluation: Boolean = True): Boolean; stdcall;
+
+    function RayCollision(const ARayObject: Iz3DScenarioObject; const ARay: Tz3DRay; var AResult: Single;
+      out ACollisionObject: Iz3DScenarioObject; out ACollisionT: Single;
+      const AVertexEvaluation: Boolean = True; const ATEvaluation: Boolean = True;
+      const ATotalSamples: Integer = 1): Boolean; stdcall;
+
+    function RayTraceLight(const AObject: Iz3DScenarioObject; const ACenter, ANormal: Iz3DFloat3;
+      const ALight: Integer): Iz3DFloat3; stdcall;
+    function RayTraceAO(const AObject: Iz3DScenarioObject; const ACenter, ANormal,
+      AOrigin, AEdge1, AEdge2: Iz3DFloat3; out ACollision: Boolean): Iz3DFloat3; stdcall;
+    function RayTraceRadiosity(const AObject: Iz3DScenarioObject; var ALumel: Tz3DLightMapLuxel;
+      const ACenter, ANormal, AOrigin, AEdge1, AEdge2, AColor: Iz3DFloat3;
+      const ALight, ALevel: Integer): Iz3DFloat3; stdcall;
+
+    property RadiosityBuffer0: Iz3DTexture read GetRadiosityBuffer0;
+    property RadiosityBuffer1: Iz3DTexture read GetRadiosityBuffer1;
+    property NormalLerp: Boolean read GetNormalLerp write SetNormalLerp;
+    property NormalLerpExponent: Single read GetNormalLerpExponent write SetNormalLerpExponent;
+    property AOSamples: Integer read GetAOSamples write SetAOSamples;
+    property RadiositySamples: Integer read GetRadiositySamples write SetRadiositySamples;
+    property Shadows: Boolean read GetShadows write SetShadows;
+    property Penumbra: Boolean read GetPenumbra write SetPenumbra;
+    property PenumbraDetailFactor: Integer read GetPenumbraDetailFactor write SetPenumbraDetailFactor;
+  end;
+
+{==============================================================================}
+{== Lightmap options interface                                               ==}
+{==============================================================================}
+{== Holds the options available for the lightmap generation                  ==}
+{==============================================================================}
+
+  Iz3DLightMapOptions = interface(Iz3DBase)['{53A99579-7971-47BF-912A-32EA5DEC9E11}']
+    function GetEnableAmbient: Boolean; stdcall;
+    function GetEnableRadiosity: Boolean; stdcall;
+    function GetRadiosityBounces: Integer; stdcall;
+    procedure SetEnableAmbient(const Value: Boolean); stdcall;
+    procedure SetEnableRadiosity(const Value: Boolean); stdcall;
+    procedure SetRadiosityBounces(const Value: Integer); stdcall;
+    function GetBlurSteps: Integer; stdcall;
+    procedure SetBlurSteps(const Value: Integer); stdcall;
+    function GetDetailFactor: Integer; stdcall;
+    procedure SetDetailFactor(const Value: Integer); stdcall;
+    
+    property DetailFactor: Integer read GetDetailFactor write SetDetailFactor;
+    property BlurSteps: Integer read GetBlurSteps write SetBlurSteps;
+    property EnableAmbient: Boolean read GetEnableAmbient write SetEnableAmbient;
+    property EnableRadiosity: Boolean read GetEnableRadiosity write SetEnableRadiosity;
+    property RadiosityBounces: Integer read GetRadiosityBounces write SetRadiosityBounces;
+  end;
+
+{==============================================================================}
+{== Global lightmap controller interface                                     ==}
+{==============================================================================}
+{== Configures the global settings of the lightmap generation algorithm such ==}
+{== as the texture format or the loading and saving path                     ==}
+{==============================================================================}
+
+  TIntegerArray = array of Integer;
+
+  Iz3DLightMapController = interface(Iz3DBase)['{E6100C60-3ADC-4A61-9AC1-A5FBB9AF3E58}']
+    function GetLights: TIntegerArray; stdcall;
+    function GetTotalLights: Integer; stdcall;
+    function GetLightFileMask: PWideChar; stdcall;
+    procedure SetLightFileMask(const Value: PWideChar); stdcall;
+    function GetAOFileMask: PWideChar; stdcall;
+    procedure SetAOFileMask(const Value: PWideChar); stdcall;
+    function GetFolderName: PWideChar; stdcall;
+    function GetMaxTextureSize: Integer; stdcall;
+    procedure SetFolderName(const Value: PWideChar); stdcall;
+    procedure SetMaxTextureSize(const Value: Integer); stdcall;
+    procedure Initialize; stdcall;
+
+    function GetTextureFileName(const ATextureName: PWideChar): PWideChar; stdcall;
+    function CreateLightMap: Iz3DLightMap; stdcall;
+
+    property LightFileMask: PWideChar read GetLightFileMask write SetLightFileMask;
+    property AOFileMask: PWideChar read GetAOFileMask write SetAOFileMask;
+    property FolderName: PWideChar read GetFolderName write SetFolderName;
+    property MaxTextureSize: Integer read GetMaxTextureSize write SetMaxTextureSize;
+    property TotalLights: Integer read GetTotalLights;
+    property Lights: TIntegerArray read GetLights;
+  end;
+
+{==============================================================================}
+{== Lightmap interface                                                       ==}
+{==============================================================================}
+{== Controls the lightmap creation and linking to an specific world static   ==}
+{== object. It uses the ray tracer interface to generate the lighting        ==}
+{==============================================================================}
+
+  Tz3DLightMapGenerationStep = (z3dlmgsLightCoords, z3dlmgsAmbient, z3dlmgsDirectLighting,
+    z3dlmgsRadiosity);
+
+  Tz3DCallbackLightMapProgressEvent = procedure(const AStep: Tz3DLightMapGenerationStep;
+    const ARadiosityLevel, APercent: Integer) of object; stdcall;
+  
+  Iz3DLightMap = interface(Iz3DBase)['{17261C55-B331-4006-B90A-FD9A4B6B37BF}']
+    function GetOnProgress: Tz3DCallbackLightMapProgressEvent; stdcall;
+    procedure SetOnProgress(const Value: Tz3DCallbackLightMapProgressEvent); stdcall;
+    function GetCurrentObject: Iz3DScenarioStaticObject;
+    function GetGenerated: Boolean; stdcall;
+    function GetFacePlane(const AFace: Integer): Pz3DLightMapPlane; stdcall;
+    function GetDistributionIndices: TIntegerArray; stdcall;
+    function GetEnabled: Boolean; stdcall;
+    procedure SetEnabled(const Value: Boolean); stdcall;
+    function GetOffset: Integer; stdcall;
+    function GetAmbientTexture: Tz3DLightMapTexture; stdcall;
+    function GetLightTextures: Tz3DLightMapTextures; stdcall;
+    function GetRadiosityTextures: Tz3DLightMapTextures; stdcall;
+    function GetOptions: Iz3DLightMapOptions; stdcall;
+    function GetRayTracer: Iz3DRayTracer; stdcall;
+    function GetDistribution: Tz3DLightMapDistribution; stdcall;
+    function GetWorldScale: Iz3DFloat3; stdcall;
+    function GetSize: Integer; stdcall;
+    function GetUniqueName: PWideChar; stdcall;
+    procedure SetUniqueName(const Value: PWideChar); stdcall;
+    procedure InternalBeginStep(const AStep: Tz3DLightMapGenerationStep); stdcall;
+    procedure InternalProgress(const APercent: Integer; const ALevel: Integer = -1); stdcall;
+    procedure GetCoords(const AV1, AV2, AV3: Iz3DFloat2; const AAditional: Tz3DFloat2Array;
+      var AMinU, AMaxU, AMinV, AMaxV, ADeltaU, ADeltaV: Single); stdcall;
+    procedure GenerateLightCoords(const AObject: Iz3DBase; const AAdjacency: Pz3DDWordArray = nil); stdcall;
+    procedure GeneratePlanarMapping(const AVB: Pointer; const AIB: PWordArray;
+      const AFaceCount: Integer; const AAdjacency: Pz3DDWordArray; const AComputeCoords: Boolean); stdcall;
+    function AddPackNode(const ANode: Iz3DLightMapPackNode; const APlane: Tz3DLightMapPlane): Iz3DLightMapPackNode; stdcall;
+    procedure CreateTextures; stdcall;
+    procedure SaveTextures; stdcall;
+    procedure Distribute(const AVB: Pointer; const AIB: PWordArray;
+      const AFaceCount: Integer; const AComputeCoords: Boolean); stdcall;
+    procedure GetWorldPlane(const ANormal, APointOnPlane: Iz3DFloat3; const AMinU, AMaxU,
+      AMinV, AMaxV: Single; var APlane: Tz3DTriangle); stdcall;
+    procedure Blur(const ARect: TD3DLockedRect; const AOffsetU, AOffsetV, AWidth, AHeight: Integer); stdcall;
+    procedure BlurTextures; stdcall;
+    procedure BlurAndSave(var ATexture: Tz3DLightMapTexture); stdcall;
+    procedure CopyRadiosityToTextures; stdcall;
+    procedure BeginDraw; stdcall;
+    procedure EndDraw; stdcall;
+
+    function BeginGeneration(const AObject: Iz3DScenarioStaticObject; const AAdjacency: Pz3DDWordArray = nil;
+      const AComputeCoords: Boolean = False): Boolean; stdcall;
+
+    procedure BeginRadiosity; stdcall;
+    function PerformRadiosityBounce: Boolean; stdcall;
+    procedure EndRadiosityBounce; stdcall;
+    procedure EndRadiosity; stdcall;
+
+    function EndGeneration: Boolean; stdcall;
+    function GenerationNeeded: Boolean; stdcall;
+
+    property AmbientTexture: Tz3DLightMapTexture read GetAmbientTexture;
+    property LightTextures: Tz3DLightMapTextures read GetLightTextures;
+    property RadiosityTextures: Tz3DLightMapTextures read GetRadiosityTextures;
+    property UniqueName: PWideChar read GetUniqueName write SetUniqueName;
+    property DistributionIndices: TIntegerArray read GetDistributionIndices;
+    property Distribution: Tz3DLightMapDistribution read GetDistribution;
+    property CurrentObject: Iz3DScenarioStaticObject read GetCurrentObject;
+    property FacePlane[const AFace: Integer]: Pz3DLightMapPlane read GetFacePlane;
+    property Generated: Boolean read GetGenerated;
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property Options: Iz3DLightMapOptions read GetOptions;
+    property RayTracer: Iz3DRayTracer read GetRayTracer;
+    property WorldScale: Iz3DFloat3 read GetWorldScale;
+    property Size: Integer read GetSize;
+    property Offset: Integer read GetOffset;
+    property OnProgress: Tz3DCallbackLightMapProgressEvent read GetOnProgress write SetOnProgress;
+  end;
+
+implementation
+
+end.

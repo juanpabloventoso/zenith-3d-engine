@@ -1,0 +1,284 @@
+unit z3DScenario;
+
+interface
+
+uses Windows, D3DX9, z3DInterface, z3DMath_Intf, z3DComponents_Intf, Classes,
+  z3DScenario_Intf, z3DClasses;
+
+type
+
+  Tz3DScenarioEntity = class(Tz3DObject, Iz3DScenarioEntity)
+  protected
+    function GetIndex: Integer; stdcall;
+  public
+    procedure Init(const AOwner: Iz3DInterface = nil); override; stdcall;
+    procedure Cleanup; override; stdcall;
+  public
+    property Index: Integer read GetIndex;
+  end;
+
+  Tz3DScenarioLinkedEntity = class(Tz3DLinkedObject, Iz3DScenarioEntity)
+  protected
+    function GetIndex: Integer; stdcall;
+  public
+    procedure Init(const AOwner: Iz3DInterface = nil); override; stdcall;
+    procedure Cleanup; override; stdcall;
+  public
+    property Index: Integer read GetIndex;
+  end;
+
+  Tz3DScenarioObjectSubset = class(Tz3DObject, Iz3DScenarioObjectSubset)
+  private
+    FMaterial: Iz3DMaterial;
+    FBoundingBox: Iz3DBoundingBox;
+    FBoundingSphere: Iz3DBoundingSphere;
+  protected
+    function GetMaterial: Iz3DMaterial; virtual; stdcall;
+    function GetBoundingBox: Iz3DBoundingBox; virtual; stdcall;
+    function GetBoundingSphere: Iz3DBoundingSphere; virtual; stdcall;
+  public
+    constructor Create(const AOwner: Iz3DInterface = nil); override;
+  public
+    property Material: Iz3DMaterial read GetMaterial;
+    property BoundingSphere: Iz3DBoundingSphere read GetBoundingSphere;
+    property BoundingBox: Iz3DBoundingBox read GetBoundingBox;
+  end;
+
+  Tz3DScenarioObject = class(Tz3DScenarioEntity, Iz3DScenarioObject)
+  private
+    FCenter: Iz3DFloat3;
+    FViewCenter: Iz3DFloat4;
+    FVisible: Boolean;
+    FBoundingBox: Iz3DBoundingBox;
+    FBoundingSphere: Iz3DBoundingSphere;
+    FShape: Tz3DScenarioObjectShape;
+    FSubsets: IInterfaceList;
+  protected
+    function GetCenter: Iz3DFloat3; virtual; stdcall;
+    function GetViewCenter: Iz3DFloat4; virtual; stdcall;
+    function GetVisible: Boolean; virtual; stdcall;
+    function GetBoundingBox: Iz3DBoundingBox; virtual; stdcall;
+    function GetBoundingSphere: Iz3DBoundingSphere; virtual; stdcall;
+    function GetShape: Tz3DScenarioObjectShape; virtual; stdcall;
+    function GetSubsetCount: Integer; virtual; stdcall;
+    function GetSubsets(const I: Integer): Iz3DScenarioObjectSubset; virtual; stdcall;
+    procedure SetVisible(const Value: Boolean); virtual; stdcall;
+    procedure Init(const AOwner: Iz3DInterface = nil); override; stdcall;
+  public
+    procedure Show; virtual; stdcall;
+    procedure Hide; virtual; stdcall;
+  public
+    property Shape: Tz3DScenarioObjectShape read GetShape;
+    property BoundingSphere: Iz3DBoundingSphere read GetBoundingSphere;
+    property BoundingBox: Iz3DBoundingBox read GetBoundingBox;
+    property Center: Iz3DFloat3 read GetCenter;
+    property ViewCenter: Iz3DFloat4 read GetViewCenter;
+    property Subsets[const I: Integer]: Iz3DScenarioObjectSubset read GetSubsets;
+    property SubsetCount: Integer read GetSubsetCount;
+    property Visible: Boolean read GetVisible write SetVisible;
+  end;
+
+  Tz3DScenarioStaticObject = class(Tz3DScenarioObject, Iz3DScenarioStaticObject)
+  end;
+
+  Tz3DScenarioDynamicObject = class(Tz3DScenarioObject, Iz3DScenarioDynamicObject)
+  private
+    FAcceleration: Iz3DFloat3;
+    FVelocity: Iz3DFloat3;
+    FGround: Boolean;
+    FEnablePhysics: Boolean;
+  protected
+    function GetAcceleration: Iz3DFloat3; virtual; stdcall;
+    function GetVelocity: Iz3DFloat3; virtual; stdcall;
+    function GetGround: Boolean; virtual; stdcall;
+    procedure SetGround(const Value: Boolean); virtual; stdcall;
+    function GetEnablePhysics: Boolean; virtual; stdcall;
+    procedure SetEnablePhysics(const Value: Boolean); virtual; stdcall;
+  public
+    constructor Create(const AOwner: Iz3DInterface = nil); override;
+  public
+    property Acceleration: Iz3DFloat3 read GetAcceleration;
+    property Velocity: Iz3DFloat3 read GetVelocity;
+    property Ground: Boolean read GetGround write SetGround;
+    property EnablePhysics: Boolean read GetEnablePhysics write SetEnablePhysics;
+  end;
+
+implementation
+
+uses z3DScenario_Func, z3DMath_Func;
+
+{ Tz3DScenarioObjectSubset }
+
+constructor Tz3DScenarioObjectSubset.Create(const AOwner: Iz3DInterface);
+begin
+  inherited;
+  if z3DMaterialController <> nil then
+  FMaterial:= z3DMaterialController.CreateMaterial;
+  FBoundingBox:= z3DBoundingBox;
+  FBoundingSphere:= z3DBoundingSphere;
+end;
+
+function Tz3DScenarioObjectSubset.GetBoundingBox: Iz3DBoundingBox;
+begin
+  Result:= FBoundingBox;
+end;
+
+function Tz3DScenarioObjectSubset.GetBoundingSphere: Iz3DBoundingSphere;
+begin
+  Result:= FBoundingSphere;
+end;
+
+function Tz3DScenarioObjectSubset.GetMaterial: Iz3DMaterial;
+begin
+  Result:= FMaterial;
+end;
+
+{ Tz3DScenarioObject }
+
+procedure Tz3DScenarioObject.Init(const AOwner: Iz3DInterface);
+begin
+  inherited;
+  FCenter:= z3DFloat3;
+  FViewCenter:= z3DFloat4;
+  FVisible:= True;
+  FBoundingBox:= z3DBoundingBox;
+  FBoundingSphere:= z3DBoundingSphere;
+  FShape:= z3dsosCube;
+  FSubsets:= TInterfaceList.Create;
+end;
+
+function Tz3DScenarioObject.GetBoundingBox: Iz3DBoundingBox;
+begin
+  Result:= FBoundingBox;
+end;
+
+function Tz3DScenarioObject.GetBoundingSphere: Iz3DBoundingSphere;
+begin
+  Result:= FBoundingSphere;
+end;
+
+function Tz3DScenarioObject.GetCenter: Iz3DFloat3;
+begin
+  Result:= FCenter;
+end;
+
+function Tz3DScenarioObject.GetShape: Tz3DScenarioObjectShape;
+begin
+  Result:= FShape;
+end;
+
+function Tz3DScenarioObject.GetSubsetCount: Integer;
+begin
+  Result:= FSubsets.Count;
+end;
+
+function Tz3DScenarioObject.GetSubsets(const I: Integer): Iz3DScenarioObjectSubset;
+begin
+  Result:= FSubsets[I] as Iz3DScenarioObjectSubset;
+end;
+
+function Tz3DScenarioObject.GetViewCenter: Iz3DFloat4;
+begin
+  Result:= FViewCenter;
+end;
+
+function Tz3DScenarioObject.GetVisible: Boolean;
+begin
+  Result:= FVisible;
+end;
+
+procedure Tz3DScenarioObject.Hide;
+begin
+  Visible:= False;
+end;
+
+procedure Tz3DScenarioObject.SetVisible(const Value: Boolean);
+begin
+  FVisible:= Value;
+end;
+
+procedure Tz3DScenarioObject.Show;
+begin
+  Visible:= True;
+end;
+
+{ Tz3DScenarioDynamicObject }
+
+constructor Tz3DScenarioDynamicObject.Create(const AOwner: Iz3DInterface);
+begin
+  inherited;
+  FAcceleration:= z3DFloat3;
+  FVelocity:= z3DFloat3;
+  FGround:= False;
+  FEnablePhysics:= True;
+end;
+
+function Tz3DScenarioDynamicObject.GetAcceleration: Iz3DFloat3;
+begin
+  Result:= FAcceleration;
+end;
+
+function Tz3DScenarioDynamicObject.GetEnablePhysics: Boolean;
+begin
+  Result:= FEnablePhysics;
+end;
+
+function Tz3DScenarioDynamicObject.GetGround: Boolean;
+begin
+  Result:= FGround;
+end;
+
+function Tz3DScenarioDynamicObject.GetVelocity: Iz3DFloat3;
+begin
+  Result:= FVelocity;
+end;
+
+procedure Tz3DScenarioDynamicObject.SetEnablePhysics(const Value: Boolean);
+begin
+  FEnablePhysics:= Value;
+end;
+
+procedure Tz3DScenarioDynamicObject.SetGround(const Value: Boolean);
+begin
+  FGround:= Value;
+end;
+
+{ Tz3DScenarioEntity }
+
+procedure Tz3DScenarioEntity.Cleanup;
+begin
+  inherited;
+  z3DGlobalScenario.RemoveEntity(Self);
+end;
+
+function Tz3DScenarioEntity.GetIndex: Integer;
+begin
+  Result:= z3DGlobalScenario.IndexOf(Self);
+end;
+
+procedure Tz3DScenarioEntity.Init(const AOwner: Iz3DInterface);
+begin
+  inherited;
+  z3DGlobalScenario.AddEntity(Self);
+end;
+
+{ Tz3DScenarioLinkedEntity }
+
+procedure Tz3DScenarioLinkedEntity.Cleanup;
+begin
+  inherited;
+  z3DGlobalScenario.RemoveEntity(Self);
+end;
+
+function Tz3DScenarioLinkedEntity.GetIndex: Integer;
+begin
+  Result:= z3DGlobalScenario.IndexOf(Self);
+end;
+
+procedure Tz3DScenarioLinkedEntity.Init(const AOwner: Iz3DInterface);
+begin
+  inherited;
+  z3DGlobalScenario.AddEntity(Self);
+end;
+
+end.

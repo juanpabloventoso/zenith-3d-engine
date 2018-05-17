@@ -1,0 +1,6530 @@
+/*==============================================================================*/ 
+/*== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==*/ 
+/*==============================================================================*/ 
+/*== Unit: z3DEngine. z3D Engine interfaces and access functions              ==*/ 
+/*==============================================================================*/ 
+
+
+
+
+
+
+      
+      
+      
+
+
+   class Tz3DWinControl : public TWinControl
+{
+public:
+
+       
+z3DSetHandle (const HWnd AHandle 
+);
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Debug helper interface                                                   ==*/ 
+/*==============================================================================*/ 
+/*== Helper class for the developer. It allow to view the position of every   ==*/ 
+/*== light source, create a grid for position metrics and so on               ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DDebugHelper : public Tz3DLinked,Iz3DDebugHelper
+{
+public:
+
+  private:
+      Boolean FEnableGrid; 
+
+      Integer FGridSize; 
+
+      Single FGridSpace; 
+
+      ID3DXMesh FGridMesh; 
+
+      ID3DXMesh FLightMesh; 
+
+      Boolean FEnableLightMesh; 
+
+  protected:
+      
+Boolean GetEnableGrid ();
+ ;
+      
+Boolean GetEnableLightMesh ();
+ ;
+      
+Integer GetGridSize ();
+ ;
+      
+Single GetGridSpace ();
+ ;
+       
+SetEnableGrid (const Boolean Value 
+);
+ ;
+       
+SetEnableLightMesh (const Boolean Value 
+);
+ ;
+       
+SetGridSize (const Integer Value 
+);
+ ;
+       
+SetGridSpace (const Single Value 
+);
+ ;
+     
+z3DResetDevice ();
+ ; ;
+     
+FrameRender ();
+ ;
+     
+RenderGridMesh ();
+ ;
+     
+CreateGridMesh ();
+ ;
+     
+CreateLightMesh ();
+ ;
+  public:
+         
+Tz3DDebugHelper (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetEnableGrid For reading   \sa SetEnableGrid For writing */
+Boolean EnableGrid; 
+
+         /** \sa GetGridSize For reading   \sa SetGridSize For writing */
+Integer GridSize; 
+
+         /** \sa GetGridSpace For reading   \sa SetGridSpace For writing */
+Single GridSpace; 
+
+         /** \sa GetEnableLightMesh For reading   \sa SetEnableLightMesh For writing */
+Boolean EnableLightMesh; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Device interface                                                         ==*/ 
+/*==============================================================================*/ 
+/*== Handles the additional properties and events of the device that are      ==*/ 
+/*== related to the engine                                                    ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DDeviceEngineCaps : public Tz3DLinked,Iz3DDeviceEngineCaps
+{
+public:
+
+  private:
+      Tz3DDirectXLevel FDirectXLevel; 
+
+      Tz3DShaderModel FShaderModel; 
+
+      Integer FShaderModelMinor; 
+
+      Boolean FHDRSupport; 
+
+      TD3DFormat FFPFormat; 
+
+      Boolean FShadowMapSupport; 
+
+      TD3DFormat FShadowMapFormat; 
+
+      TD3DFormat FCubeShadowMapFormat; 
+
+      Boolean FShadowMapHWSupport; 
+
+      Iz3DDevice FDevice; 
+
+  protected:
+      
+TD3DFormat GetFPFormat ();
+ ;
+      
+Tz3DDirectXLevel GetDirectXLevel ();
+ ;
+      
+TD3DFormat GetCubeShadowMapFormat ();
+ ;
+      
+TD3DFormat GetShadowMapFormat ();
+ ;
+      
+Boolean GetShadowMapSupport ();
+ ;
+      
+Boolean GetHDRSupport ();
+ ;
+      
+Tz3DShaderModel GetShaderModel ();
+ ;
+      
+Integer GetShaderModelMinor ();
+ ;
+      
+Boolean GetShadowMapHWSupport ();
+ ;
+               
+z3DModifyDevice (Tz3DDeviceSettings &ADeviceSettings ,
+const _D3DCAPS9 ACaps 
+);
+ ; ;
+  public:
+       
+Tz3DDeviceEngineCaps (const Iz3DDevice ADevice 
+);
+ ;
+      
+Boolean ShaderModel3Supported ();
+ ;
+  public:
+       /** \sa GetDirectXLevel For reading*/
+Tz3DDirectXLevel DirectXLevel; 
+
+       /** \sa GetShaderModel For reading*/
+Tz3DShaderModel ShaderModel; 
+
+       /** \sa GetShaderModelMinor For reading*/
+Integer ShaderModelMinor; 
+
+       /** \sa GetHDRSupport For reading*/
+Boolean HDRSupport; 
+
+       /** \sa GetFPFormat For reading*/
+TD3DFormat FPFormat; 
+
+       /** \sa GetShadowMapSupport For reading*/
+Boolean ShadowMapSupport; 
+
+       /** \sa GetShadowMapFormat For reading*/
+TD3DFormat ShadowMapFormat; 
+
+       /** \sa GetCubeShadowMapFormat For reading*/
+TD3DFormat CubeShadowMapFormat; 
+
+       /** \sa GetShadowMapHWSupport For reading*/
+Boolean ShadowMapHWSupport; 
+
+ };
+
+
+    class Tz3DDevice : public Tz3DBase,Iz3DDevice
+{
+public:
+
+  private:
+      Boolean FFirstDeviceSettings; 
+
+      Boolean FFirstFrameMove; 
+
+      Boolean FFullScreen; 
+
+      Boolean FDisplayREFWarning; 
+
+      Iz3DDeviceEngineCaps FEngineCaps; 
+
+  protected:
+      
+Iz3DDeviceEngineCaps GetEngineCaps ();
+ ;
+      
+Boolean GetFirstFrameMove ();
+ ;
+       
+SetFirstFrameMove (const Boolean Value 
+);
+ ;
+      
+Boolean GetFirstDeviceSettings ();
+ ;
+       
+SetFirstDeviceSettings (const Boolean Value 
+);
+ ;
+      
+Boolean GetDisplayREFWarning ();
+ ;
+      
+Boolean GetFullScreen ();
+ ;
+       
+SetDisplayREFWarning (const Boolean Value 
+);
+ ;
+       
+SetFullScreen (const Boolean Value 
+);
+ ;
+  public:
+     
+CreateDevice ();
+ ;
+         
+Tz3DDevice (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DDevice ();
+ ;
+     
+ToggleFullScreen ();
+ ;
+     
+ToggleREF ();
+ ;
+      
+Boolean Created ();
+ ;
+  public:
+       /** \sa GetEngineCaps For reading*/
+Iz3DDeviceEngineCaps EngineCaps; 
+
+         /** \sa GetFirstFrameMove For reading   \sa SetFirstFrameMove For writing */
+Boolean FirstFrameMove; 
+
+         /** \sa GetFirstDeviceSettings For reading   \sa SetFirstDeviceSettings For writing */
+Boolean FirstDeviceSettings; 
+
+          /** \sa GetFullScreen For reading   \sa SetFullScreen For writing */
+Boolean FullScreen; 
+
+          /** \sa GetDisplayREFWarning For reading   \sa SetDisplayREFWarning For writing */
+Boolean DisplayREFWarning; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Stats interface                                                          ==*/ 
+/*==============================================================================*/ 
+/*== This interface allows to display the rendering stats on the screen       ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DStats : public Tz3DLinked,Iz3DStats
+{
+public:
+
+  private:
+      Iz3DTextHelper FHelper; 
+
+      ID3DXFont FD3DXFont; 
+
+      ID3DXSprite FD3DXSprite; 
+
+      Boolean FShowDevice; 
+
+      Boolean FShowDisplay; 
+
+      Boolean FShowFPS; 
+
+      Boolean FShowView; 
+
+      Boolean FShowRenderer; 
+
+  protected:
+      
+Boolean GetShowRenderer ();
+ ;
+       
+SetShowRenderer (const Boolean Value 
+);
+ ;
+      
+Boolean GetShowView ();
+ ;
+       
+SetShowView (const Boolean Value 
+);
+ ;
+      
+Boolean GetShowDevice ();
+ ;
+      
+Boolean GetShowFPS ();
+ ;
+      
+Boolean GetShowDisplay ();
+ ;
+       
+SetShowDevice (const Boolean Value 
+);
+ ;
+       
+SetShowFPS (const Boolean Value 
+);
+ ;
+       
+SetShowDisplay (const Boolean Value 
+);
+ ;
+     
+FrameRender ();
+ ;
+     
+z3DCreateDevice ();
+  ;
+     
+z3DDestroyDevice ();
+ ;
+     
+z3DLostDevice ();
+ ;
+     
+z3DResetDevice ();
+ ;
+
+        
+string Float2ToText (const Iz3DFloat2 AFloat 
+);
+ ;
+        
+string Float3ToText (const Iz3DFloat3 AFloat 
+);
+ ;
+        
+string Float4ToText (const Iz3DFloat4 AFloat 
+);
+ ;
+  public:
+         
+Tz3DStats (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DStats ();
+ ;
+  public:
+         /** \sa GetShowFPS For reading   \sa SetShowFPS For writing */
+Boolean ShowFPS; 
+
+         /** \sa GetShowDisplay For reading   \sa SetShowDisplay For writing */
+Boolean ShowDisplay; 
+
+         /** \sa GetShowDevice For reading   \sa SetShowDevice For writing */
+Boolean ShowDevice; 
+
+         /** \sa GetShowView For reading   \sa SetShowView For writing */
+Boolean ShowView; 
+
+         /** \sa GetShowRenderer For reading   \sa SetShowRenderer For writing */
+Boolean ShowRenderer; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Options interface                                                        ==*/ 
+/*==============================================================================*/ 
+/*== Allows the developer to configure certain aspects and behaviors of the   ==*/ 
+/*== engine                                                                   ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DEngineOptions : public Tz3DBase,Iz3DEngineOptions
+{
+public:
+
+  private:
+      Boolean FExtendedEvents; 
+
+      Boolean FShadowStencil; 
+
+      Boolean FHandleDefaultHotkeys; 
+
+      Boolean FShowFatalMessages; 
+
+      Boolean FHandleWindowMessages; 
+
+      Boolean FParseCommandLine; 
+
+      Boolean FHandleAltEnter; 
+
+      Boolean FShowCursorOnFullScreen; 
+
+      Boolean FClipCursorOnFullScreen; 
+
+      Boolean FLockAspectRatio; 
+
+      Boolean FStretchToWindow; 
+
+      Boolean FPlayIntro; 
+
+      Boolean FPlayMusic; 
+
+  protected:
+      
+Boolean GetPlayIntro ();
+ ;
+      
+Boolean GetPlayMusic ();
+ ;
+       
+SetPlayIntro (const Boolean Value 
+);
+ ;
+       
+SetPlayMusic (const Boolean Value 
+);
+ ;
+      
+Boolean GetStretchToWindow ();
+ ;
+       
+SetStretchToWindow (const Boolean Value 
+);
+ ;
+      
+Boolean GetShowFatalMessages ();
+ ;
+       
+SetShowFatalMessages (const Boolean Value 
+);
+ ;
+      
+Boolean GetClipCursorOnFullScreen ();
+ ;
+      
+Boolean GetExtendedEvents ();
+ ;
+      
+Boolean GetHandleAltEnter ();
+ ;
+      
+Boolean GetHandleDefaultHotkeys ();
+ ;
+      
+Boolean GetHandleWindowMessages ();
+ ;
+      
+Boolean GetLockAspectRatio ();
+ ;
+      
+Boolean GetParseCommandLine ();
+ ;
+      
+Boolean GetShadowStencil ();
+ ;
+      
+Boolean GetShowCursorOnFullScreen ();
+ ;
+       
+SetExtendedEvents (const Boolean Value 
+);
+ ;
+       
+SetHandleAltEnter (const Boolean Value 
+);
+ ;
+       
+SetHandleDefaultHotkeys (const Boolean Value 
+);
+ ;
+       
+SetHandleWindowMessages (const Boolean Value 
+);
+ ;
+       
+SetLockAspectRatio (const Boolean Value 
+);
+ ;
+       
+SetParseCommandLine (const Boolean Value 
+);
+ ;
+       
+SetShadowStencil (const Boolean Value 
+);
+ ;
+       
+SetClipCursorOnFullScreen (const Boolean Value 
+);
+ ;
+       
+SetShowCursorOnFullScreen (const Boolean Value 
+);
+ ;
+  public:
+         
+Tz3DEngineOptions (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetExtendedEvents For reading   \sa SetExtendedEvents For writing */
+Boolean ExtendedEvents; 
+
+         /** \sa GetShadowStencil For reading   \sa SetShadowStencil For writing */
+Boolean ShadowStencil; 
+
+         /** \sa GetParseCommandLine For reading   \sa SetParseCommandLine For writing */
+Boolean ParseCommandLine; 
+
+         /** \sa GetHandleDefaultHotkeys For reading   \sa SetHandleDefaultHotkeys For writing */
+Boolean HandleDefaultHotkeys; 
+
+         /** \sa GetShowFatalMessages For reading   \sa SetShowFatalMessages For writing */
+Boolean ShowFatalMessages; 
+
+         /** \sa GetHandleAltEnter For reading   \sa SetHandleAltEnter For writing */
+Boolean HandleAltEnter; 
+
+         /** \sa GetHandleWindowMessages For reading   \sa SetHandleWindowMessages For writing */
+Boolean HandleWindowMessages; 
+
+         /** \sa GetShowCursorOnFullScreen For reading   \sa SetShowCursorOnFullScreen For writing */
+Boolean ShowCursorOnFullScreen; 
+
+         /** \sa GetPlayIntro For reading   \sa SetPlayIntro For writing */
+Boolean PlayIntro; 
+
+         /** \sa GetPlayMusic For reading   \sa SetPlayMusic For writing */
+Boolean PlayMusic; 
+
+         /** \sa GetClipCursorOnFullScreen For reading   \sa SetClipCursorOnFullScreen For writing */
+Boolean ClipCursorOnFullScreen; 
+
+         /** \sa GetLockAspectRatio For reading   \sa SetLockAspectRatio For writing */
+Boolean LockAspectRatio; 
+
+         /** \sa GetStretchToWindow For reading   \sa SetStretchToWindow For writing */
+Boolean StretchToWindow; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Effects interface                                                        ==*/ 
+/*==============================================================================*/ 
+/*== These are handlers for the post process effects included in the engine:  ==*/ 
+/*==                                                                          ==*/ 
+/*==   - Bloom: Enhances strong-lighted areas                                 ==*/ 
+/*==   - Tone mapping: Simulates the eye adjustment                           ==*/ 
+/*==   - Color correction: Applies color effects to the scene                 ==*/ 
+/*==   - Motion blur: Blurs the screen when the eye moves at fast speeds      ==*/ 
+/*==   - Depth of field: Centers the view into a certain distance             ==*/ 
+/*==                                                                          ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DBloomEffect : public Tz3DBase,Iz3DBloomEffect
+{
+public:
+
+  private:
+      Iz3DPostProcessEffects FEffects; 
+
+     TD3DXVector2 FBloomPass1SampleOffsets[15]; /*!< [0..15] */
+
+     TD3DXVector2 FBloomPass2SampleOffsets[15]; /*!< [0..15] */
+
+     Single FBloomSampleWeights[15]; /*!< [0..15] */
+
+      Tz3DHandle FBrightPassValidTechnique; 
+
+      Iz3DRenderTexture FBrightPassTex; 
+
+     Iz3DRenderTexture FBloomTex[2]; /*!< [0..2] */
+
+      Iz3DEffect FEffect; 
+
+      Boolean FEnabled; 
+
+      Single FIntensity; 
+
+      Single FThreshold; 
+
+      Single FFoggyFactor; 
+
+  protected:
+      
+Single GetFoggyFactor ();
+ ;
+       
+SetFoggyFactor (const Single Value 
+);
+ ;
+      
+Boolean GetEnabled ();
+ ;
+      
+Single GetIntensity ();
+ ;
+      
+Single GetThreshold ();
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+       
+SetIntensity (const Single Value 
+);
+ ;
+       
+SetThreshold (const Single Value 
+);
+ ;
+     
+FrameRender ();
+ ;
+     
+RenderBloom ();
+ ;
+     
+RenderBrightPass ();
+ ;
+     
+CreateScenarioObjects ();
+ ;
+     
+EnableResources ();
+ ;
+  public:
+       
+Tz3DBloomEffect (const Iz3DPostProcessEffects AOwner 
+);
+
+  public:
+          /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+         /** \sa GetIntensity For reading   \sa SetIntensity For writing */
+Single Intensity; 
+
+         /** \sa GetThreshold For reading   \sa SetThreshold For writing */
+Single Threshold; 
+
+         /** \sa GetFoggyFactor For reading   \sa SetFoggyFactor For writing */
+Single FoggyFactor; 
+
+ };
+
+
+    class Tz3DToneMappingEffect : public Tz3DBase,Iz3DToneMappingEffect
+{
+public:
+
+  private:
+      Iz3DEffect FEffect; 
+
+      Boolean FEnabled; 
+
+      Iz3DRenderTexture FRenderAdaptation; 
+
+      Iz3DRenderTexture FPreviousAdaptation; 
+
+      Single FAdjustmentSpeed; 
+
+      Single FAdjustmentFactor; 
+
+      Single FMiddleTone; 
+
+      Single FToneRangeMin; 
+
+      Single FToneRangeMax; 
+
+  protected:
+      
+Single GetAdjustmentFactor ();
+ ;
+      
+Single GetAdjustmentSpeed ();
+ ;
+      
+Single GetMiddleTone ();
+ ;
+      
+Single GetToneRangeMax ();
+ ;
+      
+Single GetToneRangeMin ();
+ ;
+       
+SetAdjustmentFactor (const Single Value 
+);
+ ;
+       
+SetAdjustmentSpeed (const Single Value 
+);
+ ;
+       
+SetMiddleTone (const Single Value 
+);
+ ;
+       
+SetToneRangeMax (const Single Value 
+);
+ ;
+       
+SetToneRangeMin (const Single Value 
+);
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+      
+Boolean GetEnabled ();
+ ;
+     
+FrameMove ();
+ ;
+     
+FrameRender ();
+ ;
+     
+CreateScenarioObjects ();
+ ;
+     
+EnableResources ();
+ ;
+  public:
+         
+Tz3DToneMappingEffect (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+         /** \sa GetAdjustmentSpeed For reading   \sa SetAdjustmentSpeed For writing */
+Single AdjustmentSpeed; 
+
+         /** \sa GetAdjustmentFactor For reading   \sa SetAdjustmentFactor For writing */
+Single AdjustmentFactor; 
+
+         /** \sa GetMiddleTone For reading   \sa SetMiddleTone For writing */
+Single MiddleTone; 
+
+         /** \sa GetToneRangeMin For reading   \sa SetToneRangeMin For writing */
+Single ToneRangeMin; 
+
+         /** \sa GetToneRangeMax For reading   \sa SetToneRangeMax For writing */
+Single ToneRangeMax; 
+
+ };
+
+
+    class Tz3DColorCorrectionEffect : public Tz3DBase,Iz3DColorCorrectionEffect
+{
+public:
+
+  private:
+      Iz3DEffect FEffect; 
+
+      Boolean FEnabled; 
+
+      Tz3DColorCorrectionMode FMode; 
+
+      Iz3DFloat3 FToneFactor; 
+
+  protected:
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+      
+Boolean GetEnabled ();
+ ;
+      
+Tz3DColorCorrectionMode GetMode ();
+ ;
+      
+Iz3DFloat3 GetToneFactor ();
+ ;
+       
+SetMode (const Tz3DColorCorrectionMode Value 
+);
+ ;
+     
+FrameRender ();
+ ;
+       
+PropertyChanged (const Iz3DBase ASender 
+);
+ ;
+     
+CreateScenarioObjects ();
+ ;
+     
+EnableResources ();
+ ;
+  public:
+         
+Tz3DColorCorrectionEffect (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+          /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+       /** \sa GetToneFactor For reading*/
+Iz3DFloat3 ToneFactor; 
+
+          /** \sa GetMode For reading   \sa SetMode For writing */
+Tz3DColorCorrectionMode Mode; 
+
+ };
+
+
+    class Tz3DMotionBlurEffect : public Tz3DBase,Iz3DMotionBlurEffect
+{
+public:
+
+  private:
+      Iz3DEffect FEffect; 
+
+      Iz3DRenderTexture FRenderPrevious; 
+
+      Iz3DRenderTexture FRenderSum; 
+
+      Boolean FEnabled; 
+
+      Single FAmount; 
+
+  protected:
+       
+SetAmount (const Single Value 
+);
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+      
+Single GetAmount ();
+ ;
+      
+Boolean GetEnabled ();
+ ;
+     
+FrameMove ();
+ ;
+     
+FrameRender ();
+ ;
+     
+CreateScenarioObjects ();
+ ;
+     
+EnableResources ();
+ ;
+  public:
+         
+Tz3DMotionBlurEffect (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+          /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+         /** \sa GetAmount For reading   \sa SetAmount For writing */
+Single Amount; 
+
+ };
+
+
+    class Tz3DDepthOfFieldEffect : public Tz3DBase,Iz3DDepthOfFieldEffect
+{
+public:
+
+  private:
+      Iz3DPostProcessEffects FEffects; 
+
+      Iz3DRenderTexture FDepthTex; 
+
+      Iz3DRenderTexture FBlurValuesTex; 
+
+      Iz3DRenderTexture FPreviousDepthTex; 
+
+      Iz3DRenderTexture FFinalBlurTex; 
+
+      Iz3DEffect FEffect; 
+
+      Boolean FEnabled; 
+
+      Single FFocusDepth; 
+
+      Integer FSamples; 
+
+      Boolean FAutoFocusDepth; 
+
+      Single FAmount; 
+
+      Single FAdjustmentSpeed; 
+
+      Single FFocusSpread; 
+
+  protected:
+      
+Single GetAdjustmentSpeed ();
+ ;
+       
+SetAdjustmentSpeed (const Single Value 
+);
+ ;
+      
+Single GetFocusSpread ();
+ ;
+       
+SetFocusSpread (const Single Value 
+);
+ ;
+      
+Single GetAmount ();
+ ;
+       
+SetAmount (const Single Value 
+);
+ ;
+      
+Boolean GetAutoFocusDepth ();
+ ;
+       
+SetAutoFocusDepth (const Boolean Value 
+);
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+      
+Boolean GetEnabled ();
+ ;
+      
+Single GetFocusDepth ();
+ ;
+      
+Integer GetSamples ();
+ ;
+       
+SetFocusDepth (const Single Value 
+);
+ ;
+       
+SetSamples (const Integer Value 
+);
+ ;
+     
+FrameMove ();
+ ;
+     
+FrameRender ();
+ ;
+     
+CreateScenarioObjects ();
+ ;
+     
+EnableResources ();
+ ;
+  public:
+       
+Tz3DDepthOfFieldEffect (const Iz3DPostProcessEffects AOwner 
+);
+
+  public:
+          /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+         /** \sa GetAmount For reading   \sa SetAmount For writing */
+Single Amount; 
+
+         /** \sa GetAdjustmentSpeed For reading   \sa SetAdjustmentSpeed For writing */
+Single AdjustmentSpeed; 
+
+         /** \sa GetFocusSpread For reading   \sa SetFocusSpread For writing */
+Single FocusSpread; 
+
+         /** \sa GetFocusDepth For reading   \sa SetFocusDepth For writing */
+Single FocusDepth; 
+
+         /** \sa GetAutoFocusDepth For reading   \sa SetAutoFocusDepth For writing */
+Boolean AutoFocusDepth; 
+
+         /** \sa GetSamples For reading   \sa SetSamples For writing */
+Integer Samples; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Effects handler interface                                                ==*/ 
+/*==============================================================================*/ 
+/*== Holds every post process effect and manages its shared properties and    ==*/ 
+/*== Objects                                                                  ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DPostProcessEffects : public Tz3DLinked,Iz3DPostProcessEffects
+{
+public:
+
+  private:
+      Iz3DBloomEffect FBloom; 
+
+      Iz3DColorCorrectionEffect FColorCorrection; 
+
+      Iz3DDepthOfFieldEffect FDepthOfField; 
+
+      Iz3DMotionBlurEffect FMotionBlur; 
+
+      Iz3DToneMappingEffect FToneMapping; 
+
+      Iz3DRenderTexture FSceneScaledTex; 
+
+  protected:
+      
+Iz3DRenderTexture GetSceneScaledTexture ();
+ ;
+      
+Iz3DBloomEffect GetBloom ();
+ ;
+      
+Iz3DColorCorrectionEffect GetColorCorrection ();
+ ;
+      
+Iz3DDepthOfFieldEffect GetDepthOfField ();
+ ;
+      
+Iz3DMotionBlurEffect GetMotionBlur ();
+ ;
+      
+Iz3DToneMappingEffect GetToneMapping ();
+ ;
+     
+FrameMove ();
+ ;
+     
+FrameRender ();
+ ;
+     
+CheckSharedResources ();
+ ;
+       
+z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+);
+ ; ;
+  public:
+         
+Tz3DPostProcessEffects (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DPostProcessEffects ();
+ ;
+  public:
+       /** \sa GetSceneScaledTexture For reading*/
+Iz3DRenderTexture SceneScaledTexture; 
+
+       /** \sa GetBloom For reading*/
+Iz3DBloomEffect Bloom; 
+
+       /** \sa GetToneMapping For reading*/
+Iz3DToneMappingEffect ToneMapping; 
+
+       /** \sa GetColorCorrection For reading*/
+Iz3DColorCorrectionEffect ColorCorrection; 
+
+       /** \sa GetMotionBlur For reading*/
+Iz3DMotionBlurEffect MotionBlur; 
+
+       /** \sa GetDepthOfField For reading*/
+Iz3DDepthOfFieldEffect DepthOfField; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Renderer interface                                                       ==*/ 
+/*==============================================================================*/ 
+/*== Manages the rendering of the scene and controls the different types of   ==*/ 
+/*== renderization                                                            ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DRenderer : public Tz3DLinked,Iz3DRenderer
+{
+public:
+
+  private:
+      Integer FCurrentChain; 
+
+      Single FFadeValue; 
+
+      Boolean FFadeInMode; 
+
+      Single FFadeFactor; 
+
+      Cardinal FSavedZWrite; 
+
+      Iz3DSurface FBackBuffer; 
+
+      Boolean FHDRMode; 
+
+      Boolean FRendering; 
+
+      Tz3DTargetMode FTargetMode; 
+
+      Tz3DRenderMode FRenderMode; 
+
+     Iz3DRenderTexture FRenderTextures[1]; /*!< [0..1] */
+
+      Iz3DSurface FRenderTarget; 
+
+      IDirect3DSurface9 FPreviousDepthBuffer; 
+
+      Iz3DDepthBuffer FDepthBuffer; 
+
+      Iz3DRenderTexture FDeferredBuffer; 
+
+      IInterfaceList FBlendTextures; 
+
+      Boolean FFirstSceneRender; 
+
+      Iz3DVertexBuffer FPostProcessBuffer; 
+
+      Tz3DRenderStage FRenderStage; 
+
+      Boolean FEnableMSAA; 
+
+      Integer FMSAASamples; 
+
+      Iz3DFloat4 FDefaultClearColor; 
+
+      Single FDefaultClearDepth; 
+
+      Boolean FAutoClearTarget; 
+
+      Boolean FAutoClearDepth; 
+
+       Integer FPrevRTWidth; 
+ Integer FPrevRTHeight; 
+
+       Integer FRTWidth; 
+ Integer FRTHeight; 
+
+     TD3DXVector2 FDownScaleSO[3]; /*!< [0..3] */
+
+      Boolean FSettingsChanging; 
+
+  protected:
+      
+Integer GetRTHeight ();
+ ;
+      
+Integer GetRTWidth ();
+ ;
+       
+SetRTHeight (const Integer Value 
+);
+ ;
+       
+SetRTWidth (const Integer Value 
+);
+ ;
+      
+Boolean GetAutoClearDepth ();
+ ;
+      
+Boolean GetAutoClearTarget ();
+ ;
+       
+SetAutoClearDepth (const Boolean Value 
+);
+ ;
+       
+SetAutoClearTarget (const Boolean Value 
+);
+ ;
+      
+Iz3DFloat4 GetDefaultClearColor ();
+ ;
+      
+Single GetDefaultClearDepth ();
+ ;
+       
+SetDefaultClearDepth (const Single Value 
+);
+ ;
+      
+Boolean GetEnableMSAA ();
+ ;
+       
+SetEnableMSAA (const Boolean Value 
+);
+ ;
+      
+Integer GetMSAASamples ();
+ ;
+       
+SetMSAASamples (const Integer Value 
+);
+ ;
+      
+Tz3DRenderStage GetRenderStage ();
+ ;
+      
+TD3DFormat GetFormat ();
+ ;
+      
+Integer GetCurrentChain ();
+ ;
+       
+SetCurrentChain (const Integer Value 
+);
+ ;
+      
+Iz3DRenderTexture GetPreviousRenderTexture ();
+ ;
+      
+Boolean GetFirstSceneRender ();
+ ;
+      
+Iz3DRenderTexture GetDeferredBuffer ();
+ ;
+      
+Iz3DSurface GetRenderSurface ();
+ ;
+      
+Iz3DRenderTexture GetRenderTexture ();
+ ;
+      
+Iz3DSurface GetBackBuffer ();
+ ;
+      
+Boolean GetRendering ();
+ ;
+      
+Tz3DRenderMode GetRenderMode ();
+ ;
+       
+SetRenderMode (const Tz3DRenderMode Value 
+);
+ ;
+      
+Boolean GetHDRMode ();
+ ;
+      
+Tz3DTargetMode GetTargetMode ();
+ ;
+       
+SetHDRMode (const Boolean Value 
+);
+ ;
+       
+SetTargetMode (const Tz3DTargetMode Value 
+);
+ ;
+     
+CreateRenderTarget ();
+ ;
+     
+CreateDeferredBuffer ();
+ ;
+     
+UpdateRenderMode ();
+ ;
+     
+z3DResetDevice ();
+ ; ;
+       
+z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ; ;
+     
+z3DFrameMove ();
+ ; ;
+     
+z3DLostDevice ();
+ ; ;
+  public:
+         
+Tz3DRenderer (const Iz3DBase AOwner = nil 
+);
+ ;
+         
+ClearDepthBuffer (const Single AValue = 1 
+);
+ ;
+         
+ClearRenderTarget (const Iz3DFloat4 AValue = nil 
+);
+ ;
+              
+Clear (const Iz3DFloat4 ARenderTarget = nil ,
+const Single ADepthBuffer = 1 
+);
+ ;
+       
+AddBlendTexture (const Iz3DTexture ATexture 
+);
+ ;
+     
+Render ();
+ ;
+     
+BeginRender ();
+ ;
+     
+BeginSceneRender ();
+ ;
+     
+RenderPrecomputation ();
+ ;
+     
+RenderDeferredBuffers ();
+ ;
+     
+RenderScenario ();
+ ;
+     
+RenderPostProcess ();
+ ;
+     
+RenderGUI ();
+ ;
+     
+EndSceneRender ();
+ ;
+     
+EndRender ();
+ ;
+     
+SwapRenderChain ();
+ ;
+       
+FadeIn (const Single AFactor 
+);
+ ;
+       
+FadeOut (const Single AFactor 
+);
+ ;
+
+     
+BeginSettingsChange ();
+ ;
+     
+EndSettingsChange ();
+ ;
+
+                   
+PostProcess (const Iz3DRenderTexture ATarget ,
+const Iz3Dtexture *ATextures ,
+const Iz3DEffect AEffect 
+);
+ ;
+                
+PostProcess_Blend (const Iz3Dtexture *ATextures ,
+const Iz3DEffect AEffect 
+);
+ ;
+                       
+Blend (const Iz3Dtexture *ATextures ,
+const Iz3DEffect AEffect = nil ,
+const Single AAlpha = 1 
+);
+ ;
+                                
+AutoBlend (const Iz3DTexture ATexture ,
+const Integer ALeft = 0 ,
+const Integer ATop = 0 ,
+const Iz3DEffect AEffect = nil ,
+const Single AAlpha = 1 
+);
+ ;
+         
+DrawFullScreenQuad (const Iz3DFloat4 ACoords = nil 
+);
+ ;
+        
+GetDownScaleSO (const Integer AWidth ,
+const Integer AHeight 
+);
+ ;
+       
+DownScale (const Iz3DRenderTexture AOutTexture 
+);
+ ;
+  public:
+       /** \sa GetFormat For reading*/
+TD3DFormat Format; 
+
+       /** \sa GetBackBuffer For reading*/
+Iz3DSurface BackBuffer; 
+
+       /** \sa GetRenderTexture For reading*/
+Iz3DRenderTexture RenderTexture; 
+
+       /** \sa GetPreviousRenderTexture For reading*/
+Iz3DRenderTexture PreviousRenderTexture; 
+
+       /** \sa GetRenderSurface For reading*/
+Iz3DSurface RenderSurface; 
+
+       /** \sa GetDeferredBuffer For reading*/
+Iz3DRenderTexture DeferredBuffer; 
+
+         /** \sa GetTargetMode For reading   \sa SetTargetMode For writing */
+Tz3DTargetMode TargetMode; 
+
+         /** \sa GetRenderMode For reading   \sa SetRenderMode For writing */
+Tz3DRenderMode RenderMode; 
+
+       /** \sa GetRendering For reading*/
+Boolean Rendering; 
+
+         /** \sa GetRTWidth For reading   \sa SetRTWidth For writing */
+Integer RTWidth; 
+
+         /** \sa GetRTHeight For reading   \sa SetRTHeight For writing */
+Integer RTHeight; 
+
+       /** \sa GetRenderStage For reading*/
+Tz3DRenderStage RenderStage; 
+
+         /** \sa GetHDRMode For reading   \sa SetHDRMode For writing */
+Boolean HDRMode; 
+
+       /** \sa GetFirstSceneRender For reading*/
+Boolean FirstSceneRender; 
+
+       /** \sa GetDefaultClearColor For reading*/
+Iz3DFloat4 DefaultClearColor; 
+
+         /** \sa GetDefaultClearDepth For reading   \sa SetDefaultClearDepth For writing */
+Single DefaultClearDepth; 
+
+         /** \sa GetAutoClearTarget For reading   \sa SetAutoClearTarget For writing */
+Boolean AutoClearTarget; 
+
+         /** \sa GetAutoClearDepth For reading   \sa SetAutoClearDepth For writing */
+Boolean AutoClearDepth; 
+
+         /** \sa GetCurrentChain For reading   \sa SetCurrentChain For writing */
+Integer CurrentChain; 
+
+         /** \sa GetEnableMSAA For reading   \sa SetEnableMSAA For writing */
+Boolean EnableMSAA; 
+
+         /** \sa GetMSAASamples For reading   \sa SetMSAASamples For writing */
+Integer MSAASamples; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Engine interface                                                         ==*/ 
+/*==============================================================================*/ 
+/*== The main interface of the engine. It creates and/or handles all the      ==*/ 
+/*== components of the z3D engine                                             ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DEngine : public Tz3DBase,Iz3DEngine
+{
+public:
+
+  private:
+      Iz3DRenderer FRenderer; 
+
+      Iz3DAudioController FAudioController; 
+
+      Iz3DSound FMusic; 
+
+      TMediaPlayer FVideoManager; 
+
+      Iz3DMatrix FProjectionMatrix; 
+
+      Iz3DMatrix FViewMatrix; 
+
+      Iz3DMatrix FPrevViewMatrix; 
+
+      Iz3DFloat3 FViewPosition; 
+
+      Iz3DFloat3 FViewLookAt; 
+
+
+      IInterfaceList FFrameMoveLinks; 
+
+      IInterfaceList FGPUPrecomputationLinks; 
+
+      IInterfaceList FFrameRenderLinks; 
+
+      IInterfaceList FLightingRenderLinks; 
+
+      IInterfaceList FDirectLightRenderLinks; 
+
+      IInterfaceList FGUIRenderLinks; 
+
+      IInterfaceList FMessageLinks; 
+
+      IInterfaceList FkeyboardLinks; 
+
+      IInterfaceList FCreationLinks; 
+
+
+      Iz3DEffect FEffect; 
+
+      Iz3DDevice FDevice; 
+
+      Iz3DScenario FScenario; 
+
+      Iz3DDesktop FDesktop; 
+
+      Tz3DBaseCallbackEvent FOnFrameRender; 
+
+      Tz3DCallbackKeyboardEvent FOnKeyboardProc; 
+
+      Tz3DCallbackMessageEvent FOnMsgProc; 
+
+      Tz3DDebugHelper FDebugHelper; 
+
+      Tz3DBaseCallbackEvent FOnFrameMove; 
+
+      Tz3DBaseCallbackEvent FOnCreateDevice; 
+
+      Tz3DBaseCallbackEvent FOnResetDevice; 
+
+      Tz3DBaseCallbackEvent FOnDestroyDevice; 
+
+      Tz3DBaseCallbackEvent FOnLostDevice; 
+
+      Tz3DCallbackConfirmDeviceEvent FOnConfirmDevice; 
+
+      Tz3DCallbackModifyDeviceEvent FOnModifyDevice; 
+
+      Boolean FActive; 
+
+      Iz3DStats FStats; 
+
+      Tz3DBaseCallbackEvent FOnFinalization; 
+
+      Tz3DBaseCallbackEvent FOnInitialization; 
+
+      Iz3DEngineOptions FOptions; 
+
+      Boolean FInitialized; 
+
+      Iz3DPostProcessEffects FPostProcessEffects; 
+
+      HWND FWindow; 
+
+  protected:
+      
+HWND GetWindow ();
+ ;
+       
+SetWindow (const HWND Value 
+);
+ ;
+      
+Iz3DRenderer GetRenderer ();
+ ;
+      
+Iz3DAudioController GetAudioController ();
+ ;
+      
+Iz3DMatrix GetPrevViewMatrix ();
+ ;
+      
+Single GetViewVelocity ();
+ ;
+      
+Iz3DDesktop GetDesktop ();
+ ;
+      
+Iz3DFloat3 GetViewLookAt ();
+ ;
+      
+Iz3DFloat3 GetViewPosition ();
+ ;
+      
+Iz3DMatrix GetProjectionMatrix ();
+ ;
+      
+Iz3DMatrix GetViewMatrix ();
+ ;
+       
+SetActive (const Boolean Value 
+);
+ ;
+      
+Boolean GetActive ();
+ ;
+      
+Iz3DDebugHelper GetDebugHelper ();
+ ;
+      
+Iz3DDevice GetDevice ();
+ ;
+      
+Iz3DEffect GetEffect ();
+ ;
+      
+Tz3DCallbackConfirmDeviceEvent GetOnConfirmDevice ();
+ ;
+      
+Tz3DBaseCallbackEvent GetOnCreateDevice ();
+ ;
+      
+Tz3DBaseCallbackEvent GetOnDestroyDevice ();
+ ;
+      
+Tz3DBaseCallbackEvent GetOnFinalization ();
+ ;
+      
+Tz3DBaseCallbackEvent GetOnFrameMove ();
+ ;
+      
+Tz3DBaseCallbackEvent GetOnFrameRender ();
+ ;
+      
+Tz3DBaseCallbackEvent GetOnInitialization ();
+ ;
+      
+Tz3DCallbackKeyboardEvent GetOnKeyboardProc ();
+ ;
+      
+Tz3DBaseCallbackEvent GetOnLostDevice ();
+ ;
+      
+Tz3DCallbackModifyDeviceEvent GetOnModifyDevice ();
+ ;
+      
+Tz3DCallbackMessageEvent GetOnMsgProc ();
+ ;
+      
+Tz3DBaseCallbackEvent GetOnResetDevice ();
+ ;
+      
+Iz3DEngineOptions GetOptions ();
+ ;
+      
+Iz3DPostProcessEffects GetPostProcessEffects ();
+ ;
+      
+Iz3DScenario GetScenario ();
+ ;
+      
+Iz3DStats GetStats ();
+ ;
+       
+SetOnConfirmDevice (const Tz3DCallbackConfirmDeviceEvent Value 
+);
+ ;
+       
+SetOnCreateDevice (const Tz3DBaseCallbackEvent Value 
+);
+ ;
+       
+SetOnDestroyDevice (const Tz3DBaseCallbackEvent Value 
+);
+ ;
+       
+SetOnFinalization (const Tz3DBaseCallbackEvent Value 
+);
+ ;
+       
+SetOnFrameMove (const Tz3DBaseCallbackEvent Value 
+);
+ ;
+       
+SetOnFrameRender (const Tz3DBaseCallbackEvent Value 
+);
+ ;
+       
+SetOnInitialization (const Tz3DBaseCallbackEvent Value 
+);
+ ;
+       
+SetOnKeyboardProc (const Tz3DCallbackKeyboardEvent Value 
+);
+ ;
+       
+SetOnLostDevice (const Tz3DBaseCallbackEvent Value 
+);
+ ;
+       
+SetOnModifyDevice (const Tz3DCallbackModifyDeviceEvent Value 
+);
+ ;
+       
+SetOnMsgProc (const Tz3DCallbackMessageEvent Value 
+);
+ ;
+       
+SetOnResetDevice (const Tz3DBaseCallbackEvent Value 
+);
+ ;
+               
+CreateDevice (const IDirect3DDevice9 ADevice ,
+const TD3DSurfaceDesc ABackBufferSurfaceDesc 
+);
+ ;
+                  
+ConfirmDevice (const TD3DCaps9 ACaps ,
+TD3DFormat AAdapterFormat ,
+TD3DFormat ABackBufferFormat ,
+Boolean AWindowed ,
+Boolean &AAccept 
+);
+ ;
+     
+DestroyDevice ();
+ ;
+     
+LostDevice ();
+ ;
+          
+ModifyDevice (Tz3DDeviceSettings &ADeviceSettings ,
+const TD3DCaps9 ACaps 
+);
+ ;
+     
+ResetDevice ();
+ ;
+       
+StartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ;
+     
+FrameMove ();
+ ;
+     
+FrameRender ();
+ ;
+                     
+MsgProc (HWnd AWnd ,
+LongWord AMsg ,
+wParam AwParam ,
+lParam AlParam ,
+Boolean &ADefault ,
+lResult &AResult 
+);
+ ;
+         
+KeyboardProc (LongWord AChar ,
+Boolean AKeyDown ,
+Boolean AAltDown 
+);
+ ;
+  public:
+                 .5 
+Iz3DRenderTexture ComputeNormalMap (const Iz3DTexture ATexture ,
+const Single ABump = 0 
+);
+ ;
+     
+Initialize ();
+ ;
+     
+PlayIntro ();
+ ;
+                 
+PlayMovie (const string AFileName ,
+const Boolean ACanSkip = True ,
+const Boolean AStretch = True 
+);
+ ;
+            
+PlayMusic (const string AFileName ,
+const Boolean ALoop = True 
+);
+ ;
+     
+Run ();
+ ;
+     
+Stop ();
+ ;
+         
+Tz3DEngine (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DEngine ();
+ ;
+       
+AddLink (const Iz3DLinked AObject 
+);
+ ;
+       
+RemoveLink (const Iz3DLinked AObject 
+);
+ ;
+
+
+/*    procedure NotifyControllers(const AEvent: Tz3DNotifyControllerEvent);*/ 
+
+                    
+NotifyLinks_z3DConfirmDevice (const TD3DCaps9 ACaps ,
+TD3DFormat AAdapterFormat ,
+TD3DFormat ABackBufferFormat ,
+Boolean AWindowed ,
+Boolean &AAccept 
+);
+ ;
+               
+NotifyLinks_z3DModifyDevice (Tz3DDeviceSettings &ADeviceSettings ,
+const TD3DCaps9 ACaps 
+);
+ ;
+     
+NotifyLinks_z3DCreateDevice ();
+ ;
+     
+NotifyLinks_z3DDestroyDevice ();
+ ;
+     
+NotifyLinks_z3DLostDevice ();
+ ;
+     
+NotifyLinks_z3DResetDevice ();
+ ;
+
+       
+NotifyLinks_z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ;
+     
+NotifyLinks_z3DEndScenario ();
+ ;
+
+     
+NotifyLinks_z3DFrameMove ();
+ ;
+     
+NotifyLinks_z3DFrameRender ();
+ ;
+     
+NotifyLinks_z3DLightingRender ();
+ ;
+     
+NotifyLinks_z3DDirectLightRender ();
+ ;
+     
+NotifyLinks_z3DGUIRender ();
+ ;
+                           
+NotifyLinks_z3DMessage (const HWnd AWnd ,
+const LongWord AMsg ,
+const wParam AwParam ,
+const lParam AlParam ,
+Boolean &ADefault ,
+lResult &AResult 
+);
+ ;
+           
+NotifyLinks_z3DKeyboard (const LongWord AChar ,
+const Boolean AKeyDown ,
+const Boolean AAltDown 
+);
+ ;
+  public:
+       /** \sa GetAudioController For reading*/
+Iz3DAudioController AudioController; 
+
+       /** \sa GetEffect For reading*/
+Iz3DEffect CoreEffect; 
+
+       /** \sa GetDevice For reading*/
+Iz3DDevice Device; 
+
+       /** \sa GetDesktop For reading*/
+Iz3DDesktop Desktop; 
+
+       /** \sa GetStats For reading*/
+Iz3DStats Stats; 
+
+          /** \sa GetActive For reading   \sa SetActive For writing */
+Boolean Active; 
+
+       /** \sa GetOptions For reading*/
+Iz3DEngineOptions Options; 
+
+       /** \sa GetDebugHelper For reading*/
+Iz3DDebugHelper DebugHelper; 
+
+       /** \sa GetRenderer For reading*/
+Iz3DRenderer Renderer; 
+
+       /** \sa GetViewMatrix For reading*/
+Iz3DMatrix ViewMatrix; 
+
+       /** \sa GetPrevViewMatrix For reading*/
+Iz3DMatrix PrevViewMatrix; 
+
+       /** \sa GetProjectionMatrix For reading*/
+Iz3DMatrix ProjectionMatrix; 
+
+       /** \sa GetViewPosition For reading*/
+Iz3DFloat3 ViewPosition; 
+
+       /** \sa GetViewVelocity For reading*/
+Single ViewVelocity; 
+
+       /** \sa GetViewLookAt For reading*/
+Iz3DFloat3 ViewLookAt; 
+
+         /** \sa GetWindow For reading   \sa SetWindow For writing */
+HWND Window; 
+
+         /** \sa GetOnInitialization For reading   \sa SetOnInitialization For writing */
+Tz3DBaseCallbackEvent OnInitialization; 
+
+         /** \sa GetOnFinalization For reading   \sa SetOnFinalization For writing */
+Tz3DBaseCallbackEvent OnFinalization; 
+
+         /** \sa GetOnMsgProc For reading   \sa SetOnMsgProc For writing */
+Tz3DCallbackMessageEvent OnMessage; 
+
+         /** \sa GetOnKeyboardProc For reading   \sa SetOnKeyboardProc For writing */
+Tz3DCallbackKeyboardEvent OnKeyboard; 
+
+         /** \sa GetOnFrameRender For reading   \sa SetOnFrameRender For writing */
+Tz3DBaseCallbackEvent OnFrameRender; 
+
+         /** \sa GetOnFrameMove For reading   \sa SetOnFrameMove For writing */
+Tz3DBaseCallbackEvent OnFrameMove; 
+
+         /** \sa GetOnCreateDevice For reading   \sa SetOnCreateDevice For writing */
+Tz3DBaseCallbackEvent OnCreateDevice; 
+
+         /** \sa GetOnConfirmDevice For reading   \sa SetOnConfirmDevice For writing */
+Tz3DCallbackConfirmDeviceEvent OnConfirmDevice; 
+
+         /** \sa GetOnDestroyDevice For reading   \sa SetOnDestroyDevice For writing */
+Tz3DBaseCallbackEvent OnDestroyDevice; 
+
+         /** \sa GetOnLostDevice For reading   \sa SetOnLostDevice For writing */
+Tz3DBaseCallbackEvent OnLostDevice; 
+
+         /** \sa GetOnModifyDevice For reading   \sa SetOnModifyDevice For writing */
+Tz3DCallbackModifyDeviceEvent OnModifyDevice; 
+
+         /** \sa GetOnResetDevice For reading   \sa SetOnResetDevice For writing */
+Tz3DBaseCallbackEvent OnResetDevice; 
+
+       /** \sa GetScenario For reading*/
+Iz3DScenario Scenario; 
+
+       /** \sa GetPostProcessEffects For reading*/
+Iz3DPostProcessEffects PostProcess; 
+
+ };
+
+
+// Global access variables and functions
+
+
+
+   const  GTest =  False;
+
+  FPostProcess_VD: array[0..2] of TD3DVertexElement9 =
+  (
+    (Stream: 0; Offset: 0;  const D3DDECLTYPE_FLOAT4 _Type; 
+  const D3DDECLMETHOD_DEFAULT Method; 
+  const D3DDECLUSAGE_POSITIONT Usage; 
+ UsageIndex: 0),
+    (Stream: 0; Offset: 16; const D3DDECLTYPE_FLOAT2 _Type; 
+  const D3DDECLMETHOD_DEFAULT Method; 
+  const D3DDECLUSAGE_TEXCOORD Usage; 
+  UsageIndex: 0),
+    (Stream:$FF; Offset:0;  const D3DDECLTYPE_UNUSED _Type; 
+ Method: TD3DDeclMethod(0);     Usage: TD3DDeclUsage(0);       UsageIndex: 0)
+  );
+
+    TD3DMultiSampleType FMSAASamplesD3D[16]=
+    {D3DMULTISAMPLE_NONE,
+     D3DMULTISAMPLE_NONE,
+     D3DMULTISAMPLE_2_SAMPLES,
+     D3DMULTISAMPLE_3_SAMPLES,
+     D3DMULTISAMPLE_4_SAMPLES,
+     D3DMULTISAMPLE_5_SAMPLES,
+     D3DMULTISAMPLE_6_SAMPLES,
+     D3DMULTISAMPLE_7_SAMPLES,
+     D3DMULTISAMPLE_8_SAMPLES,
+     D3DMULTISAMPLE_9_SAMPLES,
+     D3DMULTISAMPLE_10_SAMPLES,
+     D3DMULTISAMPLE_11_SAMPLES,
+     D3DMULTISAMPLE_12_SAMPLES,
+     D3DMULTISAMPLE_13_SAMPLES,
+     D3DMULTISAMPLE_14_SAMPLES,
+     D3DMULTISAMPLE_15_SAMPLES,
+     D3DMULTISAMPLE_16_SAMPLES}; /*!< [0..16] */
+
+
+  const Cardinal FDebugCounter; 
+
+
+ 
+z3DDebug_Init ();
+
+  
+string z3DDebug_Result ();
+
+
+  
+Iz3DEngine z3DCreateEngine ();
+ ;
+  
+Iz3DEngine z3DGlobalEngine ();
+ ;
+
+/*procedure z3DRegisterGlobalController(const AController: Iz3DGlobalController; const ALinkCreation: Boolean = True;
+  const ALinkInit: Boolean = True; const ALinkRun: Boolean = True); stdcall;
+procedure z3DUnregisterGlobalController(const AController: Iz3DGlobalController; const ALinkCreation: Boolean = True;
+  const ALinkInit: Boolean = True; const ALinkRun: Boolean = True); stdcall;*/ 
+
+
+
+
+     
+      
+     
+      
+   
+
+/*uses z3DFunctions, Math, z3DStrings, z3DFileSystem, z3DREFSwitch, z3DCameras;*/ 
+/*
+var
+ GEngine: Iz3DEngine;
+    GCreationControllers: IInterfaceList;
+    GInitControllers: IInterfaceList;
+    GRunControllers: IInterfaceList;
+
+  
+Iz3DEngine z3DCreateEngine ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DEngine.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DEngine z3DGlobalEngine ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= GEngine;
+#endif /* DOXYGEN_SKIP */
+};
+
+// Global controllers registration
+
+{procedure z3DRegisterGlobalController(const AController: Iz3DGlobalController; const ALinkCreation: Boolean = True;
+  const ALinkInit: Boolean = True; const ALinkRun: Boolean = True); stdcall;
+begin
+  if ALinkCreation then GCreationControllers.Add(AController);
+  if ALinkInit then GInitControllers.Add(AController);
+  if ALinkRun then GRunControllers.Add(AController);
+end;
+
+procedure z3DUnregisterGlobalController(const AController: Iz3DGlobalController; const ALinkCreation: Boolean = True;
+  const ALinkInit: Boolean = True; const ALinkRun: Boolean = True); stdcall;
+begin
+  if ALinkCreation then GCreationControllers.Remove(AController);
+  if ALinkInit then GInitControllers.Remove(AController);
+  if ALinkRun then GRunControllers.Remove(AController);
+end;}
+
+
+
+ 
+z3DDebug_Init ()
+{
+#ifndef DOXYGEN_SKIP
+  FDebugCounter:= GetTickCount;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+string z3DDebug_Result ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Format('%s seconds (%d ms).', [FormatFloat('0.0000', (GetTickCount-FDebugCounter)/1000), GetTickCount-FDebugCounter]);
+#endif /* DOXYGEN_SKIP */
+};
+
+{==============================================================================}
+{== Global callback functions to make contact with z3D Core                  ==}
+{==============================================================================}
+
+     
+Boolean IsDepthFormatOk (TD3DFormat DepthFormat ,
+TD3DFormat AdapterFormat ,
+TD3DFormat BackBufferFormat 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= False;
+
+  // Verify that the depth format exists
+  if Failed(z3DCore_GetD3DObject.CheckDeviceFormat(D3DADAPTER_DEFAULT,
+  D3DDEVTYPE_HAL, AdapterFormat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, DepthFormat)) then Exit;
+
+  // Verify that the backbuffer format is valid
+  if Failed(z3DCore_GetD3DObject.CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
+  AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, BackBufferFormat)) then Exit;
+
+  // Verify that the depth format is compatible
+  if Failed(z3DCore_GetD3DObject.CheckDepthStencilMatch(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
+  AdapterFormat, BackBufferFormat, DepthFormat)) then Exit;
+
+  Result:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+               
+Boolean GIsDeviceAcceptable (const TD3DCaps9 ACaps ,
+const TD3DFormat AAdapterFormat ,
+const TD3DFormat ABackBufferFormat ,
+const Boolean AWindowed ,
+const Pointer AUserContext 
+)
+ ;
+/*
+var
+ pD3D: IDirect3D9;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= False;
+  pD3D:= z3DCore_GetD3DObject;
+
+  // Skip backbuffer formats that don't support alpha blending
+  if FAILED(pD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  AAdapterFormat, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING, D3DRTYPE_TEXTURE, ABackBufferFormat)) then Exit;
+
+  // Must support pixel shader 2 model
+  if (ACaps.PixelShaderVersion < D3DPS_VERSION(2,0)) then Exit;
+
+  // Need to support A8R8G8B8 render target
+  if FAILED(pD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  AAdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8)) then Exit;
+
+  // Need to support alpha blending for A8R8G8B8 texture
+  if FAILED(pD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  AAdapterFormat, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8)) then Exit;
+
+// Forced REF device
+//  if FAILED(pD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+//  AAdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R8G8B8)) then Exit;
+
+  Result:= True;
+  z3DGlobalEngine.ConfirmDevice(ACaps, AAdapterFormat, ABackBufferFormat, AWindowed, Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+Boolean GModifyDevice (Tz3DDeviceSettings &ASettings ,
+const TD3DCaps9 ACaps ,
+const Pointer AUserContext 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  if (ACaps.DevCaps and D3DDEVCAPS_HWTRANSFORMANDLIGHT = 0) or
+  (ACaps.VertexShaderVersion < D3DVS_VERSION(2,0)) then
+  ASettings.BehaviorFlags:= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
+
+  z3DGlobalEngine.ModifyDevice(ASettings, ACaps);
+  Result:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+HRESULT GOnCreateDevice (const IDirect3DDevice9 ADevice ,
+const TD3DSurfaceDesc ABackBuffer ,
+const Pointer AUserContext 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.CreateDevice(ADevice, ABackBuffer);
+  Result:= S_OK;
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+HRESULT GOnResetDevice (const IDirect3DDevice9 ADevice ,
+const TD3DSurfaceDesc ABackBuffer ,
+const Pointer AUserContext 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.ResetDevice;
+  Result:= S_OK;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+GOnLostDevice (const Pointer AUserContext 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.LostDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+GOnDestroyDevice (const Pointer AUserContext 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.DestroyDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+             
+GOnFrameMove (const IDirect3DDevice9 ADevice ,
+const Double ATime ,
+const Single AElapsedTime ,
+const Pointer AUserContext 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.FrameMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+             
+GOnFrameRender (const IDirect3DDevice9 ADevice ,
+const Double ATime ,
+const Single AElapsedTime ,
+const Pointer AUserContext 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.FrameRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+                    
+LRESULT GOnMsgProc (const HWND AWnd ,
+const LongWord AMsg ,
+const WPARAM AWParam ,
+const LPARAM ALParam ,
+/* out */ Boolean &AHandled ,
+const Pointer AUserContext 
+)
+ ;
+/*
+var
+ FDefault: Boolean;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FDefault:= True;
+  z3DGlobalEngine.MsgProc(AWnd, AMsg, AwParam, AlParam, FDefault, Result);
+  AHandled:= not FDefault;
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+GOnKeyboardProc (const LongWord AChar ,
+const Boolean AKeyDown ,
+const Boolean AAltDown ,
+const Pointer AUserContext 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.KeyboardProc(AChar, AKeyDown, AAltDown);
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DEngine */ 
+
+ 
+Tz3DEngine::Tz3DEngine ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+
+  FFrameMoveLinks:= TInterfaceList.Create;
+  FGPUPrecomputationLinks:= TInterfaceList.Create;
+  FFrameRenderLinks:= TInterfaceList.Create;
+  FLightingRenderLinks:= TInterfaceList.Create;
+  FDirectLightRenderLinks:= TInterfaceList.Create;
+  FGUIRenderLinks:= TInterfaceList.Create;
+  FkeyboardLinks:= TInterfaceList.Create;
+  FCreationLinks:= TInterfaceList.Create;
+  FMessageLinks:= TInterfaceList.Create;
+
+  GEngine:= Self as Iz3DEngine;
+  FDevice:= Tz3DDevice.Create;
+  FViewMatrix:= z3DMatrix.LookAt(z3DFloat3(0, 0, -5), z3DFloat3(0, 0, 1));
+  FPrevViewMatrix:= z3DMatrix;
+  FProjectionMatrix:= z3DMatrix.PerspectiveFOV(D3DX_PI / 2);
+  FDesktop:= z3DCreateDesktop;
+  FViewPosition:= z3DFloat3;
+  FViewLookAt:= z3DFloat3;
+  FActive:= True;
+  FInitialized:= False;
+  FEffect:= z3DCreateEffect;
+  FEffect.ScenarioLevel:= False;
+  FEffect.FileName:= PWideChar(WideString(Z3DRES_CORE_EFFECT));
+  FScenario:= z3DCreateScenario;
+  FStats:= Tz3DStats.Create;
+  FDebugHelper:= Tz3DDebugHelper.Create;
+  FOptions:= Tz3DEngineOptions.Create;
+  FRenderer:= Tz3DRenderer.Create;
+  FPostProcessEffects:= Tz3DPostProcessEffects.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::~Tz3DEngine ()
+{
+#ifndef DOXYGEN_SKIP
+  FAudioController:= nil;
+  FOptions:= nil;
+  FPostProcessEffects:= nil;
+  FDebugHelper:= nil;
+  FScenario:= nil;
+  FDevice:= nil;
+  FStats:= nil;
+  if Assigned(FOnFinalization) then FOnFinalization(Self);
+  GEngine:= nil;
+  FatalExit(0);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::Initialize ()
+
+/*
+var
+ FRect: TRect;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if FInitialized then Exit;
+  if Assigned(FOnInitialization) then FOnInitialization(Self);
+
+  // Initialize z3D environment
+  z3DCore_SetCursorSettings(False, False);
+  z3DCore_SetCallback_FrameMove(GOnFrameMove);
+  z3DCore_SetCallback_FrameRender(GOnFrameRender);
+  z3DCore_SetCallback_Keyboard(GOnKeyboardProc);
+  z3DCore_SetCallback_MsgProc(GOnMsgProc);
+  z3DInit(FOptions.ParseCommandLine, FOptions.HandleDefaultHotkeys,
+  FOptions.ShowFatalMessages, False);
+  SetWindowTextW(Window, z3DCore_GetState.CurrentApp);
+
+  // Set the render window
+  if IsWindow(Window) then
+  z3DCore_SetWindow(Window, Window, Window, FOptions.HandleWindowMessages) else
+  z3DCore_CreateWindow(z3DCore_GetState.CurrentApp, HInstance);
+  if not Options.StretchToWindow or Device.FullScreen thenbegin    z3DCore_GetState.OverrideWidth:= 800;
+    z3DCore_GetState.OverrideHeight:= 600;
+ end
+
+  // Center the window on screen
+  ShowWindow(Window, SW_SHOW);
+  GetWindowRect(Window, FRect);
+  MoveWindow(Window, Screen.Width div 2 - (FRect.Right - FRect.Left) div 2,
+  Screen.Height div 2 - (FRect.Bottom - FRect.Top) div 2, FRect.Right - FRect.Left,
+  FRect.Bottom - FRect.Top, False);
+
+  // Create the Direct3D device
+  FDevice.CreateDevice;
+
+  // Play introduction media
+  if Options.PlayIntro then PlayIntro;
+
+  // Prepare the engine to run
+  z3DCore_SetCursorSettings(Options.ShowCursorOnFullScreen, Options.ClipCursorOnFullScreen);
+  z3DCore_GetState.SetHandleAltEnter(FOptions.HandleAltEnter);
+  FActive:= True;
+  FInitialized:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DEngine::PlayMovie (const string AFileName ,
+const Boolean ACanSkip ,
+const Boolean AStretch 
+)
+
+/*
+var
+ FControl: Tz3DWinControl;
+    FRect: TRect;
+    FCursor: TCursor;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Check if the filename is valid
+  if not FileExists(AFileName) thenbegin    z3DTrace(PWideChar(WideString('Iz3DEngine.PlayMovie: Could not play movie (File '+ExtractFileName(AFileName)+' not found)')), z3dtkWarning);
+    Exit;
+ end
+
+  // Create the movie controller and open the file
+  FCursor:= Screen.Cursor;
+  Screen.Cursor:= crNone;
+  FVideoManager:= TMediaPlayer.Create(nil);
+  try
+    FVideoManager.FileName:= AFileName;
+    FControl:= Tz3DWinControl.Create(Application);
+    try
+      FControl.WindowHandle:= z3DCore_GetHWND;
+      FVideoManager.Parent:= FControl;
+      FVideoManager.Display:= FControl;
+      try
+        FVideoManager.Open;
+      except
+        z3DTrace(PWideChar(WideString('Iz3DEngine.PlayMovie: Could not open movie. Message: '+FVideoManager.ErrorMessage)), z3dtkWarning);
+     end
+
+      // Prepare the movie on the screen
+      GetWindowRect(Window, FRect);
+      if AStretch then FVideoManager.DisplayRect:= Rect(0, 0, FControl.ClientRect.Right - FControl.ClientRect.Left,
+      FControl.ClientRect.Bottom - FControl.ClientRect.Top) else
+      FVideoManager.DisplayRect:= Rect((FControl.ClientRect.Right - FControl.ClientRect.Left) div 2 -
+      FVideoManager.DisplayRect.Right div 2, (FControl.ClientRect.Bottom - FControl.ClientRect.Top) div 2 -
+      FVideoManager.DisplayRect.Bottom div 2, FVideoManager.DisplayRect.Right, FVideoManager.DisplayRect.Bottom);
+
+      // Play the movie
+      ShowWindow(Window, SW_SHOW);
+      FVideoManager.Play;
+
+      // Process messages with no rendering and skip movie if spacebar is pressed
+      while FVideoManager.Mode = mpPlaying dobegin        z3DCore_ProcessMessages(0, False);
+        if ACanSkip and z3DCore_GetState.Keys[27] then Break;
+     end
+      
+    finally
+      FControl.WindowHandle:= 0;
+   end
+  finally
+    FVideoManager.Free;
+    Screen.Cursor:= FCursor;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::PlayIntro ()
+{
+#ifndef DOXYGEN_SKIP
+  z3DFileSystemController.DecryptF(fsEngineCoreResFile, fsCoreResFile_z3DTheme);
+  z3DFileSystemController.DecryptF(fsEngineCoreResFile, fsCoreResFile_z3DAVIIntro);
+
+  if Options.PlayMusic then
+  PlayMusic(WideCharToString(z3DFileSystemController.GetFullPath(fsBufferPath))+fsPathDiv+fsCoreResFile_z3DTheme);
+  PlayMovie(WideCharToString(z3DFileSystemController.GetFullPath(fsBufferPath))+fsPathDiv+fsCoreResFile_z3DAVIIntro);
+
+  z3DFileSystemController.Delete(fsCoreResFile_z3DAVIIntro);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::Run ()
+{
+#ifndef DOXYGEN_SKIP
+  if z3DCore_GetState.InsideMainloop then z3DCore_Pause(False, False) elsebegin    Initialize;
+
+    // Pass control to z3D main loop. The only events that will be called since
+    // here will be the z3D events. No application events are available
+    z3DCore_MainLoop;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetActive (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FActive <> Value thenbegin    FActive:= Value;
+    if Value then Run else Stop;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+            
+Tz3DEngine::ConfirmDevice (const TD3DCaps9 ACaps ,
+TD3DFormat AAdapterFormat ,
+TD3DFormat ABackBufferFormat ,
+Boolean AWindowed ,
+Boolean &AAccept 
+)
+{
+#ifndef DOXYGEN_SKIP
+  AAccept:= True;
+  NotifyLinks_z3DConfirmDevice(ACaps, AAdapterFormat, ABackBufferFormat, AWindowed, AAccept);
+  if Assigned(FOnConfirmDevice) then
+  FOnConfirmDevice(ACaps, AAdapterFormat, ABackBufferFormat, AWindowed, AAccept);
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DEngine::CreateDevice (const IDirect3DDevice9 ADevice ,
+const TD3DSurfaceDesc ABackBufferSurfaceDesc 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Initialize the audio manager
+  FAudioController:= z3DCreateAudioController;
+  FAudioController.Initialize(z3DCore_GetHWND);
+
+  NotifyLinks_z3DCreateDevice;
+  if Assigned(FOnCreateDevice) then FOnCreateDevice(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::DestroyDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  FAudioController:= nil;
+  FMusic:= nil;
+  NotifyLinks_z3DDestroyDevice;
+  if Assigned(FOnDestroyDevice) then FOnDestroyDevice(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::LostDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  NotifyLinks_z3DLostDevice;
+  if Assigned(FOnLostDevice) then FOnLostDevice(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DEngine::ModifyDevice (Tz3DDeviceSettings &ADeviceSettings ,
+const TD3DCaps9 ACaps 
+)
+{
+#ifndef DOXYGEN_SKIP
+  NotifyLinks_z3DModifyDevice(ADeviceSettings, ACaps);
+  if Assigned(FOnModifyDevice) then FOnModifyDevice(ADeviceSettings, ACaps);
+
+  // Display the Switching to REF dialog warning, only the first time
+  if FDevice.FirstDeviceSettings and FDevice.DisplayREFWarning thenbegin    FDevice.FirstDeviceSettings:= False;
+    if (ADeviceSettings.DeviceType = D3DDEVTYPE_REF) then TfrmREFSwitch.Launch;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::ResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  FScenario.ResetDevice;
+  NotifyLinks_z3DResetDevice;
+  if Assigned(FOnResetDevice) then FOnResetDevice(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::FrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  if (FMusic <> nil) and (FMusic.Volume = -1) then FMusic.FadeOut(10);
+
+  if Assigned(FOnFrameMove) then FOnFrameMove(Self);
+  NotifyLinks_z3DFrameMove;
+  if FScenario.Enabled then FPostProcessEffects.FrameMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::FrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if Assigned(FOnFrameRender) then FOnFrameRender(Self);
+  if Renderer <> nil then Renderer.Render;
+  FPrevViewMatrix.From(FViewMatrix);
+#endif /* DOXYGEN_SKIP */
+};
+
+        .5 
+Iz3DRenderTexture Tz3DEngine::ComputeNormalMap (const Iz3DTexture ATexture ,
+const Single ABump = 0 
+)
+
+/*
+var
+ FTexture: Iz3DRenderTexture;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if z3DTraceCondition(ATexture = nil, 'Iz3DEngine.ComputeNormalMap failed (ATexture is NULL)', z3DtkWarning) then Exit;
+  if z3DTraceCondition(ATexture.D3DTexture = nil, 'Iz3DEngine.ComputeNormalMap failed (ATexture.D3DTexture is NULL)', z3DtkWarning) then Exit;
+  FTexture:= z3DCreateRenderTexture;
+  FTexture.ScenarioLevel:= False;
+  FTexture.AutoParams:= False;
+  FTexture.Usage:= D3DUSAGE_RENDERTARGET;
+  FTexture.AutoGenerateMipMaps:= True;
+  FTexture.SetParams(ATexture.Width, ATexture.Height, 1, D3DFMT_A8R8G8B8);
+  if not Renderer.Rendering then z3DCore_GetD3DDevice.BeginScene;
+  FEffect.Technique:= 'z3DCore_NormalMap';
+  FEffect.Param['GTextureWidth']:= ATexture.Width;
+  FEffect.Param['GTextureHeight']:= ATexture.Height;
+  FEffect.Param['GBumpFactor']:= ABump;
+  Renderer.PostProcess(FTexture, [ATexture], FEffect);
+  if not Renderer.Rendering then z3DCore_GetD3DDevice.EndScene;
+  Result:= FTexture;
+#endif /* DOXYGEN_SKIP */
+};
+
+               
+Tz3DEngine::MsgProc (HWnd AWnd ,
+LongWord AMsg ,
+wParam AwParam ,
+lParam AlParam ,
+Boolean &ADefault ,
+lResult &AResult 
+)
+{
+#ifndef DOXYGEN_SKIP
+  AResult:= 0;
+
+  // Allow dialog resource manager calles to handle GUI messages
+  if not ADefault then Exit;
+  ADefault:= True;
+  NotifyLinks_z3DMessage(AWnd, AMsg, AwParam, AlParam, ADefault, AResult);
+  if not ADefault then Exit;
+  if Assigned(FOnMsgProc) then FOnMsgProc(AWnd, AMsg, AwParam, AlParam, ADefault, AResult);
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Tz3DEngine::KeyboardProc (LongWord AChar ,
+Boolean AKeyDown ,
+Boolean AAltDown 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if AKeyDown and (Ord(AChar) = VK_ESCAPE) and Scenario.Enabled then Desktop.Visible:= not Desktop.Visible;
+  NotifyLinks_z3DKeyboard(AChar, AKeyDown, AAltDown);
+  if Assigned(FOnKeyboardProc) then FOnKeyboardProc(AChar, AKeyDown, AAltDown);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::Stop ()
+{
+#ifndef DOXYGEN_SKIP
+  z3DCore_Pause(True, True);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::AddLink (const Iz3DLinked AObject 
+)
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Register render targets and depth buffers first
+  if z3dlnDevice in AObject.Notifications then
+  if FCreationLinks.IndexOf(AObject) = -1 thenbegin    if (z3DSupports(AObject, Iz3DBaseTexture) and not
+    z3DSupports(AObject, Iz3DMaterialTexture)) or
+    z3DSupports(AObject, Iz3DEffect) or z3DSupports(AObject, Iz3DDepthBuffer) then
+    FCreationLinks.Insert(1, AObject) else FCreationLinks.Add(AObject);
+ end
+
+  // Register camera objects first
+  if z3dlnFrameMove in AObject.Notifications then
+  if FFrameMoveLinks.IndexOf(AObject) = -1 thenbegin    if z3DSupports(AObject, Iz3DBaseCamera) then
+    FFrameMoveLinks.Insert(1, AObject) else
+    FFrameMoveLinks.Add(AObject);
+ end
+  if z3dlnGPUPrecomputation in AObject.Notifications then
+  if FGPUPrecomputationLinks.IndexOf(AObject) = -1 thenbegin    FGPUPrecomputationLinks.Add(AObject);
+ end
+  if z3dlnFrameRender in AObject.Notifications then
+  if FFrameRenderLinks.IndexOf(AObject) = -1 thenbegin    FFrameRenderLinks.Add(AObject);
+ end
+  if z3dlnLightingRender in AObject.Notifications then
+  if FLightingRenderLinks.IndexOf(AObject) = -1 thenbegin    FLightingRenderLinks.Add(AObject);
+ end
+  if z3dlnDirectLightRender in AObject.Notifications then
+  if FDirectLightRenderLinks.IndexOf(AObject) = -1 thenbegin    FDirectLightRenderLinks.Add(AObject);
+ end
+  if z3dlnGUIRender in AObject.Notifications then
+  if FGUIRenderLinks.IndexOf(AObject) = -1 thenbegin    FGUIRenderLinks.Add(AObject);
+ end
+  if z3dlnMessages in AObject.Notifications then
+  if FMessageLinks.IndexOf(AObject) = -1 thenbegin    FMessageLinks.Add(AObject);
+ end
+  if z3dlnKeyboard in AObject.Notifications then
+  if FkeyboardLinks.IndexOf(AObject) = -1 thenbegin    FkeyboardLinks.Add(AObject);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::RemoveLink (const Iz3DLinked AObject 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if z3dlnDevice in AObject.Notifications then FCreationLinks.Remove(AObject);
+  if z3dlnFrameMove in AObject.Notifications then FFrameMoveLinks.Remove(AObject);
+  if z3dlnGPUPrecomputation in AObject.Notifications then FGPUPrecomputationLinks.Remove(AObject);
+  if z3dlnFrameRender in AObject.Notifications then FFrameRenderLinks.Remove(AObject);
+  if z3dlnLightingRender in AObject.Notifications then FLightingRenderLinks.Remove(AObject);
+  if z3dlnDirectLightRender in AObject.Notifications then FDirectLightRenderLinks.Remove(AObject);
+  if z3dlnGUIRender in AObject.Notifications then FGUIRenderLinks.Remove(AObject);
+  if z3dlnMessages in AObject.Notifications then FMessageLinks.Remove(AObject);
+  if z3dlnKeyboard in AObject.Notifications then FkeyboardLinks.Remove(AObject);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DConfirmDevice ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FCreationLinks.Count-1 do
+  (FCreationLinks.Items[I] as Iz3DLinked).z3DConfirmDevice(ACaps, AAdapterFormat, ABackBufferFormat, AAccept);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DCreateDevice ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FCreationLinks.Count-1 do
+  (FCreationLinks.Items[I] as Iz3DLinked).z3DCreateDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DDestroyDevice ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FCreationLinks.Count-1 do
+  (FCreationLinks.Items[I] as Iz3DLinked).z3DDestroyDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DEndScenario ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FCreationLinks.Count-1 do
+  (FCreationLinks.Items[I] as Iz3DLinked).z3DStopScenario;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::NotifyLinks_z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FCreationLinks.Count-1 dobegin    if z3DGlobalEngine.Desktop.ProgressDialog <> nil then
+    z3DGlobalEngine.Desktop.ProgressDialog.SetProgress((Integer(AStage)*FCreationLinks.Count+I)*100 div
+    ((Integer(High(Tz3DStartScenarioStage))+1) * FCreationLinks.Count));
+    
+    (FCreationLinks.Items[I] as Iz3DLinked).z3DStartScenario(AStage);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                   
+Tz3DEngine::NotifyLinks_z3DMessage (const HWnd AWnd ,
+const LongWord AMsg ,
+const wParam AwParam ,
+const lParam AlParam ,
+Boolean &ADefault ,
+lResult &AResult 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FMessageLinks.Count-1 do
+  (FMessageLinks.Items[I] as Iz3DLinked).z3DMessage(AWnd, AMsg, AwParam, AlParam, ADefault, AResult);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DFrameMove ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FFrameMoveLinks.Count-1 do
+  (FFrameMoveLinks.Items[I] as Iz3DLinked).z3DFrameMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DFrameRender ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if Renderer.RenderStage = z3drsPrecomputation thenbegin    for I:= 0 to FGPUPrecomputationLinks.Count-1 do
+    (FGPUPrecomputationLinks.Items[I] as Iz3DLinked).z3DGPUPrecomputation;
+ endelsebegin    for I:= 0 to FFrameRenderLinks.Count-1 do
+    (FFrameRenderLinks.Items[I] as Iz3DLinked).z3DFrameRender 
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DLightingRender ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FLightingRenderLinks.Count-1 do
+  (FLightingRenderLinks.Items[I] as Iz3DLinked).z3DLightingRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DDirectLightRender ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FDirectLightRenderLinks.Count-1 do
+  (FDirectLightRenderLinks.Items[I] as Iz3DLinked).z3DDirectLightRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DGUIRender ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FGUIRenderLinks.Count-1 do
+  (FGUIRenderLinks.Items[I] as Iz3DLinked).z3DGUIRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DEngine::NotifyLinks_z3DKeyboard (const LongWord AChar ,
+const Boolean AKeyDown ,
+const Boolean AAltDown 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FMessageLinks.Count-1 do
+  (FMessageLinks[I] as Iz3DLinked).z3DKeyboard(AChar, AKeyDown, AAltDown);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DLostDevice ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FCreationLinks.Count-1 do
+  (FCreationLinks[I] as Iz3DLinked).z3DLostDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DEngine::NotifyLinks_z3DModifyDevice (Tz3DDeviceSettings &ADeviceSettings ,
+const TD3DCaps9 ACaps 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FCreationLinks.Count-1 do
+  (FCreationLinks[I] as Iz3DLinked).z3DModifyDevice(ADeviceSettings, ACaps);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEngine::NotifyLinks_z3DResetDevice ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to FCreationLinks.Count-1 do
+  (FCreationLinks[I] as Iz3DLinked).z3DResetDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngine::GetActive ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FActive;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DDebugHelper Tz3DEngine::GetDebugHelper ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDebugHelper;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DDevice Tz3DEngine::GetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DEffect Tz3DEngine::GetEffect ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEffect;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DCallbackConfirmDeviceEvent Tz3DEngine::GetOnConfirmDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnConfirmDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseCallbackEvent Tz3DEngine::GetOnCreateDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnCreateDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseCallbackEvent Tz3DEngine::GetOnDestroyDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnDestroyDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseCallbackEvent Tz3DEngine::GetOnFinalization ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnFinalization;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseCallbackEvent Tz3DEngine::GetOnFrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnFrameMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseCallbackEvent Tz3DEngine::GetOnFrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnFrameRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseCallbackEvent Tz3DEngine::GetOnInitialization ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnInitialization;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DCallbackKeyboardEvent Tz3DEngine::GetOnKeyboardProc ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnKeyboardProc;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseCallbackEvent Tz3DEngine::GetOnLostDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnLostDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DCallbackModifyDeviceEvent Tz3DEngine::GetOnModifyDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnModifyDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DCallbackMessageEvent Tz3DEngine::GetOnMsgProc ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnMsgProc;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseCallbackEvent Tz3DEngine::GetOnResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnResetDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DEngineOptions Tz3DEngine::GetOptions ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOptions;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DPostProcessEffects Tz3DEngine::GetPostProcessEffects ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPostProcessEffects;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DScenario Tz3DEngine::GetScenario ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FScenario;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DStats Tz3DEngine::GetStats ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStats;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnConfirmDevice (const Tz3DCallbackConfirmDeviceEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnConfirmDevice:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnCreateDevice (const Tz3DBaseCallbackEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnCreateDevice:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnDestroyDevice (const Tz3DBaseCallbackEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnDestroyDevice:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnFinalization (const Tz3DBaseCallbackEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnFinalization:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnFrameMove (const Tz3DBaseCallbackEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnFrameMove:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnFrameRender (const Tz3DBaseCallbackEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnFrameRender:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnInitialization (const Tz3DBaseCallbackEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnInitialization:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnKeyboardProc (const Tz3DCallbackKeyboardEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnKeyboardProc:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnLostDevice (const Tz3DBaseCallbackEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnLostDevice:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnModifyDevice (const Tz3DCallbackModifyDeviceEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnModifyDevice:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnMsgProc (const Tz3DCallbackMessageEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnMsgProc:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetOnResetDevice (const Tz3DBaseCallbackEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnResetDevice:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DEngine::GetProjectionMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FProjectionMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DEngine::GetViewMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FViewMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DEngine::GetViewLookAt ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FViewLookAt;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DEngine::GetViewPosition ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FViewPosition;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DDesktop Tz3DEngine::GetDesktop ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDesktop;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::StartScenario (const Tz3DStartScenarioStage AStage 
+)
+
+/*
+//const
+ FTexts: array[Tz3DStartScenarioStage] of PWideChar = ('Creating scenario...', 'Creating scenario objects...',
+  'Creating world...', 'Creating world objects...', 'Creating lighting system...');
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if z3DGlobalEngine.Desktop.ProgressDialog <> nil then
+  z3DGlobalEngine.Desktop.ProgressDialog.SetStatus(FTexts[AStage]);
+  NotifyLinks_z3DStartScenario(AStage);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DEngine::GetViewVelocity ()
+
+/*
+var
+ FC, FP, FL, FU: Iz3DFloat4;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Extract the four components of the view matrix
+  FC:= z3DFloat4(FViewMatrix.e11, FViewMatrix.e12, FViewMatrix.e13, FViewMatrix.e14);
+  FP:= z3DFloat4(FViewMatrix.e21, FViewMatrix.e22, FViewMatrix.e23, FViewMatrix.e24);
+  FL:= z3DFloat4(FViewMatrix.e31, FViewMatrix.e32, FViewMatrix.e33, FViewMatrix.e34);
+  FU:= z3DFloat4(FViewMatrix.e41, FViewMatrix.e42, FViewMatrix.e43, FViewMatrix.e44);
+
+  // Compute the difference with the last view matrix
+  FC.Subtract(z3DFloat4(FPrevViewMatrix.e11, FPrevViewMatrix.e12, FPrevViewMatrix.e13, FPrevViewMatrix.e14));
+  FP.Subtract(z3DFloat4(FPrevViewMatrix.e21, FPrevViewMatrix.e22, FPrevViewMatrix.e23, FPrevViewMatrix.e24));
+  FL.Subtract(z3DFloat4(FPrevViewMatrix.e31, FPrevViewMatrix.e32, FPrevViewMatrix.e33, FPrevViewMatrix.e34));
+  FU.Subtract(z3DFloat4(FPrevViewMatrix.e41, FPrevViewMatrix.e42, FPrevViewMatrix.e43, FPrevViewMatrix.e44));
+
+  // Return the amount of difference
+  Result:= Saturate((FC.Length + FP.Length + FL.Length + FU.Length) * 0.1);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DEngine::GetPrevViewMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPrevViewMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DAudioController Tz3DEngine::GetAudioController ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAudioController;
+#endif /* DOXYGEN_SKIP */
+};
+
+        
+Tz3DEngine::PlayMusic (const string AFileName ,
+const Boolean ALoop = True 
+)
+
+/*
+//const
+ FLoop: array[Boolean] of Cardinal = (0, DSBPLAY_LOOPING);
+var FFileName: PWideChar;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not FileExists(AFileName) thenbegin    z3DTrace(PwideChar(WideString('Iz3DEngine.PlayMusic: Could not play music (File '+ExtractFileName(AFileName)+' not found)')), z3dtkWarning);
+    Exit;
+ end
+  GetMem(FFileName, 255);
+  try
+    StringToWideChar(AFileName, FFileName, 255);
+    FMusic:= FAudioController.CreateSound(FFileName, DSBCAPS_CTRLVOLUME, GUID_NULL);
+    FMusic.Play(0, FLoop[ALoop]);
+  finally
+    FreeMem(FFileName);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderer Tz3DEngine::GetRenderer ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRenderer;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+HWND Tz3DEngine::GetWindow ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWindow;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngine::SetWindow (const HWND Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FWindow:= Value;
+  if z3DCore_GetState.z3DInitCalled then z3DCore_SetWindow(Value, Value, Value);
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DDevice */ 
+
+ 
+Tz3DDevice::Tz3DDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FFirstDeviceSettings:= True;
+  FFirstFrameMove:= True;
+  FDisplayREFWarning:= True;
+  z3DCore_SetCallback_DeviceCreated(GOnCreateDevice);
+  z3DCore_SetCallback_DeviceDestroyed(GOnDestroyDevice);
+  z3DCore_SetCallback_DeviceLost(GOnLostDevice);
+  z3DCore_SetCallback_DeviceReset(GOnResetDevice);
+  FEngineCaps:= Tz3DDeviceEngineCaps.Create(Self);
+  SetFullScreen(True);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDevice::~Tz3DDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  FEngineCaps:= nil;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDevice::CreateDevice ()
+
+/*
+var
+ FRect: TRect;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  GetClientRect(z3DGlobalEngine.Window, FRect);
+  z3DCore_CreateDevice(D3DADAPTER_DEFAULT, True, FRect.Right-FRect.Left,
+  FRect.Bottom-FRect.Top, GIsDeviceAcceptable, GModifyDevice);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDevice::SetFullScreen (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FFullScreen <> Value thenbegin    FFullScreen:= Value;
+    if z3DCore_GetState.InsideMainloop thenbegin      z3DCore_Pause(True, True);
+      z3DCore_ToggleFullScreen;
+      z3DCore_Pause(False, False);
+   endelse z3DCore_GetState.OverrideFullScreen:= Value 
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDevice::ToggleFullScreen ()
+{
+#ifndef DOXYGEN_SKIP
+  FullScreen:= not FullScreen;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDevice::ToggleREF ()
+{
+#ifndef DOXYGEN_SKIP
+  z3DCore_ToggleREF;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDevice::Created ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DCore_GetD3DDevice <> nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDevice::GetDisplayREFWarning ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDisplayREFWarning;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDevice::GetFullScreen ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFullScreen;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDevice::SetDisplayREFWarning (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDisplayREFWarning:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDevice::GetFirstDeviceSettings ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFirstDeviceSettings;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDevice::SetFirstDeviceSettings (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FFirstDeviceSettings:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDevice::GetFirstFrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFirstFrameMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDevice::SetFirstFrameMove (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FFirstFrameMove:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DDeviceEngineCaps Tz3DDevice::GetEngineCaps ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEngineCaps;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DStats */ 
+
+ 
+Tz3DStats::Tz3DStats ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+
+  // Link this object to all the events generated by the z3D Engine
+  Notifications:= [z3dlnDevice];
+
+  FShowFPS:= False;
+  FShowDevice:= False;
+  FShowDisplay:= False;
+  FShowView:= False;
+  FShowRenderer:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DStats::z3DCreateDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  // Initialize the font
+  if FAILED(D3DXCreateFont(z3DCore_GetD3DDevice, z3DFontHeight(10), 0,
+  FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+  DEFAULT_QUALITY, DEFAULT_PITCH or FF_DONTCARE, 'Courier New', FD3DXFont)) thenbegin    z3DTrace('Iz3DStats.CreateFont failed: D3DXCreateFont failed. Stats will not be rendered', z3DtkWarning);
+    Exit;
+ end
+  FHelper:= z3DCreateTextHelper(FD3DXFont, FD3DXSprite, z3DFontHeight(10));
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DStats::~Tz3DStats ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DStats::z3DDestroyDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  SafeRelease(FD3DXFont);
+  FHelper:= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DStats::FrameRender ()
+
+/*
+//const
+ FBools: array[Boolean] of string = ('No', 'Yes');
+var I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if (FHelper = nil) or (not FShowDevice and not FShowDisplay and not FShowFPS) then Exit;
+
+  FHelper.BeginRender;
+  for I:= 0 to 1 dobegin    // Prepare the text helper
+    if I = 0 thenbegin      FHelper.SetInsertionPos(4, 4);
+      FHelper.SetForegroundColor(z3DD3DXColor(z3DFloat3));
+   endelsebegin      FHelper.SetInsertionPos(3, 3) 
+      FHelper.SetForegroundColor(D3DXColor(255, 255, 255, 255));
+   end
+
+
+    // Draw the core stats
+    if GTest then FHelper.DrawTextLine(PAnsiChar(z3DDS(z3DMESSAGE_2DTEXT)));
+    if FShowDevice then FHelper.DrawTextLine(z3DCore_GetState.DeviceStats);
+    if FShowDisplay then FHelper.DrawTextLine(z3DCore_GetFrameStats);
+    if FShowFPS then FHelper.DrawTextLine(z3DCore_GetState.FPSStats);
+
+    // Draw the view stats
+    if FShowView thenbegin      FHelper.DrawTextLine('');
+      FHelper.DrawTextLine('  View information');
+      FHelper.DrawTextLine(PWideChar(WideString(('    Position: '+Float3ToText(z3DGlobalEngine.ViewPosition)))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    Look at:  '+Float3ToText(z3DFloat3.From(z3DGlobalEngine.ViewLookAt).Subtract(z3DGlobalEngine.ViewPosition))))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    Velocity: '+FormatFloat('0.00', z3DGlobalEngine.ViewVelocity)))));
+      FHelper.DrawTextLine('');
+      FHelper.DrawTextLine('  Scenario information');
+      FHelper.DrawTextLine(PWideChar(WideString(('    Current scene models:     '+IntToStr(z3DModelController.CurrentSceneInstances)))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    Current visible models:   '+IntToStr(z3DModelController.CurrentVisibleInstances)))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    Current scene polygons:   '+IntToStr(z3DModelController.CurrentScenePolygons)))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    Current visible polygons: '+IntToStr(z3DModelController.CurrentVisiblePolygons)))));
+   end
+
+    // Draw the renderer stats
+    if FShowRenderer thenbegin      FHelper.DrawTextLine('');
+      FHelper.DrawTextLine('  Renderer information');
+      FHelper.DrawTextLine(PWideChar(WideString(('    Auto target clear: '+FBools[z3DGlobalEngine.Renderer.AutoClearTarget]))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    Auto depth clear:  '+FBools[z3DGlobalEngine.Renderer.AutoClearDepth]))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    HDR enabled:  '+FBools[z3DGlobalEngine.Renderer.HDRMode]))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    MSAA enabled: '+FBools[z3DGlobalEngine.Renderer.EnableMSAA]))));
+      FHelper.DrawTextLine(PWideChar(WideString(('    MSAA samples: '+IntToStr(z3DGlobalEngine.Renderer.MSAASamples)))));
+   end
+ end
+
+  FHelper.EndRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DStats::z3DLostDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  if FD3DXFont <> nil then FD3DXFont.OnLostDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DStats::z3DResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  if FD3DXFont <> nil then FD3DXFont.OnResetDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DStats::GetShowDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShowDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DStats::GetShowFPS ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShowFPS;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DStats::GetShowDisplay ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShowDisplay;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DStats::SetShowDevice (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShowDevice:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DStats::SetShowFPS (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShowFPS:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DStats::SetShowDisplay (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShowDisplay:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+string Tz3DStats::Float2ToText (const Iz3DFloat2 AFloat 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Format('[%f %f]', [AFloat.X, AFloat.Y]);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+string Tz3DStats::Float3ToText (const Iz3DFloat3 AFloat 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Format('[%f %f %f]', [AFloat.X, AFloat.Y, AFloat.Z]);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+string Tz3DStats::Float4ToText (const Iz3DFloat4 AFloat 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Format('[%f %f %f %f]', [AFloat.X, AFloat.Y, AFloat.Z, AFloat.W]);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DStats::GetShowView ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShowView;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DStats::SetShowView (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShowView:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DStats::GetShowRenderer ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShowRenderer;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DStats::SetShowRenderer (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShowRenderer:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DEngineOptions */ 
+
+ 
+Tz3DEngineOptions::Tz3DEngineOptions ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FExtendedEvents:= False;
+  FShadowStencil:= True;
+  FHandleDefaultHotkeys:= True;
+  FShowFatalMessages:= True;
+  FHandleWindowMessages:= True;
+  FParseCommandLine:= True;
+  FHandleAltEnter:= True;
+  FClipCursorOnFullScreen:= True;
+  FShowCursorOnFullScreen:= True;
+  FLockAspectRatio:= True;
+  FStretchToWindow:= False;
+  FPlayIntro:= True;
+  FPlayMusic:= True;
+  z3DCore_SetCursorSettings(True, True);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetClipCursorOnFullScreen ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FClipCursorOnFullScreen;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetExtendedEvents ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FExtendedEvents;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetHandleAltEnter ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FHandleAltEnter;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetHandleDefaultHotkeys ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FHandleDefaultHotkeys;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetHandleWindowMessages ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FHandleWindowMessages;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetLockAspectRatio ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLockAspectRatio;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetParseCommandLine ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FParseCommandLine;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetPlayIntro ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPlayIntro;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetPlayMusic ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPlayMusic;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetShadowStencil ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShadowStencil;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetShowCursorOnFullScreen ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShowCursorOnFullScreen;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetShowFatalMessages ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShowFatalMessages;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEngineOptions::GetStretchToWindow ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStretchToWindow;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetClipCursorOnFullScreen (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FClipCursorOnFullScreen <> Value thenbegin    FClipCursorOnFullScreen:= Value;
+    z3DCore_SetCursorSettings(FShowCursorOnFullScreen, FClipCursorOnFullScreen);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetExtendedEvents (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FExtendedEvents:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetHandleAltEnter (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FHandleAltEnter:= Value;
+  z3DCore_GetState.HandleAltEnter:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetHandleDefaultHotkeys (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FHandleDefaultHotkeys:= Value;
+  z3DCore_GetState.HandleDefaultHotkeys:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetHandleWindowMessages (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FHandleWindowMessages:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetLockAspectRatio (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FLockAspectRatio <> Value thenbegin    FLockAspectRatio:= Value;
+    z3DGlobalEngine.Scenario.ProjectionChanged:= True;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetParseCommandLine (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FParseCommandLine:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetPlayIntro (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FPlayIntro:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetPlayMusic (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FPlayMusic:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetShadowStencil (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShadowStencil:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetShowCursorOnFullScreen (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FShowCursorOnFullScreen <> Value thenbegin    FShowCursorOnFullScreen:= Value;
+    z3DCore_SetCursorSettings(FShowCursorOnFullScreen, FClipCursorOnFullScreen);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetShowFatalMessages (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShowFatalMessages:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEngineOptions::SetStretchToWindow (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FStretchToWindow:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DDebugHelper */ 
+
+ 
+Tz3DDebugHelper::Tz3DDebugHelper ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FEnableGrid:= False;
+  FGridSize:= 10;
+  FGridSpace:= 1;
+  FEnableLightMesh:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDebugHelper::CreateGridMesh ()
+{
+#ifndef DOXYGEN_SKIP
+  if (FGridMesh = nil) and FEnableGrid then
+  D3DXCreateBox(z3DCore_GetD3DDevice, 1, 1, 1, FGridMesh, nil);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDebugHelper::CreateLightMesh ()
+{
+#ifndef DOXYGEN_SKIP
+  if (FLightMesh = nil) and FEnableLightMesh then
+  D3DXCreateSphere(z3DCore_GetD3DDevice, 1, 32, 32, FLightMesh, nil);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDebugHelper::RenderGridMesh ()
+
+/*
+var
+ X, Y, Z: Integer;
+    FFillSaved: Cardinal;
+    FW, FS: Iz3DMatrix;
+    FMaterial: TD3DMaterial9;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+/*  CreateGridMesh;
+  z3DCore_GetD3DDevice.GetRenderState(D3DRS_FILLMODE, FFillSaved);
+  FMaterial.Diffuse.r:= 255;
+  FMaterial.Diffuse.g:= 255;
+  FMaterial.Diffuse.b:= 255;
+  FMaterial.Diffuse.a:= 255;
+  z3DCore_GetD3DDevice.SetMaterial(FMaterial);
+  FW:= z3DMatrix;
+  FS:= z3DMatrix;
+  try
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    for X:= -(FGridSize div 2) to (FGridSize div 2) do
+    for Y:= -(FGridSize div 2) to (FGridSize div 2) do
+    begin
+      FW.Translation(X*FGridSpace/0.00001, Y*FGridSpace/0.00001, 0);
+      FS.Scale(0.00001, 0.00001, FGridSize*FGridSpace).Multiply(FW);
+      z3DCore_GetD3DDevice.SetTransform(D3DTS_WORLD, FS.D3DMatrix);
+      FGridMesh.DrawSubset(0);
+    end;
+    for Z:= -(FGridSize div 2) to (FGridSize div 2) do
+    for Y:= -(FGridSize div 2) to (FGridSize div 2) do
+    begin
+      FW.Translation(0, Y*FGridSpace/0.00001, Z*FGridSpace/0.00001);
+      FS.Scale(FGridSize*FGridSpace, 0.00001, 0.00001).Multiply(FW);
+      z3DCore_GetD3DDevice.SetTransform(D3DTS_WORLD, FS.D3DMatrix);
+      FGridMesh.DrawSubset(0);
+    end;
+    for Z:= -(FGridSize div 2) to (FGridSize div 2) do
+    for X:= -(FGridSize div 2) to (FGridSize div 2) do
+    begin
+      FW.Translation(X*FGridSpace/0.00001, 0, Z*FGridSpace/0.00001);
+      FS.Scale(0.00001, FGridSize*FGridSpace, 0.00001).Multiply(FW);
+      z3DCore_GetD3DDevice.SetTransform(D3DTS_WORLD, FS.D3DMatrix);
+      FGridMesh.DrawSubset(0);
+    end;
+  finally
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_FILLMODE, FFillSaved);
+  end;*/ 
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDebugHelper::FrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if FEnableGrid then RenderGridMesh;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDebugHelper::z3DResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  CreateGridMesh;
+  CreateLightMesh;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDebugHelper::GetEnableGrid ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableGrid;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDebugHelper::GetEnableLightMesh ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableLightMesh;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DDebugHelper::GetGridSize ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGridSize;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DDebugHelper::GetGridSpace ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGridSpace;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDebugHelper::SetEnableGrid (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableGrid:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDebugHelper::SetEnableLightMesh (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableLightMesh:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDebugHelper::SetGridSize (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FGridSize:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDebugHelper::SetGridSpace (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FGridSpace:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DPostProcessEffects */ 
+
+ 
+Tz3DPostProcessEffects::CheckSharedResources ()
+{
+#ifndef DOXYGEN_SKIP
+  FSceneScaledTex.Enabled:= Bloom.Enabled or DepthOfField.Enabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DPostProcessEffects::Tz3DPostProcessEffects ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+
+  // Link this object to the desired events generated by the z3D Engine
+  Notifications:= [z3dlnDevice];
+
+  FBloom:= Tz3DBloomEffect.Create(Self);
+  FColorCorrection:= Tz3DColorCorrectionEffect.Create;
+  FDepthOfField:= Tz3DDepthOfFieldEffect.Create(Self);
+  FMotionBlur:= Tz3DMotionBlurEffect.Create;
+  FToneMapping:= Tz3DToneMappingEffect.Create;
+  FSceneScaledTex:= z3DCreateRenderTexture;
+  FSceneScaledTex.AutoWidthFactor:= 0.25;
+  FSceneScaledTex.AutoHeightFactor:= 0.25;
+  FSceneScaledTex.AutoFormat:= z3drafRenderer;
+  FSceneScaledTex.Enabled:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DPostProcessEffects::~Tz3DPostProcessEffects ()
+{
+#ifndef DOXYGEN_SKIP
+  FBloom:= nil;
+  FColorCorrection:= nil;
+  FDepthOfField:= nil;
+  FMotionBlur:= nil;
+  FToneMapping:= nil;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DPostProcessEffects::z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  CheckSharedResources;
+  FColorCorrection.CreateScenarioObjects;
+  FToneMapping.CreateScenarioObjects;
+  FBloom.CreateScenarioObjects;
+  FDepthOfField.CreateScenarioObjects;
+  FMotionBlur.CreateScenarioObjects;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DPostProcessEffects::FrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  FToneMapping.FrameMove;
+  FDepthOfField.FrameMove;
+  FMotionBlur.FrameMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DPostProcessEffects::FrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if FBloom.Enabled or FDepthOfField.Enabled then
+  z3DGlobalEngine.Renderer.DownScale(FSceneScaledTex);
+
+  FColorCorrection.FrameRender;
+  FToneMapping.FrameRender;
+  FBloom.FrameRender;
+  FDepthOfField.FrameRender;
+  FMotionBlur.FrameRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBloomEffect Tz3DPostProcessEffects::GetBloom ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBloom;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DColorCorrectionEffect Tz3DPostProcessEffects::GetColorCorrection ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FColorCorrection;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DDepthOfFieldEffect Tz3DPostProcessEffects::GetDepthOfField ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDepthOfField;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMotionBlurEffect Tz3DPostProcessEffects::GetMotionBlur ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMotionBlur;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderTexture Tz3DPostProcessEffects::GetSceneScaledTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSceneScaledTex;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DToneMappingEffect Tz3DPostProcessEffects::GetToneMapping ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FToneMapping;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DBloomEffect */ 
+
+   
+Tz3DBloomEffect::Tz3DBloomEffect (const Iz3DPostProcessEffects AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FEffects:= AOwner;
+  FEnabled:= True;
+  FIntensity:= 1;
+  FBrightPassTex:= z3DCreateRenderTexture;
+  FBrightPassTex.AutoWidthFactor:= 0.25;
+  FBrightPassTex.AutoHeightFactor:= 0.25;
+  FBrightPassTex.Format:= D3DFMT_A8R8G8B8;
+  FBrightPassTex.Enabled:= False;
+  FBloomTex[0]:= z3DCreateRenderTexture;
+  FBloomTex[0].AutoWidthFactor:= 0.125;
+  FBloomTex[0].AutoHeightFactor:= 0.125;
+  FBloomTex[0].Format:= D3DFMT_A8R8G8B8;
+  FBloomTex[0].Enabled:= False;
+  FBloomTex[1]:= z3DCreateRenderTexture;
+  FBloomTex[1].AutoWidthFactor:= 0.125;
+  FBloomTex[1].AutoHeightFactor:= 0.125;
+  FBloomTex[1].Format:= D3DFMT_A8R8G8B8;
+  FBloomTex[1].Enabled:= False;
+  FBloomTex[2]:= z3DCreateRenderTexture;
+  FBloomTex[2].AutoWidthFactor:= 0.125;
+  FBloomTex[2].AutoHeightFactor:= 0.125;
+  FBloomTex[2].Format:= D3DFMT_A8R8G8B8;
+  FBloomTex[2].Enabled:= False;
+  FEffect:= z3DCreateEffect;
+  FEffect.FileName:= PWideChar(WideString(Z3DRES_BLOOM_EFFECT));
+  FEffect.Enabled:= False;
+  FThreshold:= 0.95;
+  FFoggyFactor:= 0.035;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBloomEffect::RenderBloom ()
+{
+#ifndef DOXYGEN_SKIP
+  FEffect.Technique:= 'z3DBloom_BloomPass1';
+  z3DGlobalEngine.Renderer.PostProcess(FBloomTex[1], [FBloomTex[2]], FEffect);
+  FEffect.Technique:= 'z3DBloom_BloomPass2';
+  z3DGlobalEngine.Renderer.PostProcess(FBloomTex[0], [FBloomTex[1]], FEffect);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBloomEffect::RenderBrightPass ()
+{
+#ifndef DOXYGEN_SKIP
+  FEffect.Technique:= FBrightPassValidTechnique;
+  z3DGlobalEngine.Renderer.PostProcess(FBrightPassTex, [FEffects.SceneScaledTexture], FEffect);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBloomEffect::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnabled <> Value thenbegin    if z3DGlobalEngine.Scenario.Enabled thenbegin      EnableResources;
+      FEffects.CheckSharedResources;
+   end
+    FEnabled:= Value;
+    if z3DGlobalEngine.Scenario.Enabled thenbegin      CreateScenarioObjects;
+      FEffects.CheckSharedResources;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBloomEffect::FrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Enabled then Exit;
+  RenderBrightPass;
+  z3DCore_GetD3DDevice.SetSamplerState(2, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+  z3DCore_GetD3DDevice.SetSamplerState(2, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+  z3DRenderGaussBlur(FBrightPassTex, FBloomTex[2]);
+  RenderBloom;
+  FEffect.Technique:= 'z3DBloom_Blend';
+  z3DCore_GetD3DDevice.SetSamplerState(2, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
+  z3DGlobalEngine.Renderer.PostProcess_Blend([FBloomTex[0]], FEffect);
+  z3DCore_GetD3DDevice.SetSamplerState(2, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBloomEffect::SetIntensity (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FIntensity <> Value thenbegin    FIntensity:= Value;
+    if FEffect.D3DXEffect <> nil then FEffect.Param['GBloomIntensity']:= FIntensity;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBloomEffect::SetThreshold (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FThreshold <> Value thenbegin    FThreshold:= Value;
+    if FEffect.D3DXEffect <> nil then FEffect.Param['GBloomThreshold']:= FThreshold;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBloomEffect::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBloomEffect::GetIntensity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FIntensity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBloomEffect::GetThreshold ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FThreshold;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBloomEffect::CreateScenarioObjects ()
+
+/*
+var
+ FISampleOffsets: array[0..15] of Single;
+    I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  EnableResources;
+  if not Enabled then Exit;
+
+  if z3DGlobalEngine.Renderer.HDRMode then
+  FBrightPassValidTechnique:= 'z3DBloom_BrightPassFilterHDR' else
+  FBrightPassValidTechnique:= 'z3DBloom_BrightPassFilter';
+  z3DGetBloomSO(FBloomTex[1].Width, FISampleOffsets, FBloomSampleWeights, 3, 2);
+  FEffect.SetPointer('GSampleWeights', @FBloomSampleWeights, SizeOf(FBloomSampleWeights));
+  for I:= 0 to 15 do FBloomPass1SampleOffsets[I]:= D3DXVector2(FISampleOffsets[I], 0);
+  for I:= 0 to 15 do FBloomPass2SampleOffsets[I]:= D3DXVector2(0, FISampleOffsets[I]);
+  FEffect.Param['GBloomIntensity']:= FIntensity;
+  FEffect.Param['GBloomThreshold']:= FThreshold;
+  FEffect.Param['GBloomFoggy']:= FFoggyFactor;
+  FEffect.SetPointer('GPass1SampleOffsets', @FBloomPass1SampleOffsets, SizeOf(FBloomPass1SampleOffsets));
+  FEffect.SetPointer('GPass2SampleOffsets', @FBloomPass2SampleOffsets, SizeOf(FBloomPass2SampleOffsets));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBloomEffect::GetFoggyFactor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFoggyFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBloomEffect::SetFoggyFactor (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FFoggyFactor <> Value thenbegin    FFoggyFactor:= Value;
+    if FEffect.D3DXEffect <> nil then FEffect.Param['GBloomFoggy']:= FFoggyFactor;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBloomEffect::EnableResources ()
+{
+#ifndef DOXYGEN_SKIP
+  FBrightPassTex.Enabled:= FEnabled;
+  FBloomTex[0].Enabled:= FEnabled;
+  FBloomTex[1].Enabled:= FEnabled;
+  FBloomTex[2].Enabled:= FEnabled;
+  FEffect.Enabled:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DDepthOfFieldEffect */ 
+
+   
+Tz3DDepthOfFieldEffect::Tz3DDepthOfFieldEffect (const Iz3DPostProcessEffects AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FEffects:= AOwner;
+  FAdjustmentSpeed:= 10;
+  FFocusSpread:= 0.1;
+  FAmount:= 0.75;
+  FAutoFocusDepth:= True;
+  FEnabled:= False;
+  FSamples:= 1;
+  FFocusDepth:= 2;
+  FDepthTex:= z3DCreateRenderTexture;
+  FDepthTex.AutoParams:= False;
+  FDepthTex.Width:= 1;
+  FDepthTex.Height:= 1;
+  FDepthTex.AutoFormat:= z3drafFP;
+  FBlurValuesTex:= z3DCreateRenderTexture;
+  FBlurValuesTex.Format:= D3DFMT_A8R8G8B8;
+  FBlurValuesTex.Enabled:= False;
+  FPreviousDepthTex:= z3DCreateRenderTexture;
+  FPreviousDepthTex.AutoParams:= False;
+  FPreviousDepthTex.Width:= 1;
+  FPreviousDepthTex.Height:= 1;
+  FPreviousDepthTex.AutoFormat:= z3drafFP;
+  FPreviousDepthTex.Enabled:= False;
+  FFinalBlurTex:= z3DCreateRenderTexture;
+  FFinalBlurTex.AutoWidthFactor:= 0.25;
+  FFinalBlurTex.AutoHeightFactor:= 0.25;
+  FFinalBlurTex.Enabled:= False;
+  FFinalBlurTex.AutoFormat:= z3drafRenderer;
+  FEffect:= z3DCreateEffect;
+  FEffect.FileName:= PWideChar(WideString(Z3DRES_DEPTHOFFIELD_EFFECT));
+  FEffect.Enabled:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDepthOfFieldEffect::FrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Enabled then Exit;
+  if z3DGlobalEngine.Desktop.Visible then FEffect.Param['GAdjustmentSpeed']:= 0 else
+  FEffect.Param['GAdjustmentSpeed']:= FAdjustmentSpeed * (1 - Power(0.98, 30 * z3DCore_GetElapsedTime));
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDepthOfFieldEffect::FrameRender ()
+
+/*
+var
+ FTemp: Iz3DRenderTexture;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Enabled then Exit;
+
+  // Compute focus depth over time
+  FTemp:= FPreviousDepthTex;
+  FPreviousDepthTex:= FDepthTex;
+  FDepthTex:= FTemp;
+  if FAutoFocusDepth then FEffect.SetTechnique('z3DDepthOfField_CopyDepth') elsebegin    FEffect.SetTechnique('z3DDepthOfField_CopyDepthManual');
+    FEffect.Param['GManualFocusDepth']:= FFocusDepth / (z3DGlobalEngine.Scenario.Bounds.Radius * 2 * 0.1);
+ end
+  z3DGlobalEngine.Renderer.PostProcess(FDepthTex, [FPreviousDepthTex], FEffect);
+
+  // Generate a blurred version of the scene
+  z3DCore_GetD3DDevice.SetSamplerState(2, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
+  z3DCore_GetD3DDevice.SetSamplerState(2, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
+  z3DRenderGaussBlur(FEffects.SceneScaledTexture, FFinalBlurTex);
+
+  if (FSamples > 1) and (z3DGlobalEngine.Device.EngineCaps.ShaderModel3Supported) thenbegin    // Convert depth values to blur amounts
+    FEffect.SetTechnique('z3DDepthOfField_DepthToBlur');
+    z3DGlobalEngine.Renderer.PostProcess(FBlurValuesTex, [FDepthTex], FEffect);
+
+    FEffect.Param['GSamples']:= FSamples;
+
+    // Blend the scene with the blurred version based on depth
+    FEffect.Technique:= 'z3DDepthOfField_DepthOfFieldMS';
+    z3DGlobalEngine.Renderer.PostProcess_Blend([FFinalBlurTex, FBlurValuesTex], FEffect);
+ endelsebegin    // Blend the scene with the blurred version based on depth
+    FEffect.Technique:= 'z3DDepthOfField_DepthOfField' 
+    z3DGlobalEngine.Renderer.PostProcess_Blend([FFinalBlurTex, FDepthTex], FEffect);
+ end
+  z3DCore_GetD3DDevice.SetSamplerState(2, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+  z3DCore_GetD3DDevice.SetSamplerState(2, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDepthOfFieldEffect::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnabled <> Value thenbegin    if z3DGlobalEngine.Scenario.Enabled thenbegin      EnableResources;
+      FEffects.CheckSharedResources;
+   end
+    FEnabled:= Value;
+    if z3DGlobalEngine.Scenario.Enabled thenbegin      CreateScenarioObjects;
+      FEffects.CheckSharedResources;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDepthOfFieldEffect::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DDepthOfFieldEffect::GetFocusDepth ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFocusDepth;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DDepthOfFieldEffect::GetSamples ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSamples;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDepthOfFieldEffect::SetFocusDepth (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FFocusDepth:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDepthOfFieldEffect::SetSamples (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FSamples:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDepthOfFieldEffect::CreateScenarioObjects ()
+
+/*
+var
+ FCropWidth, FCropHeight: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  EnableResources;
+  if not Enabled then Exit;
+
+  FCropWidth:= z3DCore_GetBackBufferSurfaceDesc.Width-z3DCore_GetBackBufferSurfaceDesc.Width mod 8;
+  FCropHeight:= z3DCore_GetBackBufferSurfaceDesc.Height-z3DCore_GetBackBufferSurfaceDesc.Height mod 8;
+  FEffect.Float4['GPixelSize']:= z3DFloat4(1 / z3DCore_GetBackBufferSurfaceDesc.Width,
+  1 / z3DCore_GetBackBufferSurfaceDesc.Height, 4 * (1 / FCropWidth), 4 * (1 / FCropHeight));
+  FEffect.Param['GFocusSpread']:= FFocusSpread;
+  FEffect.Param['GAmount']:= FAmount;
+  FEffect.Param['GManualFocusDepth']:= FFocusDepth;
+  FEffect.Param['GAdjustmentSpeed']:= FAdjustmentSpeed;
+  FEffect.Param['GFarFocus']:= z3DGlobalEngine.Scenario.Bounds.Radius * 2 * 0.1;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDepthOfFieldEffect::GetAutoFocusDepth ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAutoFocusDepth;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDepthOfFieldEffect::SetAutoFocusDepth (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAutoFocusDepth:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DDepthOfFieldEffect::GetAmount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAmount;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDepthOfFieldEffect::SetAmount (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAmount:= Value;
+  if FEffect.D3DXEffect <> nil then FEffect.Param['GAmount']:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DDepthOfFieldEffect::GetFocusSpread ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFocusSpread;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDepthOfFieldEffect::SetFocusSpread (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FFocusSpread:= Value;
+  if FEffect.D3DXEffect <> nil then FEffect.Param['GFocusSpread']:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DDepthOfFieldEffect::GetAdjustmentSpeed ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAdjustmentSpeed;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DDepthOfFieldEffect::SetAdjustmentSpeed (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAdjustmentSpeed:= Value;
+  if FEffect.D3DXEffect <> nil then FEffect.Param['GAdjustmentSpeed']:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DDepthOfFieldEffect::EnableResources ()
+{
+#ifndef DOXYGEN_SKIP
+  FDepthTex.Enabled:= FEnabled;
+  FBlurValuesTex.Enabled:= FEnabled;
+  FPreviousDepthTex.Enabled:= FEnabled;
+  FFinalBlurTex.Enabled:= FEnabled;
+  FEffect.Enabled:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DToneMappingEffect */ 
+
+ 
+Tz3DToneMappingEffect::Tz3DToneMappingEffect ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FEnabled:= True;
+  FAdjustmentSpeed:= 0.25;
+  FAdjustmentFactor:= 0.4;
+  FMiddleTone:= 0.5;
+  FToneRangeMin:= 0.75;
+  FToneRangeMax:= 100.0;
+  FRenderAdaptation:= z3DCreateRenderTexture;
+  FRenderAdaptation.AutoParams:= False;
+  FRenderAdaptation.Width:= 1;
+  FRenderAdaptation.Height:= 1;
+  FRenderAdaptation.AutoFormat:= z3drafFP;
+  FRenderAdaptation.Enabled:= False;
+  FPreviousAdaptation:= z3DCreateRenderTexture;
+  FPreviousAdaptation.Width:= 1;
+  FPreviousAdaptation.Height:= 1;
+  FPreviousAdaptation.AutoFormat:= z3drafFP;
+  FPreviousAdaptation.Enabled:= False;
+  FEffect:= z3DCreateEffect;
+  FEffect.FileName:= PWideChar(WideString(Z3DRES_TONEMAPPING_EFFECT));
+  FEffect.Enabled:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DToneMappingEffect::FrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Enabled then Exit;
+  if z3DGlobalEngine.Desktop.Visible then FEffect.Param['GAdjustmentSpeed']:= 0 else
+  FEffect.Param['GAdjustmentSpeed']:= FAdjustmentSpeed * (1 - Power(0.98, 30 * z3DCore_GetElapsedTime));
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DToneMappingEffect::FrameRender ()
+
+/*
+var
+ FTemp: Iz3DRenderTexture;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Enabled then Exit;
+  FEffect.Technique:= 'z3DToneMapping_ToneMapping';
+  z3DGlobalEngine.Renderer.PostProcess(FRenderAdaptation, [FPreviousAdaptation], FEffect);
+  FTemp:= FPreviousAdaptation;
+  FPreviousAdaptation:= FRenderAdaptation;
+  FRenderAdaptation:= FTemp;
+  FEffect.Technique:= 'z3DToneMapping_Blend';
+  z3DGlobalEngine.Renderer.PostProcess_Blend([FRenderAdaptation], FEffect);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DToneMappingEffect::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnabled <> Value thenbegin    if z3DGlobalEngine.Scenario.Enabled then EnableResources;
+    FEnabled := Value;
+    if z3DGlobalEngine.Scenario.Enabled then CreateScenarioObjects;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DToneMappingEffect::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DToneMappingEffect::CreateScenarioObjects ()
+
+/*
+var
+ FColor: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  EnableResources;
+  if not FEnabled then Exit;
+
+  FColor:= Round(FMiddleTone*255);
+  z3DClearTexture(FPreviousAdaptation.D3DTexture, RGB(FColor, FColor, FColor));
+  z3DClearTexture(FRenderAdaptation.D3DTexture, RGB(FColor, FColor, FColor));
+  FEffect.Param['GAdjustmentSpeed']:= FAdjustmentSpeed;
+  FEffect.Param['GAdjustmentFactor']:= FAdjustmentFactor;
+  FEffect.Param['GMiddleTone']:= FMiddleTone;
+  FEffect.Param['GToneRangeMin']:= FToneRangeMin;
+  FEffect.Param['GToneRangeMax']:= FToneRangeMax;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DToneMappingEffect::GetAdjustmentFactor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAdjustmentFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DToneMappingEffect::GetAdjustmentSpeed ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAdjustmentSpeed;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DToneMappingEffect::GetMiddleTone ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMiddleTone;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DToneMappingEffect::GetToneRangeMax ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FToneRangeMax;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DToneMappingEffect::GetToneRangeMin ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FToneRangeMin;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DToneMappingEffect::SetAdjustmentFactor (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAdjustmentFactor:= Value;
+  if FEffect.D3DXEffect <> nil then FEffect.Param['GAdjustmentFactor']:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DToneMappingEffect::SetAdjustmentSpeed (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAdjustmentSpeed:= Value;
+  if FEffect.D3DXEffect <> nil then FEffect.Param['GAdjustmentSpeed']:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DToneMappingEffect::SetMiddleTone (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMiddleTone:= Value;
+  if FEffect.D3DXEffect <> nil then FEffect.Param['GMiddleTone']:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DToneMappingEffect::SetToneRangeMax (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FToneRangeMax:= Value;
+  if FEffect.D3DXEffect <> nil then FEffect.Param['GRangeMax']:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DToneMappingEffect::SetToneRangeMin (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FToneRangeMin:= Value;
+  if FEffect.D3DXEffect <> nil then FEffect.Param['GRangeMin']:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DToneMappingEffect::EnableResources ()
+{
+#ifndef DOXYGEN_SKIP
+  FRenderAdaptation.Enabled:= FEnabled;
+  FPreviousAdaptation.Enabled:= FEnabled;
+  FEffect.Enabled:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DColorCorrectionEffect */ 
+
+ 
+Tz3DColorCorrectionEffect::Tz3DColorCorrectionEffect ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FEnabled:= False;
+  FMode:= z3dccmTonalize;
+  FToneFactor:= z3DFloat3(1, 1, 1);
+  FToneFactor.OnChange:= PropertyChanged;
+  FEffect:= z3DCreateEffect;
+  FEffect.FileName:= PWideChar(WideString(Z3DRES_COLORCORRECTION_EFFECT));
+  FEffect.Enabled:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DColorCorrectionEffect::FrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Enabled or z3DCore_GetState.RenderingPaused then Exit;
+  z3DGlobalEngine.Renderer.PostProcess_Blend([z3DGlobalEngine.Renderer.PreviousRenderTexture], FEFfect);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DColorCorrectionEffect::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnabled <> Value thenbegin    if z3DGlobalEngine.Scenario.Enabled then EnableResources;
+    FEnabled := Value;
+    if z3DGlobalEngine.Scenario.Enabled then CreateScenarioObjects;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DColorCorrectionEffect::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DColorCorrectionMode Tz3DColorCorrectionEffect::GetMode ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMode;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DColorCorrectionEffect::GetToneFactor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FToneFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DColorCorrectionEffect::SetMode (const Tz3DColorCorrectionMode Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMode:= Value;
+  if FEffect.D3DXEffect <> nil thenbegin    case FMode of
+
+      z3dccmMonochromatic: FEffect.SetTechnique('z3DColorCorrection_Monochromatic');
+      z3dccmNegative: FEffect.SetTechnique('z3DColorCorrection_Negative');
+      z3dccmSepia: FEffect.SetTechnique('z3DColorCorrection_Sepia');
+      z3dccmTonalize: FEffect.SetTechnique('z3DColorCorrection_Tonalize');
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DColorCorrectionEffect::PropertyChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if Assigned(FEffect.D3DXEffect) then FEffect.Float3['GToneFactor']:= FToneFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DColorCorrectionEffect::CreateScenarioObjects ()
+{
+#ifndef DOXYGEN_SKIP
+  EnableResources;
+  if not FEnabled then Exit;
+  
+  case FMode of
+
+    z3dccmMonochromatic: FEffect.SetTechnique('z3DColorCorrection_Monochromatic');
+    z3dccmNegative: FEffect.SetTechnique('z3DColorCorrection_Negative');
+    z3dccmSepia: FEffect.SetTechnique('z3DColorCorrection_Sepia');
+    z3dccmTonalize: FEffect.SetTechnique('z3DColorCorrection_Tonalize');
+ end
+  FEffect.Float3['GToneFactor']:= FToneFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DColorCorrectionEffect::EnableResources ()
+{
+#ifndef DOXYGEN_SKIP
+  FEffect.Enabled:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DMotionBlurEffect */ 
+
+ 
+Tz3DMotionBlurEffect::Tz3DMotionBlurEffect ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FEnabled:= True;
+  FAmount:= 0.75;
+  FRenderPrevious:= z3DCreateRenderTexture;
+  FRenderPrevious.AutoFormat:= z3drafRenderer;
+  FRenderPrevious.Enabled:= False;
+  FRenderSum:= z3DCreateRenderTexture;
+  FRenderSum.AutoFormat:= z3drafRenderer;
+  FRenderSum.Enabled:= False;
+  FEffect:= z3DCreateEffect;
+  FEffect.FileName:= PWideChar(WideString(Z3DRES_MOTIONBLUR_EFFECT));
+  FEffect.Enabled:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DMotionBlurEffect::FrameMove ()
+
+/*
+var
+ FVelocity: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Enabled then Exit;
+  FVelocity:= z3DGlobalEngine.ViewVelocity;
+  if FVelocity < 0.001 then Exit;
+  if z3DGlobalEngine.Desktop.Visible then FEffect.Param['GAmount']:= 0 else
+  FEffect.Param['GAmount']:= FAmount * FVelocity * Power(0.98, 30 * z3DCore_GetElapsedTime);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DMotionBlurEffect::FrameRender ()
+
+/*
+var
+ FTemp: Iz3DRenderTexture;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Enabled then Exit;
+  if z3DGlobalEngine.ViewVelocity < 0.001 then Exit;
+  FEffect.Technique:= 'z3DMotionBlur_MotionBlur';
+  z3DGlobalEngine.Renderer.PostProcess(FRenderPrevious, [FRenderSum], FEffect);
+  FTemp:= FRenderSum;
+  FRenderSum:= FRenderPrevious;
+  FRenderPrevious:= FTemp;
+  FEffect.Technique:= 'z3DMotionBlur_Blend';
+  z3DGlobalEngine.Renderer.PostProcess_Blend([FRenderSum], FEffect);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMotionBlurEffect::SetAmount (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FAmount <> Value thenbegin    FAmount := Value;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMotionBlurEffect::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnabled <> Value thenbegin    if z3DGlobalEngine.Scenario.Enabled then EnableResources;
+    FEnabled := Value;
+    if z3DGlobalEngine.Scenario.Enabled then CreateScenarioObjects;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMotionBlurEffect::GetAmount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAmount;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DMotionBlurEffect::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DMotionBlurEffect::CreateScenarioObjects ()
+{
+#ifndef DOXYGEN_SKIP
+  EnableResources;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DMotionBlurEffect::EnableResources ()
+{
+#ifndef DOXYGEN_SKIP
+  FRenderPrevious.Enabled:= FEnabled;
+  FRenderSum.Enabled:= FEnabled;
+  FEffect.Enabled:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DWinControl */ 
+
+   
+Tz3DWinControl::z3DSetHandle (const HWnd AHandle 
+)
+{
+#ifndef DOXYGEN_SKIP
+  WindowHandle:= AHandle;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DRenderer */ 
+
+ 
+Tz3DRenderer::Tz3DRenderer ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+
+  // Link this object to all the events generated by the z3D Engine
+  Notifications:= [z3dlnDevice, z3dlnFrameMove];
+  ScenarioLevel:= False;
+
+  FAutoClearTarget:= False;
+  FAutoClearDepth:= True;
+  FHDRMode:= True;
+  FDefaultClearColor:= z3DFloat4;
+  FDefaultClearDepth:= 1;
+  FMSAASamples:= 1;
+  FEnableMSAA:= False;
+  FBlendTextures:= TInterfaceList.Create;
+  FTargetMode:= z3dtmTexture;
+  FRenderMode:= z3drm3D;
+  FRendering:= False;
+  FPostProcessBuffer:= z3DCreateVertexBuffer;
+  FPostProcessBuffer.SetParams(4, D3DUSAGE_ or D3DUSAGE_WRITEONLY, D3DPOOL_DEFAULT);
+  FPostProcessBuffer.Format.AddElement(0, z3dvefFloat4, z3dvemDefault, z3dveuTransformedPosition, 0);
+  FPostProcessBuffer.Format.AddElement(0, z3dvefFloat2, z3dvemDefault, z3dveuTexCoord, 0);
+  FPostProcessBuffer.ScenarioLevel:= False;
+  FRenderTextures[0]:= z3DCreateRenderTexture;
+  FRenderTextures[0].AutoFormat:= z3drafRenderer;
+  FRenderTextures[0].ScenarioLevel:= False;
+  FRenderTextures[0].Enabled:= False;
+  FRenderTextures[1]:= z3DCreateRenderTexture;
+  FRenderTextures[1].AutoFormat:= z3drafRenderer;
+  FRenderTextures[1].ScenarioLevel:= False;
+  FRenderTextures[1].Enabled:= False;
+  FDepthBuffer:= z3DCreateDepthBuffer;
+  FDeferredBuffer:= z3DCreateRenderTexture;
+  FDeferredBuffer.ScenarioLevel:= False;
+  FDeferredBuffer.AutoParams:= False;
+  FRenderTarget:= z3DCreateSurface;
+  FRenderTarget.ScenarioLevel:= False;
+  FBackBuffer:= z3DCreateSurface;
+  FBackBuffer.ScenarioLevel:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRenderer::GetHDRMode ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FHDRMode;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DTargetMode Tz3DRenderer::GetTargetMode ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTargetMode;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DRenderMode Tz3DRenderer::GetRenderMode ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRenderMode;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DSurface Tz3DRenderer::GetRenderSurface ()
+{
+#ifndef DOXYGEN_SKIP
+  if RenderStage in [z3drsBackBuffer, z3drsGUI] then Result:= FBackBuffer else
+  Result:= FRenderTextures[FCurrentChain].GetSurface;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderTexture Tz3DRenderer::GetRenderTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRenderTextures[FCurrentChain];
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetHDRMode (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FHDRMode <> Value thenbegin    if z3DGlobalEngine.Device.Created and not z3DGlobalEngine.Device.EngineCaps.HDRSupport then
+    FHDRMode:= False else FHDRMode:= Value;
+    CreateRenderTarget;
+    (z3DGlobalEngine.PostProcess as Iz3DLinked).z3DLostDevice;
+    (z3DGlobalEngine.PostProcess as Iz3DLinked).z3DResetDevice;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetTargetMode (const Tz3DTargetMode Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FTargetMode <> Value thenbegin    FTargetMode:= Value;
+    CreateRenderTarget;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetRenderMode (const Tz3DRenderMode Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FRenderMode <> Value thenbegin    FRenderMode:= Value;
+    UpdateRenderMode;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::CreateDeferredBuffer ()
+{
+#ifndef DOXYGEN_SKIP
+  // Create the deferred texture
+  if (z3DLightingController <> nil) and z3DLightingController.SSAO.Enabled and
+  (z3DGlobalEngine.Device.EngineCaps.ShaderModel3Supported)
+  and (z3DLightingController.SSAO.Quality = z3dssaoqHigh) and (z3DGlobalEngine.Device.EngineCaps.HDRSupport) then
+  FDeferredBuffer.SetParams(z3DCore_GetState.BackBufferSurfaceDesc.Width,
+  z3DCore_GetState.BackBufferSurfaceDesc.Height, 1, D3DFMT_A16B16G16R16F) else
+  FDeferredBuffer.SetParams(z3DCore_GetState.BackBufferSurfaceDesc.Width,
+  z3DCore_GetState.BackBufferSurfaceDesc.Height, 1, z3DGlobalEngine.Device.EngineCaps.FPFormat);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::CreateRenderTarget ()
+
+/*
+var
+ FSurface: IDirect3DSurface9;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not z3DGlobalEngine.Device.Created or FSettingsChanging then Exit;
+
+  // Create the render texture
+  FRenderTextures[0].Enabled:= TargetMode = z3dtmTexture;
+  FRenderTextures[1].Enabled:= TargetMode = z3dtmTexture;
+
+  case TargetMode of
+
+
+    // Set the back buffer as RT
+    z3dtmBackBuffer:
+    begin      BackBuffer.SetRenderTarget;
+      RenderSurface.From(BackBuffer);
+   end
+
+    // TODO JP: Render target mode not implemented yet
+    z3dtmRenderTarget:
+    begin      RenderTexture.D3DTexture:= nil;
+      BackBuffer.SetRenderTarget;
+      RenderSurface.From(BackBuffer);
+   end
+ end
+
+  CreateDeferredBuffer;
+
+  // Create a multisample render target if needed
+  if EnableMSAA thenbegin    if HDRMode thenbegin      if FAILED(z3DCore_GetD3DDevice.CreateRenderTarget(z3DCore_GetBackBufferSurfaceDesc.Width, z3DCore_GetBackBufferSurfaceDesc.Height,
+      D3DFMT_A16B16G16R16F, FMSAASamplesD3D[FMSAASamples], 0, False, FSurface, nil)) then
+      z3DTrace('Iz3DRenderer.CreateRenderTarget: Could not create multisampled HDR render target', z3dtkError);
+   endelsebegin      if FAILED(z3DCore_GetD3DDevice.CreateRenderTarget(z3DCore_GetBackBufferSurfaceDesc.Width, z3DCore_GetBackBufferSurfaceDesc.Height,
+      D3DFMT_A8R8G8B8, FMSAASamplesD3D[FMSAASamples], 0, False, FSurface, nil)) then
+      z3DTrace('Iz3DRenderer.CreateRenderTarget: Could not create multisampled render target', z3dtkError) 
+   end
+    FRenderTarget.D3DSurface:= FSurface;
+    FDepthBuffer.SetParams(z3DCore_GetBackBufferSurfaceDesc.Width, z3DCore_GetBackBufferSurfaceDesc.Height,
+    z3DCore_GetDeviceSettings.PresentParams.AutoDepthStencilFormat, FMSAASamplesD3D[FMSAASamples], 0, False);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::UpdateRenderMode ()
+{
+#ifndef DOXYGEN_SKIP
+  if RenderMode = z3drm2D thenbegin    z3DCore_GetD3DDevice.GetRenderState(D3DRS_ZWRITEENABLE, FSavedZWrite);
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZENABLE, iFalse);
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iFalse);
+ endelsebegin    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZENABLE, iTrue) 
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, FSavedZWrite);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::z3DResetDevice ()
+
+/*
+var
+ FSurface: IDirect3DSurface9;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Set up the render states
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_LIGHTING, iFalse);
+  if not z3DGlobalEngine.Device.EngineCaps.HDRSupport then HDRMode:= False;
+
+  // Save the back buffer
+  z3DCore_GetD3DDevice.GetRenderTarget(0, FSurface);
+  FBackBuffer.D3DSurface:= FSurface;
+
+  // Create the render target
+  CreateRenderTarget;
+  FFirstSceneRender:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::AddBlendTexture (const Iz3DTexture ATexture 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FBlendTextures.IndexOf(ATexture) = -1 then FBlendTextures.Add(ATexture);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::BeginRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if SUCCEEDED(z3DCore_GetD3DDevice.BeginScene) thenbegin    FRendering:= True;
+    FRenderStage:= z3drsBackBuffer;
+    BackBuffer.SetRenderTarget;
+    FCurrentChain:= 0;
+ endelse z3DTrace('Iz3DRenderer.BeginRender failed (BeginScene failed)', z3dtkWarning) 
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::BeginSceneRender ()
+{
+#ifndef DOXYGEN_SKIP
+  // Set the multisample render target if needed
+  if EnableMSAA thenbegin    z3DCore_GetD3DDevice.GetDepthStencilSurface(FPreviousDepthBuffer);
+    FRenderTarget.SetRenderTarget;
+    z3DCore_GetD3DDevice.SetDepthStencilSurface(FDepthBuffer.D3DSurface);
+    if AutoClearDepth then ClearDepthBuffer(FDefaultClearDepth);
+ endelse RenderTexture.SetRenderTarget 
+
+  DeferredBuffer.SetRenderTexture(1);
+  FRenderStage:= z3drsScene;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::EndSceneRender ()
+
+/*
+var
+ I: Integer;
+    FTechnique: Tz3DHandle;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Restore the back buffer
+  FRenderStage:= z3drsBackBuffer;
+  BackBuffer.SetRenderTarget;
+  RenderTexture.SetRenderTexture(0);
+//  DeferredBuffer.SetRenderTexture(0);
+
+  // Set the blend textures
+  for I:= 2 to FBlendTextures.Count+1 dobegin    (FBlendTextures[I-2] as Iz3DTexture).SetRenderTexture(I);
+    z3DCore_GetD3DDevice.SetSamplerState(I, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
+    z3DCore_GetD3DDevice.SetSamplerState(I, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+    z3DCore_GetD3DDevice.SetSamplerState(I, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+ end
+
+  // Set the blend technique
+  if z3DGlobalScenario.Worlds[0].Fog.Enabled thenbegin    if z3DGlobalScenario.Worlds[0].Fog.Uniform then
+    FTechnique:= Tz3DHandle('z3DCore_MainSceneFogBlend_'+IntToStr(FBlendTextures.Count+1)) else
+    FTechnique:= Tz3DHandle('z3DCore_MainSceneFogBlend_'+IntToStr(FBlendTextures.Count+1)); /*z3DCore_MainSceneHFogBlend_*/ 
+
+    z3DGlobalEngine.CoreEffect.Param['GAltitude']:= -z3DFloat3.From(z3DGlobalEngine.ViewLookAt).
+    Subtract(z3DGlobalEngine.ViewPosition).Normalize.Y + 0.5;
+
+ endelse
+  FTechnique:= Tz3DHandle('z3DCore_MainSceneBlend_'+IntToStr(FBlendTextures.Count+1)) 
+
+  z3DGlobalEngine.CoreEffect.Technique:= FTechnique;
+
+//  z3DGlobalEngine.CoreEffect.Vector3['GGlobalColor']:= z3D;
+  z3DGlobalEngine.CoreEffect.Float2['GPixelSize']:= z3DFloat2(1 / z3DCore_GetBackBufferSurfaceDesc.Width,
+  1 / z3DCore_GetBackBufferSurfaceDesc.Height);
+  z3DGlobalEngine.CoreEffect.RunPostProcess;
+
+  if z3DLightingController <> nil then
+  z3DLightingController.RenderLightSources;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::EndRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if Rendering then z3DCore_GetD3DDevice.EndScene;
+  if z3DGlobalEngine.Scenario.Enabled then FFirstSceneRender:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRenderer::GetRendering ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRendering;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DSurface Tz3DRenderer::GetBackBuffer ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBackBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderTexture Tz3DRenderer::GetDeferredBuffer ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDeferredBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+Tz3DRenderer::PostProcess (const Iz3DRenderTexture ATarget ,
+const Iz3Dtexture *ATextures ,
+const Iz3DEffect AEffect 
+)
+
+/*
+var
+ I: Integer;
+    FMode: Tz3DRenderMode;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Setup 2D mode if not assigned
+  FMode:= RenderMode;
+  RenderMode:= z3drm2D;
+
+  // Draw a full screen quad to sample the render target
+  try
+    ATarget.SetRenderTarget;
+    if RenderTexture <> nil then RenderTexture.SetRenderTexture(0);
+    for I:= 0 to High(ATextures) do ATextures[I].SetRenderTexture(I + 2);
+    AEffect.RunPostProcess;
+  finally
+    RenderMode:= FMode;
+    z3DCore_GetD3DDevice.SetTexture(0, nil);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+        
+Tz3DRenderer::PostProcess_Blend (const Iz3Dtexture *ATextures ,
+const Iz3DEffect AEffect 
+)
+
+/*
+var
+ I: Integer;
+    FMode: Tz3DRenderMode;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Setup 2D mode if not assigned
+  FMode:= RenderMode;
+  RenderMode:= z3drm2D;
+
+  // Draw a full screen quad to sample the render target
+  try
+    if FCurrentChain = 0 then FCurrentChain:= 1 else FCurrentChain:= 0;
+    RenderTexture.SetRenderTarget;
+    PreviousRenderTexture.SetRenderTexture(0);
+    for I:= 0 to High(ATextures) do ATextures[I].SetRenderTexture(I + 2);
+    AEffect.RunPostProcess;
+  finally
+    RenderMode:= FMode;
+    z3DCore_GetD3DDevice.SetTexture(0, nil);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+               
+Tz3DRenderer::Blend (const Iz3Dtexture *ATextures ,
+const Iz3DEffect AEffect = nil ,
+const Single AAlpha = 1 
+)
+
+/*
+var
+ I: Integer;
+    FMode: Tz3DRenderMode;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Setup 2D mode if not assigned
+  FMode:= RenderMode;
+  RenderMode:= z3drm2D;
+
+  if AEffect = nil thenbegin    if AAlpha < 1 thenbegin      z3DGlobalEngine.CoreEffect.SetTechnique(Tz3DHandle('z3DCore_TextureBlend_'+
+      IntToStr(High(ATextures)-Low(ATextures)+1)+'_Alpha'));
+      z3DGlobalEngine.CoreEffect.Param['GAlphaBlendValue']:= AAlpha;
+   endelse z3DGlobalEngine.CoreEffect.SetTechnique(Tz3DHandle('z3DCore_TextureBlend_'+
+    IntToStr(High(ATextures)-Low(ATextures)+1))) 
+    // Draw a full screen quad to sample the render target
+    try
+      for I:= 0 to High(ATextures) do ATextures[I].SetRenderTexture(I);
+      if AAlpha < 1 then
+      z3DGlobalEngine.CoreEffect.RunPostProcess(0) else
+      z3DGlobalEngine.CoreEffect.RunPostProcess;
+    finally
+      RenderMode:= FMode;
+   end
+ endelsebegin    // Draw a full screen quad to sample the render target
+    try
+      for I:= 0 to High(ATextures) do ATextures[I].SetRenderTexture(I) 
+      AEffect.RunPostProcess;
+    finally
+      RenderMode:= FMode;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                         
+Tz3DRenderer::AutoBlend (const Iz3DTexture ATexture ,
+const Integer ALeft = 0 ,
+const Integer ATop = 0 ,
+const Iz3DEffect AEffect = nil ,
+const Single AAlpha = 1 
+)
+
+/*
+var
+ I: Integer;
+    FLeft, FTop, FU, FV: Single;
+    FMode: Tz3DRenderMode;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Setup 2D mode if not assigned
+  FMode:= RenderMode;
+  RenderMode:= z3drm2D;
+
+  FU:= RenderSurface.Width / ATexture.Width;
+  FV:= RenderSurface.Height / ATexture.Height;
+  FLeft:= (-ALeft / RenderSurface.Width) * FU;
+  FTop:= (-ATop / RenderSurface.Height) * FV;
+
+  if AEffect = nil thenbegin    if AAlpha < 1 thenbegin      z3DGlobalEngine.CoreEffect.Technique:= 'z3DCore_TextureBlend_1_Alpha';
+      z3DGlobalEngine.CoreEffect.Param['GAlphaBlendValue']:= AAlpha;
+   endelse z3DGlobalEngine.CoreEffect.Technique:= 'z3DCore_TextureBlend_1' 
+    // Draw a full screen quad to sample the render target
+    try
+      ATexture.SetRenderTexture(0);
+      if AAlpha < 1 thenbegin        for I:= 0 to z3DGlobalEngine.CoreEffect.Run(0)-1 dobegin          z3DGlobalEngine.CoreEffect.BeginPass(I);
+          DrawFullScreenQuad(z3DFloat4(FLeft, FTop, FLeft+FU, FTop+FV));
+          z3DGlobalEngine.CoreEffect.EndPass;
+       end
+     endelsebegin        for I:= 0 to z3DGlobalEngine.CoreEffect.Run-1 dobegin          z3DGlobalEngine.CoreEffect.BeginPass(I) 
+          DrawFullScreenQuad(z3DFloat4(FLeft, FTop, FLeft+FU, FTop+FV));
+          z3DGlobalEngine.CoreEffect.EndPass;
+       end
+     end
+    finally
+      RenderMode:= FMode;
+   end
+ endelsebegin    // Draw a full screen quad to sample the render target
+    try
+      ATexture.SetRenderTexture(0) 
+      for I:= 0 to AEffect.Run-1 dobegin        AEffect.BeginPass(I);
+        DrawFullScreenQuad(z3DFloat4(FLeft, FTop, FLeft+FU, FTop+FV));
+        AEffect.EndPass;
+     end
+    finally
+      RenderMode:= FMode;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if AStage = z3dssCreatingScenario thenbegin    FadeIn(4);
+    FFirstSceneRender:= True;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::ClearDepthBuffer (const Single AValue 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FAILED(z3DCore_GetD3DDevice.Clear(0, nil, D3DCLEAR_ZBUFFER, 0, AValue, 0)) then
+  z3DTrace('Iz3DRenderer.ClearDepthBuffer: Could not clear depth buffer', z3dtkWarning);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::ClearRenderTarget (const Iz3DFloat4 AValue 
+)
+
+/*
+var
+ FColor: TD3DColor;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if AValue = nil then FColor:= z3DD3DColor(FDefaultClearColor) else FColor:= z3DD3DColor(AValue);
+  if FAILED(z3DCore_GetD3DDevice.Clear(0, nil, D3DCLEAR_TARGET, FColor, 0, 0)) then
+  z3DTrace('Iz3DRenderer.ClearRenderTarget: Could not clear render target', z3dtkWarning);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::z3DFrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  if not z3DGlobalEngine.Scenario.Enabled then Exit;
+
+  // Decrease/increase fade factor when fading
+  if (FFadeValue < 1) thenbegin    FFadeValue:= FFadeValue / (Power(0.98, 30 * FFadeFactor * z3DCore_GetElapsedTime));
+    if FFadeValue > 1 then FFadeValue:= 1;
+    if FFadeInMode then z3DGlobalEngine.CoreEffect.Param['GFadeFactor']:= FFadeValue else
+    z3DGlobalEngine.CoreEffect.Param['GFadeFactor']:= 1 - FFadeValue;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::Render ()
+{
+#ifndef DOXYGEN_SKIP
+
+  // Begin rendering the scene
+  BeginRender;
+
+  // Clear the depth buffer
+  if AutoClearDepth then ClearDepthBuffer;
+
+  try
+
+    // Render the scene
+    if z3DGlobalEngine.Scenario.Enabled thenbegin      RenderMode:= z3drm3D;
+
+      // Perform precomputation if needed
+      if FirstSceneRender then RenderPrecomputation;
+
+      RenderDeferredBuffers;
+      BeginSceneRender;
+      try
+        // Clear the target
+        if AutoClearTarget then ClearRenderTarget;
+
+        RenderScenario;
+
+        RenderMode:= z3drm2D;
+        RenderPostProcess;
+      finally
+        EndSceneRender;
+     end
+   end
+
+    // Render the user interface
+    RenderMode:= z3drm2D;
+    RenderGUI;
+
+  finally
+    // Stop renderer
+    EndRender;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::RenderPrecomputation ()
+{
+#ifndef DOXYGEN_SKIP
+  FRenderStage:= z3drsPrecomputation;
+  z3DGlobalEngine.NotifyLinks_z3DFrameRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::RenderDeferredBuffers ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FRenderStage:= z3drsDepth;
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iTrue);
+  try
+
+    // Select the deferred technique
+    if (z3DLightingController <> nil) and z3DLightingController.SSAO.Enabled and
+    (z3DGlobalEngine.Device.EngineCaps.ShaderModel3Supported)
+    and (z3DLightingController.SSAO.Quality = z3dssaoqHigh) and
+    z3DGlobalEngine.Device.EngineCaps.HDRSupport then
+    z3DGlobalEngine.CoreEffect.Technique:= 'z3DCore_DepthNormal' else
+    z3DGlobalEngine.CoreEffect.Technique:= 'z3DCore_Depth';
+
+    // TODO JP: OPTIMIZAR
+    z3DGlobalEngine.CoreEffect.Param['GFarClip']:= z3DGlobalEngine.Scenario.Bounds.Radius * 2;
+    DeferredBuffer.SetRenderTarget;
+    ClearRenderTarget(z3DFloat4(1, 1, 1, 1));
+    for I:= 0 to z3DGlobalEngine.CoreEffect.Run-1 dobegin      z3DGlobalEngine.CoreEffect.BeginPass(I);
+      z3DGlobalEngine.NotifyLinks_z3DFrameRender;
+      z3DGlobalEngine.CoreEffect.EndPass;
+   end
+  finally
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iFalse);
+    z3DCore_GetD3DDevice.SetSamplerState(1, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+    z3DCore_GetD3DDevice.SetSamplerState(1, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+    z3DCore_GetD3DDevice.SetSamplerState(1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+    z3DCore_GetD3DDevice.SetSamplerState(1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::RenderScenario ()
+{
+#ifndef DOXYGEN_SKIP
+  z3DGlobalEngine.Scenario.FrameRender;
+
+  // Copy the multisampled render target to the render texture
+  if EnableMSAA thenbegin    if FAILED(z3DCore_GetD3DDevice.StretchRect(FRenderTarget.D3DSurface,
+    nil, RenderTexture.GetSurface.D3DSurface, nil, D3DTEXF_NONE)) then
+    z3DTrace('Iz3DRenderer.RenderScenario: Could not copy render target (StretchRect failed)', z3dtkWarning);
+    if FAILED(z3DCore_GetD3DDevice.SetDepthStencilSurface(FPreviousDepthBuffer)) then
+    z3DTrace('Iz3DRenderer.RenderScenario: Could not set previous depth surface', z3dtkWarning);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::RenderPostProcess ()
+{
+#ifndef DOXYGEN_SKIP
+  FRenderStage:= z3drsPostProcess;
+  FPostProcessBuffer.Prepare;
+  z3DGlobalEngine.PostProcess.FrameRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::RenderGUI ()
+{
+#ifndef DOXYGEN_SKIP
+  FRenderStage:= z3drsGUI;
+  z3DGlobalEngine.NotifyLinks_z3DGUIRender;
+  z3DGlobalEngine.Stats.FrameRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRenderer::GetFirstSceneRender ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFirstSceneRender and z3DGlobalEngine.Scenario.Enabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::FadeIn (const Single AFactor 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FFadeInMode:= True;
+  FFadeFactor:= AFactor;
+  FFadeValue:= 0.001;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::FadeOut (const Single AFactor 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FFadeInMode:= False;
+  FFadeFactor:= AFactor;
+  FFadeValue:= 0.001;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderTexture Tz3DRenderer::GetPreviousRenderTexture ()
+
+/*
+var
+ FPreviousChain: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if FCurrentChain = 0 then FPReviousChain:= 1 else FPreviousChain:= 0;
+  Result:= FRenderTextures[FPreviousChain];
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DRenderer::Clear (const Iz3DFloat4 ARenderTarget ,
+const Single ADepthBuffer 
+)
+
+/*
+var
+ FColor: TD3DColor;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if ARenderTarget = nil then FColor:= z3DD3DColor(FDefaultClearColor) else FColor:= z3DD3DColor(ARenderTarget);
+  if FAILED(z3DCore_GetD3DDevice.Clear(0, nil, D3DCLEAR_TARGET or D3DCLEAR_ZBUFFER, FColor, ADepthBuffer, 0)) then
+  z3DTrace('Iz3DRenderer.Clear: Could not clear render target and depth buffer', z3dtkWarning);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRenderer::GetCurrentChain ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCurrentChain;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetCurrentChain (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FCurrentChain:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DFormat Tz3DRenderer::GetFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  if HDRMode then Result:= D3DFMT_A16B16G16R16F else Result:= D3DFMT_A8R8G8B8;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::z3DLostDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FPreviousDepthBuffer:= nil;
+  FRenderTextures[0].D3DTexture:= nil;
+  FRenderTextures[0].D3DBaseTexture:= nil;
+  FRenderTextures[1].D3DTexture:= nil;
+  FRenderTextures[1].D3DBaseTexture:= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::DrawFullScreenQuad (const Iz3DFloat4 ACoords 
+)
+
+/*
+var
+ FBufferData: Pz3DPostProcessVertexArray;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Update the post process quad buffer
+  FBufferData:= FPostProcessBuffer.Lock(D3DLOCK_DISCARD);
+  try
+    FBufferData[0].Position:= D3DXVector4(-0.5, -0.5, 0.5, 1.0);
+    FBufferData[1].Position:= D3DXVector4(RTWidth - 0.5, -0.5, 0.5, 1.0);
+    FBufferData[2].Position:= D3DXVector4(-0.5, RTHeight - 0.5, 0.5, 1.0);
+    FBufferData[3].Position:= D3DXVector4(RTWidth - 0.5, RTHeight - 0.5, 0.5, 1.0);
+    if ACoords <> nil thenbegin      FBufferData[0].TexCoord:= D3DXVector2(ACoords.X, ACoords.Y);
+      FBufferData[1].TexCoord:= D3DXVector2(ACoords.Z, ACoords.Y);
+      FBufferData[2].TexCoord:= D3DXVector2(ACoords.X, ACoords.W);
+      FBufferData[3].TexCoord:= D3DXVector2(ACoords.Z, ACoords.W);
+   endelsebegin      FBufferData[0].TexCoord:= D3DXVector2(0, 0) 
+      FBufferData[1].TexCoord:= D3DXVector2(1, 0);
+      FBufferData[2].TexCoord:= D3DXVector2(0, 1);
+      FBufferData[3].TexCoord:= D3DXVector2(1, 1);
+   end
+  finally
+    FPostProcessBuffer.Unlock;
+ end
+  FPostProcessBuffer.Prepare;
+  FPostProcessBuffer.Render;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DRenderStage Tz3DRenderer::GetRenderStage ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRenderStage;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRenderer::GetMSAASamples ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMSAASamples;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetMSAASamples (const Integer Value 
+)
+
+/*
+var
+ I: Integer;
+    FFound: Boolean;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if FMSAASamples <> Value thenbegin    FFound:= False;
+    if z3DGlobalEngine.Device.Created thenbegin      for I:= Low(z3DCore_GetDeviceList.GetCurrentDeviceSettingsCombo.MultiSampleTypeList) to
+      High(z3DCore_GetDeviceList.GetCurrentDeviceSettingsCombo.MultiSampleTypeList) do
+      if z3DCore_GetDeviceList.GetCurrentDeviceSettingsCombo.MultiSampleTypeList[I] =
+      FMSAASamplesD3D[Value] then FFound:= True;
+   endelse FFound:= True 
+    if FFound thenbegin      FMSAASamples:= Value;
+      CreateRenderTarget;
+   endelse z3DTrace(PWideChar(WideString('Iz3DRenderer.SetMSAASamples: Mumber of MSAA samples ('+IntToStr(Value)+'x) is not compatible with current device')), z3dtkWarning) 
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRenderer::GetEnableMSAA ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableMSAA;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetEnableMSAA (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnableMSAA <> Value thenbegin    FEnableMSAA:= Value;
+    CreateRenderTarget;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat4 Tz3DRenderer::GetDefaultClearColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDefaultClearColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DRenderer::GetDefaultClearDepth ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDefaultClearDepth;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetDefaultClearDepth (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDefaultClearDepth:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRenderer::GetAutoClearDepth ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAutoClearDepth;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRenderer::GetAutoClearTarget ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAutoClearTarget;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetAutoClearDepth (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAutoClearDepth:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetAutoClearTarget (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAutoClearTarget:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::SwapRenderChain ()
+{
+#ifndef DOXYGEN_SKIP
+  if FCurrentChain = 0 then FCurrentChain:= 1 else FCurrentChain:= 0;
+  RenderTexture.SetRenderTarget;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Tz3DRenderer::GetDownScaleSO (const Integer AWidth ,
+const Integer AHeight 
+)
+
+/*
+var
+ FU, FV: Single;
+    FIndex, X, Y: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FU:= 1 / AWidth;
+  FV:= 1 / AHeight;
+  FIndex:= 0;
+  for Y:= 0 to 1 do
+  for X:= 0 to 1 dobegin    FDownScaleSO[FIndex].X:= (X - 0.5) * FU;
+    FDownScaleSO[FIndex].Y:= (Y - 0.5) * FV;
+    Inc(FIndex);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::DownScale (const Iz3DRenderTexture AOutTexture 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if (FPrevRTWidth <> RTWidth) or (FPrevRTHeight <> RTHeight) thenbegin    FPrevRTWidth:= RTWidth;
+    FPrevRTHeight:= RTHeight;
+    GetDownScaleSO(RTWidth, RTHeight);
+    z3DGlobalEngine.CoreEffect.SetPointer('GDownScaleSampleOffsets', @FDownScaleSO, SizeOf(FDownScaleSO));
+ end
+  z3DGlobalEngine.CoreEffect.Technique:= 'z3DCore_DownScale';
+  PostProcess(AOutTexture, [], z3DGlobalEngine.CoreEffect);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRenderer::GetRTHeight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRTHeight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRenderer::GetRTWidth ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRTWidth;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetRTHeight (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRTHeight:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRenderer::SetRTWidth (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRTWidth:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::BeginSettingsChange ()
+{
+#ifndef DOXYGEN_SKIP
+  FSettingsChanging:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRenderer::EndSettingsChange ()
+{
+#ifndef DOXYGEN_SKIP
+  FSettingsChanging:= False;
+  CreateRenderTarget;
+  (z3DGlobalEngine.PostProcess as Iz3DLinked).z3DLostDevice;
+  (z3DGlobalEngine.PostProcess as Iz3DLinked).z3DResetDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DDeviceEngineCaps */ 
+
+   
+Tz3DDeviceEngineCaps::Tz3DDeviceEngineCaps (const Iz3DDevice ADevice 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FDevice:= ADevice;
+  Notifications:= [z3dlnDevice];
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DDeviceEngineCaps::z3DModifyDevice (Tz3DDeviceSettings &ADeviceSettings ,
+const _D3DCAPS9 ACaps 
+)
+
+/*
+var
+ FD3D: IDirect3D9;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FD3D:= z3DCore_GetD3DObject;
+
+  // Shader model supported
+  FShaderModelMinor:= D3DSHADER_VERSION_MINOR(ACaps.PixelShaderVersion);
+  case D3DSHADER_VERSION_MAJOR(ACaps.PixelShaderVersion) of
+
+    1: FShaderModel:= z3dsm1x;
+    2: FShaderModel:= z3dsm2x;
+    3: FShaderModel:= z3dsm3x;
+    else FShaderModel:= z3dsmHigher;
+ end
+
+  // HDR (must support ARGB16F RT with additive blending)
+  FHDRSupport:= not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) and
+  not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING,
+  D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F));
+
+  // DirectX level supported by hardware
+  case FShaderModel of
+
+    z3dsm1x: FDirectXLevel:= z3ddx70;
+    z3dsm2x:
+    begin      if ShaderModelMinor = 0 then FDirectXLevel:= z3ddx80 else
+      FDirectXLevel:= z3ddx81;
+   end
+    z3dsm3x:
+    begin      if HDRSupport then FDirectXLevel:= z3ddx91 else
+      FDirectXLevel:= z3ddx90;
+   end
+    z3dsmHigher: FDirectXLevel:= z3ddxHigher;
+ end
+
+  // Default single-component flating point format
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R32F)) then
+  FFPFormat:= D3DFMT_R32F else
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R16F)) then
+  FFPFormat:= D3DFMT_R16F else
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_G16R16)) then
+  FFPFormat:= D3DFMT_G16R16 else
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) then
+  FFPFormat:= D3DFMT_A16B16G16R16F else
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16)) then
+  FFPFormat:= D3DFMT_A16B16G16R16 else FFPFormat:= D3DFMT_A8R8G8B8;
+
+  // Dynamic shadow map support and format
+  FShadowMapFormat:= FFPFormat;
+  FShadowMapSupport:= ShadowMapFormat <> D3DFMT_A8R8G8B8;
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_CUBETEXTURE, D3DFMT_R32F)) then
+  FCubeShadowMapFormat:= D3DFMT_R32F else
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_CUBETEXTURE, D3DFMT_R16F)) then
+  FCubeShadowMapFormat:= D3DFMT_R16F else
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_CUBETEXTURE, D3DFMT_G16R16)) then
+  FCubeShadowMapFormat:= D3DFMT_G16R16 else
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F)) then
+  FCubeShadowMapFormat:= D3DFMT_A16B16G16R16F else
+  if not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16)) then
+  FCubeShadowMapFormat:= D3DFMT_A16B16G16R16 else FShadowMapSupport:= False;
+
+  // Check for current hardware acceleration for shadow mapping
+  FShadowMapHWSupport:= not FAILED(FD3D.CheckDeviceFormat(ACaps.AdapterOrdinal, ACaps.DeviceType,
+  ADeviceSettings.AdapterFormat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE,
+  z3DCore_GetDeviceSettings.PresentParams.AutoDepthStencilFormat));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DFormat Tz3DDeviceEngineCaps::GetFPFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFPFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DDirectXLevel Tz3DDeviceEngineCaps::GetDirectXLevel ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDirectXLevel;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DFormat Tz3DDeviceEngineCaps::GetCubeShadowMapFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCubeShadowMapFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DFormat Tz3DDeviceEngineCaps::GetShadowMapFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShadowMapFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDeviceEngineCaps::GetShadowMapSupport ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShadowMapSupport;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDeviceEngineCaps::GetHDRSupport ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FHDRSupport;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DShaderModel Tz3DDeviceEngineCaps::GetShaderModel ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShaderModel;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DDeviceEngineCaps::GetShaderModelMinor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShaderModelMinor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDeviceEngineCaps::GetShadowMapHWSupport ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShadowMapHWSupport;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DDeviceEngineCaps::ShaderModel3Supported ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= ShaderModel in [z3dsm3x, z3dsmHigher];
+#endif /* DOXYGEN_SKIP */
+};
+
+// finished
+

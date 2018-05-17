@@ -1,0 +1,301 @@
+{==============================================================================}
+{== Visual Direct3D VCL library BETA 1                                       ==}
+{== Author: Juan Pablo Ventoso.                                              ==}
+{==============================================================================}
+{== Unit: z3DClass. Main classes for all z3D descendants.                  ==}
+{==============================================================================}
+
+unit z3DClasses;
+
+interface
+
+uses
+  Windows, Classes, Direct3D9, D3DX9, z3DInterface, z3DCore_Intf, z3DCore_Func;
+
+const
+
+  z3DPI: Single       = 3.141592654;
+
+
+
+
+type
+
+  Tz3DLightingRenderStage = (z3dlrsStaticAmbient, z3dlrsDynamicAmbient);
+
+  Tz3DDirectLightRenderStage = (z3ddlrsStaticShadows, z3ddlrsDynamicShadows,
+    z3ddlrsStaticLighting, z3ddlrsDynamicLighting);
+
+  Tz3DStartScenarioStage = (z3dssCreatingScenario, z3dssCreatingScenarioObjects,
+    z3dssCreatingWorld, z3dssCreatingWorldObjects, z3dssCreatingLightingSystem);
+
+
+
+
+
+
+
+
+
+
+
+  /////////////////////////////////////////////////////////////////////////////
+  // This interface holds the common z3D Engine device events such as device //
+  // construction/destruction, settings modification or renderization stages //
+  // to be accesed by all linked objects or components.                      //
+  /////////////////////////////////////////////////////////////////////////////
+  // The z3D Engine core will call this events on any object registered as   //
+  // linked.                                                                 //
+  /////////////////////////////////////////////////////////////////////////////
+
+  Tz3DCreateObjectCaller = (z3dcocCreateDevice, z3dcocResetDevice, z3dcocStartScenario);
+  Tz3DDestroyObjectCaller = (z3ddocDestroyDevice, z3ddocLostDevice, z3ddocStopScenario);
+
+  Tz3DLinkNotification = (z3dlnDevice, z3dlnFrameMove, z3dlnGPUPrecomputation,
+    z3dlnFrameRender, z3dlnLightingRender, z3dlnDirectLightRender, z3dlnGUIRender,
+    z3dlnMessages, z3dlnKeyboard);
+
+  Tz3DLinkNotifications = set of Tz3DLinkNotification;
+
+  Iz3DLinkedInterface = interface(Iz3DInterface)['{F092F9D0-8C3D-424C-BF9C-9A3DBB734B63}']
+    function z3DGetScenarioLevel: Boolean; stdcall;
+    procedure z3DSetScenarioLevel(const Value: Boolean); stdcall;
+    function z3DGetScenarioStage: Tz3DStartScenarioStage; stdcall;
+    procedure z3DSetScenarioStage(const AStage: Tz3DStartScenarioStage); stdcall;
+    function z3DGetNotifications: Tz3DLinkNotifications; stdcall;
+    procedure z3DSetNotifications(const ANotifications: Tz3DLinkNotifications); stdcall;
+
+    procedure z3DCreateDevice; stdcall;
+    procedure z3DDestroyDevice; stdcall;
+    procedure z3DResetDevice; stdcall;
+    procedure z3DLostDevice; stdcall;
+
+    procedure z3DConfirmDevice(const ACaps: TD3DCaps9; const AAdapterFormat,
+      ABackBufferFormat: TD3DFormat; var AAccept: Boolean); stdcall;
+    procedure z3DModifyDevice(var ADeviceSettings: Tz3DDeviceSettings; const ACaps: TD3DCaps9); stdcall;
+
+    procedure z3DStartScenario(const AStage: Tz3DStartScenarioStage); stdcall;
+    procedure z3DStopScenario; stdcall;
+    procedure z3DCreateScenarioObjects(const ACaller: Tz3DCreateObjectCaller); stdcall;
+    procedure z3DDestroyScenarioObjects(const ACaller: Tz3DDestroyObjectCaller); stdcall;
+
+    procedure z3DFrameMove; stdcall;
+    procedure z3DGPUPrecomputation; stdcall;
+    procedure z3DFrameRender; stdcall;
+    procedure z3DLightingRender; stdcall;
+    procedure z3DDirectLightRender; stdcall;
+    procedure z3DGUIRender; stdcall;
+
+    procedure z3DMessage(const AWnd: HWnd; const AMsg: LongWord; const AwParam: wParam;
+      const AlParam: lParam; var ADefault: Boolean; var AResult: lResult); stdcall;
+    procedure z3DKeyboard(const AChar: LongWord; const AKeyDown, AAltDown: Boolean); stdcall;
+
+    property z3DScenarioStage: Tz3DStartScenarioStage read z3DGetScenarioStage write z3DSetScenarioStage;
+    property z3DNotifications: Tz3DLinkNotifications read z3DGetNotifications write z3DSetNotifications;
+    property z3DScenarioLevel: Boolean read z3DGetScenarioLevel write z3DSetScenarioLevel;
+  end;
+
+  Tz3DLinkedObject = class(Tz3DObject, Iz3DLinkedInterface)
+  private
+    FNotifications: Tz3DLinkNotifications;
+    FScenarioStage: Tz3DStartScenarioStage;
+    FScenarioLevel: Boolean;
+  protected
+    function z3DGetScenarioLevel: Boolean; virtual; stdcall;
+    procedure z3DSetScenarioLevel(const Value: Boolean); virtual; stdcall;
+    function z3DGetScenarioStage: Tz3DStartScenarioStage; virtual; stdcall;
+    procedure z3DSetScenarioStage(const AStage: Tz3DStartScenarioStage); virtual; stdcall;
+    function z3DGetNotifications: Tz3DLinkNotifications; virtual; stdcall;
+    procedure z3DSetNotifications(const ANotifications: Tz3DLinkNotifications); virtual; stdcall;
+  protected
+    procedure z3DCreateDevice; virtual; stdcall;
+    procedure z3DDestroyDevice; virtual; stdcall;
+    procedure z3DResetDevice; virtual; stdcall;
+    procedure z3DLostDevice; virtual; stdcall;
+    procedure z3DConfirmDevice(const ACaps: TD3DCaps9; const AAdapterFormat,
+      ABackBufferFormat: TD3DFormat; var AAccept: Boolean); virtual; stdcall;
+    procedure z3DModifyDevice(var ADeviceSettings: Tz3DDeviceSettings; const ACaps: TD3DCaps9); virtual; stdcall;
+    procedure z3DStartScenario(const AStage: Tz3DStartScenarioStage); virtual; stdcall;
+    procedure z3DStopScenario; virtual; stdcall;
+    procedure z3DCreateScenarioObjects(const ACaller: Tz3DCreateObjectCaller); virtual; stdcall;
+    procedure z3DDestroyScenarioObjects(const ACaller: Tz3DDestroyObjectCaller); virtual; stdcall;
+    procedure z3DFrameMove; virtual; stdcall;
+    procedure z3DGPUPrecomputation; virtual; stdcall;
+    procedure z3DFrameRender; virtual; stdcall;
+    procedure z3DLightingRender; virtual; stdcall;
+    procedure z3DDirectLightRender; virtual; stdcall;
+    procedure z3DGUIRender; virtual; stdcall;
+    procedure z3DMessage(const AWnd: HWnd; const AMsg: LongWord; const AwParam: wParam;
+      const AlParam: lParam; var ADefault: Boolean; var AResult: lResult); virtual; stdcall;
+    procedure z3DKeyboard(const AChar: LongWord; const AKeyDown, AAltDown: Boolean); virtual; stdcall;
+  public
+    procedure z3DLink; stdcall;
+    procedure z3DUnlink; stdcall;
+    constructor Create(const AOwner: Iz3DInterface = nil); override;
+  public
+    property z3DScenarioStage: Tz3DStartScenarioStage read z3DGetScenarioStage write z3DSetScenarioStage;
+    property z3DNotifications: Tz3DLinkNotifications read z3DGetNotifications write z3DSetNotifications;
+    property z3DScenarioLevel: Boolean read z3DGetScenarioLevel write z3DSetScenarioLevel;
+  end;
+
+///////////////////////////////////////////////////////////////////////////////
+// Common access interfaces and objects                                      //
+///////////////////////////////////////////////////////////////////////////////
+
+implementation
+
+uses z3DEngine_Func;
+
+{ Tz3DLinkedObject }
+
+constructor Tz3DLinkedObject.Create(const AOwner: Iz3DInterface);
+begin
+  inherited;
+  FNotifications:= [];
+  FScenarioStage:= z3dssCreatingScenarioObjects;
+  FScenarioLevel:= True;
+end;
+
+function Tz3DLinkedObject.z3DGetScenarioLevel: Boolean;
+begin
+  Result:= FScenarioLevel;
+end;
+
+procedure Tz3DLinkedObject.z3DSetScenarioLevel(const Value: Boolean);
+begin
+  FScenarioLevel:= Value;
+end;
+
+procedure Tz3DLinkedObject.z3DConfirmDevice(const ACaps: TD3DCaps9;
+  const AAdapterFormat, ABackBufferFormat: TD3DFormat;
+  var AAccept: Boolean);
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DCreateDevice;
+begin
+  if z3DGlobalEngine.Scenario.Enabled or not z3DScenarioLevel then
+  z3DCreateScenarioObjects(z3dcocCreateDevice);
+end;
+
+procedure Tz3DLinkedObject.z3DCreateScenarioObjects(const ACaller: Tz3DCreateObjectCaller);
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DDestroyDevice;
+begin
+  if z3DGlobalEngine.Scenario.Enabled or not z3DScenarioLevel then
+  z3DDestroyScenarioObjects(z3ddocDestroyDevice);
+end;
+
+procedure Tz3DLinkedObject.z3DDestroyScenarioObjects(const ACaller: Tz3DDestroyObjectCaller);
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DDirectLightRender;
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DFrameMove;
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DFrameRender;
+begin
+  // Not implemented on this class //
+end;
+
+function Tz3DLinkedObject.z3DGetNotifications: Tz3DLinkNotifications;
+begin
+  Result:= FNotifications;
+end;
+
+function Tz3DLinkedObject.z3DGetScenarioStage: Tz3DStartScenarioStage;
+begin
+  Result:= FScenarioStage;
+end;
+
+procedure Tz3DLinkedObject.z3DGPUPrecomputation;
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DGUIRender;
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DKeyboard(const AChar: LongWord;
+  const AKeyDown, AAltDown: Boolean);
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DLightingRender;
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DLink;
+begin
+  z3DGlobalEngine.AddLink(Self);
+end;
+
+procedure Tz3DLinkedObject.z3DLostDevice;
+begin
+  if z3DGlobalEngine.Scenario.Enabled or not z3DScenarioLevel then
+  z3DDestroyScenarioObjects(z3ddocLostDevice);
+end;
+
+procedure Tz3DLinkedObject.z3DMessage(const AWnd: HWnd; const AMsg: LongWord;
+  const AwParam: wParam; const AlParam: lParam; var ADefault: Boolean; var AResult: lResult);
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DModifyDevice(var ADeviceSettings: Tz3DDeviceSettings;
+  const ACaps: TD3DCaps9);
+begin
+  // Not implemented on this class //
+end;
+
+procedure Tz3DLinkedObject.z3DResetDevice;
+begin
+  if z3DGlobalEngine.Scenario.Enabled or not z3DScenarioLevel then
+  z3DCreateScenarioObjects(z3dcocResetDevice);
+end;
+
+procedure Tz3DLinkedObject.z3DSetNotifications(const ANotifications: Tz3DLinkNotifications);
+begin
+  z3DUnlink;
+  FNotifications:= ANotifications;
+  z3DLink;
+end;
+
+procedure Tz3DLinkedObject.z3DSetScenarioStage(const AStage: Tz3DStartScenarioStage);
+begin
+  FScenarioStage:= AStage;
+end;
+
+procedure Tz3DLinkedObject.z3DStartScenario(const AStage: Tz3DStartScenarioStage);
+begin
+  if (AStage = FScenarioStage) and FScenarioLevel then
+  z3DCreateScenarioObjects(z3dcocStartScenario);
+end;
+
+procedure Tz3DLinkedObject.z3DStopScenario;
+begin
+  if FScenarioLevel then z3DDestroyScenarioObjects(z3ddocStopScenario);
+end;
+
+procedure Tz3DLinkedObject.z3DUnlink;
+begin
+  z3DGlobalEngine.RemoveLink(Self);
+end;
+
+end.

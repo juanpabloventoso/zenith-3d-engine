@@ -1,0 +1,3664 @@
+
+
+
+
+      
+
+
+    class Tz3DMatrix : public Tz3DBase,Iz3DMatrix
+{
+public:
+
+  private:
+      TD3DXMatrix Pure; 
+
+      Tz3DBaseObjectEvent FOnChange; 
+
+  protected:
+      
+PD3DXMatrix GetPD3DMatrix ();
+ ;
+      
+Single Get11 ();
+ ;
+      
+Single Get12 ();
+ ;
+      
+Single Get13 ();
+ ;
+      
+Single Get14 ();
+ ;
+      
+Single Get21 ();
+ ;
+      
+Single Get22 ();
+ ;
+      
+Single Get23 ();
+ ;
+      
+Single Get24 ();
+ ;
+      
+Single Get31 ();
+ ;
+      
+Single Get32 ();
+ ;
+      
+Single Get33 ();
+ ;
+      
+Single Get34 ();
+ ;
+      
+Single Get41 ();
+ ;
+      
+Single Get42 ();
+ ;
+      
+Single Get43 ();
+ ;
+      
+Single Get44 ();
+ ;
+       
+Set11 (const Single Value 
+);
+ ;
+       
+Set12 (const Single Value 
+);
+ ;
+       
+Set13 (const Single Value 
+);
+ ;
+       
+Set14 (const Single Value 
+);
+ ;
+       
+Set21 (const Single Value 
+);
+ ;
+       
+Set22 (const Single Value 
+);
+ ;
+       
+Set23 (const Single Value 
+);
+ ;
+       
+Set24 (const Single Value 
+);
+ ;
+       
+Set31 (const Single Value 
+);
+ ;
+       
+Set32 (const Single Value 
+);
+ ;
+       
+Set33 (const Single Value 
+);
+ ;
+       
+Set34 (const Single Value 
+);
+ ;
+       
+Set41 (const Single Value 
+);
+ ;
+       
+Set42 (const Single Value 
+);
+ ;
+       
+Set43 (const Single Value 
+);
+ ;
+       
+Set44 (const Single Value 
+);
+ ;
+      
+TD3DXMatrix GetD3DMatrix ();
+ ;
+       
+SetD3DMatrix (const TD3DXMatrix Value 
+);
+ ;
+      
+Tz3DBaseObjectEvent GetOnChange ();
+ ;
+       
+SetOnChange (const Tz3DBaseObjectEvent Value 
+);
+ ;
+  public:
+       
+Iz3DMatrix New ();
+
+         
+Iz3DMatrix NewFrom (const Iz3DMatrix AMatrix 
+);
+ ;
+         
+Iz3DMatrix NewFrom (const TD3DXMatrix AMatrix 
+);
+ ;
+       
+Iz3DMatrix NewIdentity ();
+
+        
+Iz3DMatrix From (const Iz3DMatrix AMatrix 
+);
+ ; ;
+        
+Iz3DMatrix From (const TD3DXMatrix AMatrix 
+);
+ ; ;
+         
+Iz3DMatrix LookAt (const Iz3DFloat3 APosition ,
+const Iz3DFloat3 ALookAt 
+);
+ ; ;
+          
+Iz3DMatrix LookAt (const Iz3DFloat3 APosition ,
+const Iz3DFloat3 ALookAt ,
+const Iz3DFloat3 AUp 
+);
+ ; ;
+                      .01      
+Iz3DMatrix PerspectiveFOV (const Single AAngle ,
+const Single AAspect = 1 ,
+const Single ANear = 0 ,
+const Single AFar = 1000 
+);
+ ; ;
+             .01           
+Iz3DMatrix Ortho (const Single AWidth ,
+const Single AHeight ,
+const Single ANear = 0 ,
+const Single AFar = 1000 
+);
+ ;
+        
+Iz3DMatrix Multiply (const Iz3DMatrix AMatrix 
+);
+ ; ;
+        
+Iz3DMatrix Multiply (const TD3DXMatrix AMatrix 
+);
+ ; ;
+      
+Iz3DMatrix Inverse ();
+ ; ;
+      
+Iz3DMatrix Identity ();
+ ;
+        
+Iz3DMatrix Inverse (const Iz3DMatrix AMatrix 
+);
+ ; ;
+        
+Iz3DMatrix Inverse (const TD3DXMatrix AMatrix 
+);
+ ; ;
+          
+Iz3DMatrix Translation (const Single AX ,
+const Single AY ,
+const Single AZ 
+);
+ ;
+          
+Iz3DMatrix RotateYPR (const Single AYaw ,
+const Single APitch ,
+const Single ARoll 
+);
+ ;
+        
+Iz3DMatrix RotateX (const Single AAngle 
+);
+ ;
+        
+Iz3DMatrix RotateY (const Single AAngle 
+);
+ ;
+        
+Iz3DMatrix RotateZ (const Single AAngle 
+);
+ ;
+        
+Iz3DMatrix RotateQuat (const TD3DXQuaternion AQuat 
+);
+ ;
+        
+Iz3DMatrix Scale (const Iz3DFloat3 AScale 
+);
+ ;
+  public:
+         /** \sa GetOnChange For reading   \sa SetOnChange For writing */
+Tz3DBaseObjectEvent OnChange; 
+
+         /** \sa GetD3DMatrix For reading   \sa SetD3DMatrix For writing */
+TD3DXMatrix D3DMatrix; 
+
+       /** \sa GetPD3DMatrix For reading*/
+PD3DXMatrix PD3DMatrix; 
+
+         /** \sa Get11 For reading   \sa Set11 For writing */
+Single e11; 
+
+         /** \sa Get12 For reading   \sa Set12 For writing */
+Single e12; 
+
+         /** \sa Get13 For reading   \sa Set13 For writing */
+Single e13; 
+
+         /** \sa Get14 For reading   \sa Set14 For writing */
+Single e14; 
+
+         /** \sa Get21 For reading   \sa Set21 For writing */
+Single e21; 
+
+         /** \sa Get22 For reading   \sa Set22 For writing */
+Single e22; 
+
+         /** \sa Get23 For reading   \sa Set23 For writing */
+Single e23; 
+
+         /** \sa Get24 For reading   \sa Set24 For writing */
+Single e24; 
+
+         /** \sa Get31 For reading   \sa Set31 For writing */
+Single e31; 
+
+         /** \sa Get32 For reading   \sa Set32 For writing */
+Single e32; 
+
+         /** \sa Get33 For reading   \sa Set33 For writing */
+Single e33; 
+
+         /** \sa Get34 For reading   \sa Set34 For writing */
+Single e34; 
+
+         /** \sa Get41 For reading   \sa Set41 For writing */
+Single e41; 
+
+         /** \sa Get42 For reading   \sa Set42 For writing */
+Single e42; 
+
+         /** \sa Get43 For reading   \sa Set43 For writing */
+Single e43; 
+
+         /** \sa Get44 For reading   \sa Set44 For writing */
+Single e44; 
+
+ };
+
+
+    class Tz3DFloat2 : public Tz3DBase,Iz3DFloat2
+{
+public:
+
+  private:
+      TD3DXVector2 Pure; 
+
+      Tz3DBaseObjectEvent FOnChange; 
+
+      Boolean FInternalChanging; 
+
+  protected:
+      
+Tz3DBaseObjectEvent GetOnChange ();
+ ;
+       
+SetOnChange (const Tz3DBaseObjectEvent Value 
+);
+ ;
+      
+TD3DXVector2 GetXY ();
+ ;
+       
+SetXY (const TD3DXVector2 Value 
+);
+ ;
+      
+Single GetX ();
+ ;
+      
+Single GetY ();
+ ;
+       
+SetX (const Single Value 
+);
+ ;
+       
+SetY (const Single Value 
+);
+ ;
+  public:
+        
+Iz3DFloat2 From (const Iz3DFloat2 AVector 
+);
+ ; ;
+        
+Iz3DFloat2 From (const TD3DXVector2 AVector 
+);
+ ; ;
+        
+Iz3DFloat2 Add (const Iz3DFloat2 AVector 
+);
+ ; ;
+        
+Iz3DFloat2 Add (const TD3DXVector2 AVector 
+);
+ ; ;
+        
+Iz3DFloat2 Subtract (const Iz3DFloat2 AVector 
+);
+ ; ;
+        
+Iz3DFloat2 Subtract (const TD3DXVector2 AVector 
+);
+ ; ;
+        
+Iz3DFloat2 Scale (const Single AScale 
+);
+ ;
+      
+Iz3DFloat2 Negate ();
+ ;
+      
+Iz3DFloat2 Saturate ();
+ ;
+      
+Single Length ();
+ ;
+      
+Single LengthSq ();
+ ;
+      
+Iz3DFloat2 Normalize ();
+ ;
+     
+BeginInternalChange ();
+ ;
+     
+EndInternalChange ();
+ ;
+                
+Iz3DFloat2 New (const Single AX = 0 ,
+const Single AY = 0 
+);
+
+         
+Iz3DFloat2 NewFrom (const Iz3DFloat2 AVector 
+);
+ ;
+         
+Iz3DFloat2 NewFrom (const TD3DXVector2 AVector 
+);
+ ;
+  public:
+         /** \sa GetOnChange For reading   \sa SetOnChange For writing */
+Tz3DBaseObjectEvent OnChange; 
+
+         /** \sa GetXY For reading   \sa SetXY For writing */
+TD3DXVector2 XY; 
+
+         /** \sa GetX For reading   \sa SetX For writing */
+Single R; 
+
+         /** \sa GetY For reading   \sa SetY For writing */
+Single G; 
+
+         /** \sa GetXY For reading   \sa SetXY For writing */
+TD3DXVector2 RG; 
+
+         /** \sa GetX For reading   \sa SetX For writing */
+Single X; 
+
+         /** \sa GetY For reading   \sa SetY For writing */
+Single Y; 
+
+ };
+
+
+    class Tz3DFloat3 : public Tz3DBase,Iz3DFloat3
+{
+public:
+
+  private:
+      TD3DXVector3 Pure; 
+
+      Tz3DBaseObjectEvent FOnChange; 
+
+      Boolean FInternalChanging; 
+
+  protected:
+      
+TD3DColor GetD3DColor ();
+ ;
+      
+TD3DColorValue GetD3DColorValue ();
+ ;
+      
+Tz3DBaseObjectEvent GetOnChange ();
+ ;
+       
+SetOnChange (const Tz3DBaseObjectEvent Value 
+);
+ ;
+      
+TD3DXVector2 GetXY ();
+ ;
+      
+TD3DXVector2 GetXZ ();
+ ;
+      
+TD3DXVector2 GetYZ ();
+ ;
+       
+SetXY (const TD3DXVector2 Value 
+);
+ ;
+       
+SetXZ (const TD3DXVector2 Value 
+);
+ ;
+       
+SetYZ (const TD3DXVector2 Value 
+);
+ ;
+      
+Single GetX ();
+ ;
+      
+TD3DXVector3 GetXYZ ();
+ ;
+      
+Single GetY ();
+ ;
+      
+Single GetZ ();
+ ;
+       
+SetX (const Single Value 
+);
+ ;
+       
+SetXYZ (const TD3DXVector3 Value 
+);
+ ;
+       
+SetY (const Single Value 
+);
+ ;
+       
+SetZ (const Single Value 
+);
+ ;
+      
+TD3DXVector4 GetRGBA ();
+ ;
+  public:
+        
+Iz3DFloat3 Add (const Iz3DFloat3 AVector 
+);
+ ; ;
+        
+Iz3DFloat3 Add (const TD3DXVector3 AVector 
+);
+ ; ;
+        
+Iz3DFloat3 Subtract (const Iz3DFloat3 AVector 
+);
+ ; ;
+        
+Iz3DFloat3 Subtract (const TD3DXVector3 AVector 
+);
+ ; ;
+        
+Iz3DFloat3 Scale (const Single AScale 
+);
+ ;
+        
+Single Dot (const Iz3DFloat3 AVector 
+);
+ ;
+      
+Iz3DFloat3 Negate ();
+ ;
+      
+Iz3DFloat3 Saturate ();
+ ;
+      
+Single Length ();
+ ;
+      
+Single LengthSq ();
+ ;
+      
+Iz3DFloat3 Identity ();
+ ;
+        
+Iz3DFloat3 Cross (const Iz3DFloat3 AVector 
+);
+ ;
+        
+Iz3DFloat3 TransformC (const Iz3DMatrix AMatrix 
+);
+ ;
+        
+Iz3DFloat3 TransformN (const Iz3DMatrix AMatrix 
+);
+ ;
+      
+Iz3DFloat3 Normalize ();
+ ;
+        
+Iz3DFloat3 From (const Iz3DFloat3 AVector 
+);
+ ; ;
+        
+Iz3DFloat3 From (const TD3DXVector3 AVector 
+);
+ ; ;
+        
+Iz3DFloat3 From (const TD3DColorValue AColor 
+);
+ ; ;
+     
+BeginInternalChange ();
+ ;
+     
+EndInternalChange ();
+ ;
+                     
+Iz3DFloat3 New (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 
+);
+
+         
+Iz3DFloat3 NewFrom (const Iz3DFloat3 AVector 
+);
+ ;
+         
+Iz3DFloat3 NewFrom (const TD3DXVector3 AVector 
+);
+ ;
+         
+Iz3DFloat3 NewFrom (const TD3DColorValue AColor 
+);
+ ;
+  public:
+         /** \sa GetOnChange For reading   \sa SetOnChange For writing */
+Tz3DBaseObjectEvent OnChange; 
+
+       /** \sa GetD3DColor For reading*/
+TD3DColor D3DColor; 
+
+       /** \sa GetD3DColorValue For reading*/
+TD3DColorValue D3DColorValue; 
+
+         /** \sa GetXY For reading   \sa SetXY For writing */
+TD3DXVector2 XY; 
+
+         /** \sa GetXZ For reading   \sa SetXZ For writing */
+TD3DXVector2 XZ; 
+
+         /** \sa GetYZ For reading   \sa SetYZ For writing */
+TD3DXVector2 YZ; 
+
+         /** \sa GetXYZ For reading   \sa SetXYZ For writing */
+TD3DXVector3 XYZ; 
+
+         /** \sa GetX For reading   \sa SetX For writing */
+Single R; 
+
+         /** \sa GetY For reading   \sa SetY For writing */
+Single G; 
+
+         /** \sa GetZ For reading   \sa SetZ For writing */
+Single B; 
+
+         /** \sa GetXY For reading   \sa SetXY For writing */
+TD3DXVector2 RG; 
+
+         /** \sa GetXZ For reading   \sa SetXZ For writing */
+TD3DXVector2 RB; 
+
+         /** \sa GetYZ For reading   \sa SetYZ For writing */
+TD3DXVector2 GB; 
+
+         /** \sa GetXYZ For reading   \sa SetXYZ For writing */
+TD3DXVector3 RGB; 
+
+       /** \sa GetRGBA For reading*/
+TD3DXVector4 RGBA; 
+
+         /** \sa GetX For reading   \sa SetX For writing */
+Single X; 
+
+         /** \sa GetY For reading   \sa SetY For writing */
+Single Y; 
+
+         /** \sa GetZ For reading   \sa SetZ For writing */
+Single Z; 
+
+ };
+
+
+    class Tz3DFloat4 : public Tz3DBase,Iz3DFloat4
+{
+public:
+
+  private:
+      TD3DXVector4 Pure; 
+
+      Tz3DBaseObjectEvent FOnChange; 
+
+  protected:
+      
+TD3DColor GetD3DColor ();
+ ;
+      
+TD3DColorValue GetD3DColorValue ();
+ ;
+      
+Tz3DBaseObjectEvent GetOnChange ();
+ ;
+       
+SetOnChange (const Tz3DBaseObjectEvent Value 
+);
+ ;
+      
+TD3DXQuaternion GetD3DQuat ();
+ ;
+       
+SetD3DQuat (const TD3DXQuaternion Value 
+);
+ ;
+      
+Single GetW ();
+ ;
+      
+TD3DXVector3 GetXYW ();
+ ;
+      
+TD3DXVector4 GetXYZW ();
+ ;
+      
+TD3DXVector3 GetXZW ();
+ ;
+      
+TD3DXVector3 GetYZW ();
+ ;
+       
+SetW (const Single Value 
+);
+ ;
+       
+SetXYW (const TD3DXVector3 Value 
+);
+ ;
+       
+SetXYZW (const TD3DXVector4 Value 
+);
+ ;
+       
+SetXZW (const TD3DXVector3 Value 
+);
+ ;
+       
+SetYZW (const TD3DXVector3 Value 
+);
+ ;
+      
+TD3DXVector2 GetXY ();
+ ;
+      
+TD3DXVector2 GetXZ ();
+ ;
+      
+TD3DXVector2 GetYZ ();
+ ;
+       
+SetXY (const TD3DXVector2 Value 
+);
+ ;
+       
+SetXZ (const TD3DXVector2 Value 
+);
+ ;
+       
+SetYZ (const TD3DXVector2 Value 
+);
+ ;
+      
+Single GetX ();
+ ;
+      
+TD3DXVector3 GetXYZ ();
+ ;
+      
+Single GetY ();
+ ;
+      
+Single GetZ ();
+ ;
+       
+SetX (const Single Value 
+);
+ ;
+       
+SetXYZ (const TD3DXVector3 Value 
+);
+ ;
+       
+SetY (const Single Value 
+);
+ ;
+       
+SetZ (const Single Value 
+);
+ ;
+  public:
+        
+Iz3DFloat4 Add (const Iz3DFloat4 AVector 
+);
+ ; ;
+        
+Iz3DFloat4 Add (const TD3DXVector4 AVector 
+);
+ ; ;
+        
+Iz3DFloat4 Subtract (const Iz3DFloat4 AVector 
+);
+ ; ;
+        
+Iz3DFloat4 Subtract (const TD3DXVector4 AVector 
+);
+ ; ;
+        
+Iz3DFloat4 Scale (const Single AScale 
+);
+ ;
+        
+Iz3DFloat4 Transform (const Iz3DMatrix AMatrix 
+);
+ ;
+        
+Iz3DFloat4 Multiply (const Iz3DFloat4 AVector 
+);
+ ;
+        
+Iz3DFloat4 RotationMatrix (const Iz3DMatrix AMatrix 
+);
+ ;
+      
+Iz3DFloat4 Negate ();
+ ;
+      
+Iz3DFloat4 Saturate ();
+ ;
+      
+Iz3DFloat4 Identity ();
+ ;
+      
+Iz3DFloat4 Normalize ();
+ ;
+      
+Single Length ();
+ ;
+      
+Single LengthSq ();
+ ;
+        
+Iz3DFloat4 From (const Iz3DFloat4 AVector 
+);
+ ; ;
+        
+Iz3DFloat4 From (const TD3DXVector4 AVector 
+);
+ ; ;
+        
+Iz3DFloat4 From (const TD3DColorValue AColor 
+);
+ ; ;
+                          
+Iz3DFloat4 New (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 ,
+const Single AW = 0 
+);
+
+         
+Iz3DFloat4 NewFrom (const Iz3DFloat4 AVector 
+);
+ ;
+         
+Iz3DFloat4 NewFrom (const TD3DXVector4 AVector 
+);
+ ;
+         
+Iz3DFloat4 NewFrom (const TD3DColorValue AColor 
+);
+ ;
+  public:
+         /** \sa GetD3DQuat For reading   \sa SetD3DQuat For writing */
+TD3DXQuaternion D3DQuat; 
+
+       /** \sa GetD3DColor For reading*/
+TD3DColor D3DColor; 
+
+       /** \sa GetD3DColorValue For reading*/
+TD3DColorValue D3DColorValue; 
+
+         /** \sa GetOnChange For reading   \sa SetOnChange For writing */
+Tz3DBaseObjectEvent OnChange; 
+
+         /** \sa GetXY For reading   \sa SetXY For writing */
+TD3DXVector2 XY; 
+
+         /** \sa GetXZ For reading   \sa SetXZ For writing */
+TD3DXVector2 XZ; 
+
+         /** \sa GetYZ For reading   \sa SetYZ For writing */
+TD3DXVector2 YZ; 
+
+         /** \sa GetXYZ For reading   \sa SetXYZ For writing */
+TD3DXVector3 XYZ; 
+
+         /** \sa GetXYW For reading   \sa SetXYW For writing */
+TD3DXVector3 XYW; 
+
+         /** \sa GetXZW For reading   \sa SetXZW For writing */
+TD3DXVector3 XZW; 
+
+         /** \sa GetYZW For reading   \sa SetYZW For writing */
+TD3DXVector3 YZW; 
+
+         /** \sa GetXYZW For reading   \sa SetXYZW For writing */
+TD3DXVector4 XYZW; 
+
+         /** \sa GetX For reading   \sa SetX For writing */
+Single R; 
+
+         /** \sa GetY For reading   \sa SetY For writing */
+Single G; 
+
+         /** \sa GetZ For reading   \sa SetZ For writing */
+Single B; 
+
+         /** \sa GetW For reading   \sa SetW For writing */
+Single A; 
+
+         /** \sa GetXY For reading   \sa SetXY For writing */
+TD3DXVector2 RG; 
+
+         /** \sa GetXZ For reading   \sa SetXZ For writing */
+TD3DXVector2 RB; 
+
+         /** \sa GetYZ For reading   \sa SetYZ For writing */
+TD3DXVector2 GB; 
+
+         /** \sa GetXYZ For reading   \sa SetXYZ For writing */
+TD3DXVector3 RGB; 
+
+         /** \sa GetXYZW For reading   \sa SetXYZW For writing */
+TD3DXVector4 RGBA; 
+
+         /** \sa GetXYW For reading   \sa SetXYW For writing */
+TD3DXVector3 RGA; 
+
+         /** \sa GetXZW For reading   \sa SetXZW For writing */
+TD3DXVector3 RBA; 
+
+         /** \sa GetYZW For reading   \sa SetYZW For writing */
+TD3DXVector3 GBA; 
+
+         /** \sa GetX For reading   \sa SetX For writing */
+Single X; 
+
+         /** \sa GetY For reading   \sa SetY For writing */
+Single Y; 
+
+         /** \sa GetZ For reading   \sa SetZ For writing */
+Single Z; 
+
+         /** \sa GetW For reading   \sa SetW For writing */
+Single W; 
+
+ };
+
+
+    class Tz3DPlane : public Tz3DBase,Iz3DPlane
+{
+public:
+
+  private:
+      TD3DXPlane Pure; 
+
+      Tz3DBaseObjectEvent FOnChange; 
+
+  protected:
+      
+Tz3DBaseObjectEvent GetOnChange ();
+ ;
+       
+SetOnChange (const Tz3DBaseObjectEvent Value 
+);
+ ;
+      
+Single GetA ();
+ ;
+      
+Single GetB ();
+ ;
+      
+Single GetC ();
+ ;
+      
+Single GetD ();
+ ;
+      
+TD3DXPlane GetABCD ();
+ ;
+       
+SetABCD (const TD3DXPlane Value 
+);
+ ;
+       
+SetA (const Single Value 
+);
+ ;
+       
+SetB (const Single Value 
+);
+ ;
+       
+SetC (const Single Value 
+);
+ ;
+       
+SetD (const Single Value 
+);
+ ;
+  public:
+                               
+Iz3DPlane New (const Single AA = 0 ,
+const Single AB = 0 ,
+const Single AC = 0 ,
+const Single AD = 0 
+);
+
+         
+Iz3DPlane NewFrom (const Iz3DPlane APlane 
+);
+ ;
+         
+Iz3DPlane NewFrom (const TD3DXPlane APlane 
+);
+ ;
+        
+Boolean Intersects (const Iz3DPlane APlane 
+);
+
+        
+Boolean Included (const Iz3DPlane APlane 
+);
+
+  public:
+         /** \sa GetOnChange For reading   \sa SetOnChange For writing */
+Tz3DBaseObjectEvent OnChange; 
+
+         /** \sa GetABCD For reading   \sa SetABCD For writing */
+TD3DXPlane ABCD; 
+
+         /** \sa GetA For reading   \sa SetA For writing */
+Single A; 
+
+         /** \sa GetB For reading   \sa SetB For writing */
+Single B; 
+
+         /** \sa GetC For reading   \sa SetC For writing */
+Single C; 
+
+         /** \sa GetD For reading   \sa SetD For writing */
+Single D; 
+
+ };
+
+
+    class Tz3DBoundingBox : public Tz3DBase,Iz3DBoundingBox
+{
+public:
+
+  private:
+      Iz3DFloat3 FLowerLeft; 
+
+      Iz3DFloat3 FUpperRight; 
+
+      Iz3DFloat3 FDimensions; 
+
+      Iz3DFloat3 FCenter; 
+
+  protected:
+      
+Iz3DFloat3 GetLowerLeft ();
+ ;
+      
+Iz3DFloat3 GetUpperRight ();
+ ;
+      
+Iz3DFloat3 GetDimensions ();
+ ;
+      
+Iz3DFloat3 GetCenter ();
+ ;
+  public:
+         
+Tz3DBoundingBox (const Iz3DBase AOwner = nil 
+);
+ ;
+
+       
+ComputeFromMesh (const ID3DXMesh AMesh 
+);
+ ;
+        
+Boolean Intersects (const Iz3DBoundingBox ABox 
+);
+ ; ;
+        
+Boolean Intersects (const Iz3DBoundingSphere ASphere 
+);
+ ; ;
+
+       
+ValueChanged (const Iz3DBase ASender 
+);
+ ;
+       
+DimensionsChanged (const Iz3DBase ASender 
+);
+ ;
+  public:
+       /** \sa GetCenter For reading*/
+Iz3DFloat3 Center; 
+
+       /** \sa GetDimensions For reading*/
+Iz3DFloat3 Dimensions; 
+
+       /** \sa GetLowerLeft For reading*/
+Iz3DFloat3 LowerLeft; 
+
+       /** \sa GetUpperRight For reading*/
+Iz3DFloat3 UpperRight; 
+
+ };
+
+
+    class Tz3DBoundingSphere : public Tz3DBase,Iz3DBoundingSphere
+{
+public:
+
+  private:
+      Iz3DFloat3 FCenter; 
+
+      Single FRadius; 
+
+  protected:
+      
+Iz3DFloat3 GetCenter ();
+ ;
+      
+Single GetRadius ();
+ ;
+       
+SetRadius (const Single Value 
+);
+ ;
+  public:
+         
+Tz3DBoundingSphere (const Iz3DBase AOwner = nil 
+);
+ ;
+
+       
+ComputeFromMesh (const ID3DXMesh AMesh 
+);
+ ;
+        
+Boolean Intersects (const Iz3DBoundingBox ABox 
+);
+ ; ;
+        
+Boolean Intersects (const Iz3DBoundingSphere ASphere 
+);
+ ; ;
+  public:
+       /** \sa GetCenter For reading*/
+Iz3DFloat3 Center; 
+
+         /** \sa GetRadius For reading   \sa SetRadius For writing */
+Single Radius; 
+
+ };
+
+
+// FloatN constructors
+
+           
+Iz3DFloat2 z3DFloat2 (const Single AX = 0 ,
+const Single AY = 0 
+);
+ ;
+                 
+Iz3DFloat3 z3DFloat3 (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 
+);
+ ;
+                      
+Iz3DFloat4 z3DFloat4 (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 ,
+const Single AW = 0 
+);
+ ;
+                      
+Iz3DFloat4 z3DFloat4Coord (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 ,
+const Single AW = 1 
+);
+ ;
+
+// Matrix constructors
+
+  
+Iz3DMatrix z3DMatrix ();
+ ;
+  
+Iz3DMatrix z3DMatrixIdentity ();
+ ;
+
+// Plane functions
+
+                      
+Iz3DPlane z3DPlane (const Single AA = 0 ,
+const Single AB = 0 ,
+const Single AC = 0 ,
+const Single AD = 0 
+);
+ ;
+
+// Algebraic functions
+
+    
+Single Saturate (const Single AValue 
+);
+ ;
+      
+Iz3DFloat3 z3DGetNormal (const Iz3DFloat3 AV1 ,
+const Iz3DFloat3 AV2 ,
+const Iz3DFloat3 AV3 
+);
+ ;
+               
+Single z3DPlaneRaySHLerp (const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AEdgeI ,
+const Iz3DFloat3 AEdgeJ ,
+const Integer AI ,
+const Integer AJ ,
+const Integer ACount ,
+/* out */ Iz3DFloat3 &ARay 
+);
+ ;
+
+// Math functions
+
+      
+Single Clamp (const Single AValue ,
+const Single AMin ,
+const Single AMax 
+);
+ ;
+        
+Single Lerp (const Single AX ,
+const Single AY ,
+const Single AValue 
+);
+ ;
+
+// Bounding volume functions
+
+  
+Iz3DBoundingBox z3DBoundingBox ();
+ ;
+  
+Iz3DBoundingSphere z3DBoundingSphere ();
+ ;
+
+
+
+   
+
+  
+Iz3DBoundingBox z3DBoundingBox ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DBoundingBox.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBoundingSphere z3DBoundingSphere ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DBoundingSphere.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+Iz3DFloat2 z3DFloat2 (const Single AX = 0 ,
+const Single AY = 0 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat2.New(AX, AY);
+#endif /* DOXYGEN_SKIP */
+};
+
+                
+Iz3DFloat3 z3DFloat3 (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat3.New(AX, AY, AZ);
+#endif /* DOXYGEN_SKIP */
+};
+
+                     
+Iz3DFloat4 z3DFloat4 (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 ,
+const Single AW = 0 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat4.New(AX, AY, AZ, AW);
+#endif /* DOXYGEN_SKIP */
+};
+
+                     
+Iz3DFloat4 z3DFloat4Coord (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 ,
+const Single AW = 1 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DFloat4(AX, AY, AZ, AW);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix z3DMatrix ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DMatrix.New;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix z3DMatrixIdentity ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DMatrix.NewIdentity;
+#endif /* DOXYGEN_SKIP */
+};
+
+                     
+Iz3DPlane z3DPlane (const Single AA = 0 ,
+const Single AB = 0 ,
+const Single AC = 0 ,
+const Single AD = 0 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DPlane.New(AA, AB, AC, AD);
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Iz3DFloat3 z3DGetNormal (const Iz3DFloat3 AV1 ,
+const Iz3DFloat3 AV2 ,
+const Iz3DFloat3 AV3 
+)
+ ;
+/*
+var
+ UX, UY, UZ, VX, VY, VZ: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  UX:= AV2.x - AV1.x;
+  UY:= AV2.y - AV1.y;
+  UZ:= AV2.z - AV1.z;
+  VX:= AV3.x - AV1.x;
+  VY:= AV3.y - AV1.y;
+  VZ:= AV3.z - AV1.z;
+  Result:= z3DFloat3((UY*VZ)-(VY*UZ), (UZ*VX)-(VZ*UX), (UX*VY)-(VX*UY));
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Single Clamp (const Single AValue ,
+const Single AMin ,
+const Single AMax 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Min(AMax, Max(AMin, AValue));
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Single Saturate (const Single AValue 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= Clamp(AValue, 0, 1);
+#endif /* DOXYGEN_SKIP */
+};
+
+        
+Single Lerp (const Single AX ,
+const Single AY ,
+const Single AValue 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= AX + AValue * (AY - AX);
+#endif /* DOXYGEN_SKIP */
+};
+
+               
+Single z3DPlaneRaySHLerp (const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AEdgeI ,
+const Iz3DFloat3 AEdgeJ ,
+const Integer AI ,
+const Integer AJ ,
+const Integer ACount ,
+/* out */ Iz3DFloat3 &ARay 
+)
+ ;
+/*
+//const
+ FEpsilon = 1e-3;
+var FLerpEdgeI, FLerpEdgeJ, FLerpEdges, FLerpNormal, FLerpRay: Iz3DFloat3;
+    FFactorI, FFactorJ: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FFactorI:= AI / (ACount-1) - 0.5;
+  FFactorJ:= AJ / (ACount-1) - 0.5;
+  Result:= Saturate(1 - (Abs(FFactorI) + Abs(FFactorJ)) + FEpsilon);
+  FLerpEdgeI:= z3DFloat3.From(AEdgeI).Scale(FFactorI);
+  FLerpEdgeJ:= z3DFloat3.From(AEdgeJ).Scale(FFactorJ);
+  FLerpEdges:= z3DFloat3.From(FLerpEdgeI).Add(FLerpEdgeJ);
+  FLerpNormal:= z3DFloat3.From(ANormal).Scale(Result);
+  FLerpRay:= z3DFloat3.From(FLerpEdges).Add(FLerpNormal).Normalize;
+  ARay:= z3DFloat3.From(FLerpRay).Negate;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DMatrix */ 
+
+class   
+Iz3DMatrix Tz3DMatrix::NewIdentity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DMatrix.Create;
+  Result.Identity;
+#endif /* DOXYGEN_SKIP */
+};
+
+class   
+Iz3DMatrix Tz3DMatrix::New ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DMatrix.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Iz3DMatrix Tz3DMatrix::LookAt (const Iz3DFloat3 APosition ,
+const Iz3DFloat3 ALookAt 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixLookAtLH(Pure, APosition.XYZ, ALookAt.XYZ, D3DXVector3(0, 1, 0));
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Iz3DMatrix Tz3DMatrix::LookAt (const Iz3DFloat3 APosition ,
+const Iz3DFloat3 ALookAt ,
+const Iz3DFloat3 AUp 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixLookAtLH(Pure, APosition.XYZ, ALookAt.XYZ, AUp.XYZ);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::Multiply (const Iz3DMatrix AMatrix 
+)
+
+/*
+var
+ FResult: TD3DXMatrix;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXMatrixMultiply(FResult, Pure, AMatrix.D3DMatrix);
+  Pure:= FResult;
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::Multiply (const TD3DXMatrix AMatrix 
+)
+
+/*
+var
+ FResult: TD3DXMatrix;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXMatrixMultiply(FResult, Pure, AMatrix);
+  Pure:= FResult;
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DMatrix::Inverse ()
+
+/*
+var
+ FResult: TD3DXMatrix;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXMatrixInverse(FResult, nil, Pure);
+  Pure:= FResult;
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::Inverse (const Iz3DMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixInverse(Pure, nil, AMatrix.D3DMatrix);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::Inverse (const TD3DXMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixInverse(Pure, nil, AMatrix);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Iz3DMatrix Tz3DMatrix::RotateYPR (const Single AYaw ,
+const Single APitch ,
+const Single ARoll 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixRotationYawPitchRoll(Pure, AYaw, APitch, ARoll);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DMatrix Tz3DMatrix::NewFrom (const Iz3DMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DMatrix.Create;
+  Result.D3DMatrix:= AMatrix.D3DMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DMatrix Tz3DMatrix::NewFrom (const TD3DXMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DMatrix.Create;
+  Result.D3DMatrix:= AMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DMatrix::Identity ()
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixIdentity(Pure);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::RotateQuat (const TD3DXQuaternion AQuat 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixRotationQuaternion(Pure, AQuat);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Iz3DMatrix Tz3DMatrix::Translation (const Single AX ,
+const Single AY ,
+const Single AZ 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixTranslation(Pure, AX, AY, AZ);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Iz3DMatrix Tz3DMatrix::PerspectiveFOV (const Single AAngle ,
+const Single AAspect ,
+const Single ANear ,
+const Single AFar 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixPerspectiveFovLH(Pure, AAngle, AAspect, ANear, A);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get11 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._11;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get12 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._12;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get13 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._13;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get14 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._14;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get21 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._21;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get22 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._22;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get23 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._23;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get24 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._24;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get31 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._31;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get32 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._32;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get33 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._33;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get34 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._34;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get41 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._41;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get42 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._42;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get43 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._43;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DMatrix::Get44 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure._44;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set11 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._11:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set12 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._12:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set13 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._13:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set14 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._14:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set21 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._21:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set22 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._22:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set23 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._23:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set24 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._24:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set31 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._31:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set32 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._32:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set33 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._33:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set34 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._34:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set41 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._41:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set42 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._42:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set43 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._43:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::Set44 (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure._44:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXMatrix Tz3DMatrix::GetD3DMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::SetD3DMatrix (const TD3DXMatrix Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::RotateX (const Single AAngle 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixRotationX(Pure, AAngle);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::RotateY (const Single AAngle 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixRotationY(Pure, AAngle);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::RotateZ (const Single AAngle 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixRotationZ(Pure, AAngle);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::Scale (const Iz3DFloat3 AScale 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixScaling(Pure, AScale.X, AScale.Y, AScale.Z);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseObjectEvent Tz3DMatrix::GetOnChange ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnChange;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DMatrix::SetOnChange (const Tz3DBaseObjectEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnChange:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::From (const Iz3DMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= AMatrix.D3DMatrix;
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PD3DXMatrix Tz3DMatrix::GetPD3DMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= @Pure;
+#endif /* DOXYGEN_SKIP */
+};
+
+        
+Iz3DMatrix Tz3DMatrix::Ortho (const Single AWidth ,
+const Single AHeight ,
+const Single ANear ,
+const Single AFar 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXMatrixOrthoLH(Pure, AWidth, AHeight, ANear, A);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DMatrix Tz3DMatrix::From (const TD3DXMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= AMatrix;
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DFloat2 */ 
+
+    
+Iz3DFloat2 Tz3DFloat2::Add (const TD3DXVector2 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= D3DXVec2Add(Pure, AVector);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat2 Tz3DFloat2::Add (const Iz3DFloat2 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= D3DXVec2Add(Pure, AVector.XY);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat2 Tz3DFloat2::From (const Iz3DFloat2 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  XY:= AVector.XY;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFloat2::BeginInternalChange ()
+{
+#ifndef DOXYGEN_SKIP
+  FInternalChanging:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFloat2::EndInternalChange ()
+{
+#ifndef DOXYGEN_SKIP
+  FInternalChanging:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat2 Tz3DFloat2::From (const TD3DXVector2 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= AVector;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseObjectEvent Tz3DFloat2::GetOnChange ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnChange;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat2::GetX ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.X;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector2 Tz3DFloat2::GetXY ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat2::GetY ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.Y;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat2::Length ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVec2Length(Pure);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat2::LengthSq ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVec2LengthSq(Pure);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat2 Tz3DFloat2::Negate ()
+
+/*
+var
+ FResult: TD3DXVector2;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXVec2Scale(FResult, Pure, -1);
+  Pure:= FResult;
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+class      
+Iz3DFloat2 Tz3DFloat2::New (const Single AX ,
+const Single AY 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat2.Create;
+  Result.XY:= D3DXVector2(AX, AY);
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DFloat2 Tz3DFloat2::NewFrom (const TD3DXVector2 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat2.Create;
+  Result.XY:= AVector;
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DFloat2 Tz3DFloat2::NewFrom (const Iz3DFloat2 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat2.Create;
+  Result.XY:= AVector.XY;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat2 Tz3DFloat2::Normalize ()
+
+/*
+var
+ FResult: TD3DXVector2;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXVec2Normalize(FResult, Pure);
+  Pure:= FResult;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat2 Tz3DFloat2::Saturate ()
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Clamp(X, 0, 1);
+  Pure.y:= Clamp(Y, 0, 1);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat2 Tz3DFloat2::Scale (const Single AScale 
+)
+
+/*
+var
+ FResult: TD3DXVector2;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXVec2Scale(FResult, Pure, AScale);
+  Pure:= FResult;
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat2::SetOnChange (const Tz3DBaseObjectEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnChange:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat2::SetX (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.X:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat2::SetXY (const TD3DXVector2 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat2::SetY (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.Y:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat2 Tz3DFloat2::Subtract (const TD3DXVector2 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= D3DXVec2Subtract(Pure, AVector);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat2 Tz3DFloat2::Subtract (const Iz3DFloat2 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= D3DXVec2Subtract(Pure, AVector.XY);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DFloat3 */ 
+
+class                 
+Iz3DFloat3 Tz3DFloat3::New (const Single AX = 0 ,
+const Single AY = 0 ,
+const Single AZ = 0 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat3.Create;
+  Result.XYZ:= D3DXVector3(AX, AY, AZ);
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DFloat3 Tz3DFloat3::NewFrom (const Iz3DFloat3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat3.Create;
+  Result.From(AVector);
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DFloat3 Tz3DFloat3::NewFrom (const TD3DXVector3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat3.Create;
+  Result.From(AVector);
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DFloat3 Tz3DFloat3::NewFrom (const TD3DColorValue AColor 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat3.Create;
+  Result.From(AColor);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::From (const Iz3DFloat3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  XYZ:= AVector.XYZ;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::From (const TD3DXVector3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  XYZ:= AVector;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::From (const TD3DColorValue AColor 
+)
+{
+#ifndef DOXYGEN_SKIP
+  X:= AColor.R;
+  Y:= AColor.G;
+  Z:= AColor.B;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::Add (const Iz3DFloat3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec3Add(Pure, Pure, AVector.XYZ);
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::Add (const TD3DXVector3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec3Add(Pure, Pure, AVector);
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector2 Tz3DFloat3::GetXY ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector2(Pure.X, Pure.Y);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector2 Tz3DFloat3::GetXZ ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector2(Pure.X, Pure.Z);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector2 Tz3DFloat3::GetYZ ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector2(Pure.Y, Pure.Z);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat3::SetXY (const TD3DXVector2 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Value.x;
+  Pure.y:= Value.y;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat3::SetXZ (const TD3DXVector2 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Value.x;
+  Pure.z:= Value.y;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat3::SetYZ (const TD3DXVector2 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.y:= Value.x;
+  Pure.z:= Value.y;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::Subtract (const TD3DXVector3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec3Subtract(Pure, Pure, AVector);
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::Subtract (const Iz3DFloat3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec3Subtract(Pure, Pure, AVector.XYZ);
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::TransformC (const Iz3DMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec3TransformCoord(Pure, Pure, AMatrix.D3DMatrix);
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::TransformN (const Iz3DMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec3TransformNormal(Pure, Pure, AMatrix.D3DMatrix);
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::Scale (const Single AScale 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec3Scale(Pure, Pure, AScale);
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFloat3::Normalize ()
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec3Normalize(Pure, Pure);
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat3::GetX ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.X;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector3 Tz3DFloat3::GetXYZ ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat3::GetY ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.Y;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat3::GetZ ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.Z;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat3::SetX (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.X:= Value;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat3::SetXYZ (const TD3DXVector3 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= Value;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat3::SetY (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.Y:= Value;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat3::SetZ (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.Z:= Value;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector4 Tz3DFloat3::GetRGBA ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector4(Pure, 1);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Single Tz3DFloat3::Dot (const Iz3DFloat3 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVec3Dot(Pure, AVector.XYZ);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat3 Tz3DFloat3::Cross (const Iz3DFloat3 AVector 
+)
+
+/*
+var
+ FResult: TD3DXVector3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXVec3Cross(FResult, Pure, AVector.XYZ);
+  Pure:= FResult;
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat3::Length ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVec3Length(Pure);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat3::LengthSq ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVec3LengthSq(Pure);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFloat3::Identity ()
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= 0;
+  Pure.y:= 0;
+  Pure.z:= 0;
+  if Assigned(FOnChange) and not FInternalChanging then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseObjectEvent Tz3DFloat3::GetOnChange ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnChange;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat3::SetOnChange (const Tz3DBaseObjectEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnChange:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFloat3::BeginInternalChange ()
+{
+#ifndef DOXYGEN_SKIP
+  FInternalChanging:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFloat3::EndInternalChange ()
+{
+#ifndef DOXYGEN_SKIP
+  FInternalChanging:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFloat3::Negate ()
+
+/*
+var
+ FResult: TD3DXVector3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXVec3Scale(FResult, Pure, -1);
+  Pure:= FResult;
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DColor Tz3DFloat3::GetD3DColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DCOLOR_ARGB(255, Round(R*255), Round(G*255), Round(B*255));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DColorValue Tz3DFloat3::GetD3DColorValue ()
+{
+#ifndef DOXYGEN_SKIP
+  Result.r:= R;
+  Result.g:= G;
+  Result.b:= B;
+  Result.a:= 1;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFloat3::Saturate ()
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Clamp(X, 0, 1);
+  Pure.y:= Clamp(Y, 0, 1);
+  Pure.z:= Clamp(Z, 0, 1);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DPlane */ 
+
+  
+Single Tz3DPlane::GetA ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.a;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXPlane Tz3DPlane::GetABCD ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DPlane::GetB ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.b;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DPlane::GetC ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.c;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DPlane::GetD ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.d;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseObjectEvent Tz3DPlane::GetOnChange ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnChange;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DPlane::Included (const Iz3DPlane APlane 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= ((A > APlane.A) and (B > APlane.B) and
+  (C < APlane.C) and (D < APlane.D)) or
+  ((APlane.A > A) and (APlane.B > B) and
+  (APlane.C < C) and (APlane.D < D));
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DPlane::Intersects (const Iz3DPlane APlane 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= ((C > APlane.A) and (D > APlane.B) and
+  (C < APlane.C) and (D < APlane.D)) or
+  ((A < APlane.C) and (B < APlane.D) and
+  (A > APlane.A) and (B > APlane.B));
+#endif /* DOXYGEN_SKIP */
+};
+
+class        
+Iz3DPlane Tz3DPlane::New (const Single AA ,
+const Single AB ,
+const Single AC ,
+const Single AD 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DPlane.Create;
+  Result.ABCD:= D3DXPlane(AA, AB, AC, AD);
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DPlane Tz3DPlane::NewFrom (const TD3DXPlane APlane 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DPlane.Create;
+  Result.ABCD:= APlane;
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DPlane Tz3DPlane::NewFrom (const Iz3DPlane APlane 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DPlane.Create;
+  Result.ABCD:= APlane.ABCD;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DPlane::SetA (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.a:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DPlane::SetABCD (const TD3DXPlane Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DPlane::SetB (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.b:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DPlane::SetC (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.c:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DPlane::SetD (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.d:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DPlane::SetOnChange (const Tz3DBaseObjectEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnChange:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DFloat4 */ 
+
+    
+Iz3DFloat4 Tz3DFloat4::Add (const Iz3DFloat4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec4Add(Pure, Pure, AVector.XYZW);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::Add (const TD3DXVector4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec4Add(Pure, Pure, AVector);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::From (const Iz3DFloat4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= AVector.XYZW;
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::From (const TD3DXVector4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= AVector;
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::From (const TD3DColorValue AColor 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= AColor.r;
+  Pure.y:= AColor.g;
+  Pure.z:= AColor.b;
+  Pure.w:= AColor.a;
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DColor Tz3DFloat4::GetD3DColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DCOLOR_ARGB(Round(A*255), Round(R*255), Round(G*255), Round(B*255));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DColorValue Tz3DFloat4::GetD3DColorValue ()
+{
+#ifndef DOXYGEN_SKIP
+  Result.r:= R;
+  Result.g:= G;
+  Result.b:= B;
+  Result.a:= A;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXQuaternion Tz3DFloat4::GetD3DQuat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= TD3DXQuaternion(Pure);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DBaseObjectEvent Tz3DFloat4::GetOnChange ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnChange;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat4::GetW ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.w;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat4::GetX ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.x;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector2 Tz3DFloat4::GetXY ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector2(Pure.x, Pure.y);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector3 Tz3DFloat4::GetXYW ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector3(Pure.x, Pure.y, Pure.w);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector3 Tz3DFloat4::GetXYZ ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector3(Pure.x, Pure.y, Pure.z);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector4 Tz3DFloat4::GetXYZW ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector2 Tz3DFloat4::GetXZ ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector2(Pure.x, Pure.z);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector3 Tz3DFloat4::GetXZW ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector3(Pure.x, Pure.z, Pure.w);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat4::GetY ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.y;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector2 Tz3DFloat4::GetYZ ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector2(Pure.y, Pure.z);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TD3DXVector3 Tz3DFloat4::GetYZW ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVector3(Pure.y, Pure.z, Pure.w);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat4::GetZ ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Pure.z;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat4 Tz3DFloat4::Identity ()
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= 0;
+  Pure.y:= 0;
+  Pure.z:= 0;
+  Pure.w:= 1;
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat4::Length ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVec4Length(Pure);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DFloat4::LengthSq ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= D3DXVec4LengthSq(Pure);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::Multiply (const Iz3DFloat4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXQuaternionMultiply(TD3DXQuaternion(Pure), TD3DXQuaternion(Pure), TD3DXQuaternion(AVector.XYZW));
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat4 Tz3DFloat4::Negate ()
+
+/*
+var
+ FResult: TD3DXVector4;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  D3DXVec4Scale(FResult, Pure, -1);
+  Pure:= FResult;
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+class        
+Iz3DFloat4 Tz3DFloat4::New (const Single AX ,
+const Single AY ,
+const Single AZ ,
+const Single AW 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat4.Create;
+  Result.XYZW:= D3DXVector4(AX, AY, AZ, AW);
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DFloat4 Tz3DFloat4::NewFrom (const Iz3DFloat4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat4.Create;
+  Result.XYZW:= AVector.XYZW;
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DFloat4 Tz3DFloat4::NewFrom (const TD3DColorValue AColor 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat4.Create;
+  Result.x:= AColor.r;
+  Result.y:= AColor.g;
+  Result.z:= AColor.b;
+  Result.w:= AColor.a;
+#endif /* DOXYGEN_SKIP */
+};
+
+class     
+Iz3DFloat4 Tz3DFloat4::NewFrom (const TD3DXVector4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFloat4.Create;
+  Result.XYZW:= AVector;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat4 Tz3DFloat4::Normalize ()
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec4Normalize(Pure, Pure);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::RotationMatrix (const Iz3DMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXQuaternionRotationMatrix(TD3DXQuaternion(Pure), AMatrix.D3DMatrix);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat4 Tz3DFloat4::Saturate ()
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Clamp(X, 0, 1);
+  Pure.y:= Clamp(Y, 0, 1);
+  Pure.z:= Clamp(Z, 0, 1);
+  Pure.w:= Clamp(W, 0, 1);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::Scale (const Single AScale 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec4Scale(Pure, Pure, AScale);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetD3DQuat (const TD3DXQuaternion Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= TD3DXVector4(Value);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetOnChange (const Tz3DBaseObjectEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnChange:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetW (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.w:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetX (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetXY (const TD3DXVector2 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Value.x;
+  Pure.y:= Value.y;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetXYW (const TD3DXVector3 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Value.x;
+  Pure.y:= Value.y;
+  Pure.w:= Value.z;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetXYZ (const TD3DXVector3 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Value.x;
+  Pure.y:= Value.y;
+  Pure.z:= Value.z;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetXYZW (const TD3DXVector4 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetXZ (const TD3DXVector2 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Value.x;
+  Pure.z:= Value.y;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetXZW (const TD3DXVector3 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.x:= Value.x;
+  Pure.z:= Value.y;
+  Pure.w:= Value.z;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetY (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.y:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetYZ (const TD3DXVector2 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.y:= Value.x;
+  Pure.z:= Value.y;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetYZW (const TD3DXVector3 Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.y:= Value.x;
+  Pure.z:= Value.y;
+  Pure.w:= Value.z;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFloat4::SetZ (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Pure.z:= Value;
+  if Assigned(FOnChange) then FOnChange(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::Subtract (const TD3DXVector4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec4Subtract(Pure, Pure, AVector);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::Subtract (const Iz3DFloat4 AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec4Subtract(Pure, Pure, AVector.XYZW);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DFloat4 Tz3DFloat4::Transform (const Iz3DMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  D3DXVec4Transform(Pure, Pure, AMatrix.D3DMatrix);
+  if Assigned(FOnChange) then FOnChange(Self);
+  Result:= Self;
+#endif /* DOXYGEN_SKIP */
+};
+
+
+ 
+Tz3DBoundingBox::Tz3DBoundingBox ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FLowerLeft:= z3DFloat3;
+  FUpperRight:= z3DFloat3;
+  FCenter:= z3DFloat3;
+  FDimensions:= z3DFloat3;
+  FLowerLeft.OnChange:= ValueChanged;
+  FUpperRight.OnChange:= ValueChanged;
+  FDimensions.OnChange:= DimensionsChanged;
+  FCenter.OnChange:= DimensionsChanged;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBoundingBox::GetLowerLeft ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLowerLeft;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBoundingBox::GetUpperRight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FUpperRight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBoundingBox::GetDimensions ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDimensions;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBoundingBox::GetCenter ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCenter;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBoundingBox::ComputeFromMesh (const ID3DXMesh AMesh 
+)
+
+/*
+var
+ FBuffer: Pointer;
+    FVLowerLeft, FVUpperRight: TD3DXVector3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  AMesh.LockVertexBuffer(0, FBuffer);
+  try
+    if FAILED(D3DXComputeBoundingBox(FBuffer, AMesh.GetNumVertices, AMesh.GetNumBytesPerVertex, FVLowerLeft, FVUpperRight)) thenbegin      z3DTrace('Iz3DBoundingBox.Compute: D3DXComputeBoundingBox failed', z3DtkWarning);
+      Exit;
+   end
+    FLowerLeft.XYZ:= FVLowerLeft;
+    FUpperRight.XYZ:= FVUpperRight;
+  finally
+    AMesh.UnlockVertexBuffer;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBoundingBox::ValueChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDimensions.BeginInternalChange;
+  try
+    FDimensions.From(FUpperRight).Subtract(FLowerLeft);
+  finally
+    FDimensions.EndInternalChange;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBoundingBox::DimensionsChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLowerLeft.BeginInternalChange;
+  FUpperRight.BeginInternalChange;
+  try
+    FLowerLeft.From(FDimensions).Scale(-0.5).Add(FCenter);
+    FUpperRight.From(FDimensions).Scale(0.5).Add(FCenter);
+  finally
+    FLowerLeft.EndInternalChange;
+    FUpperRight.EndInternalChange;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DBoundingBox::Intersects (const Iz3DBoundingBox ABox 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= True;
+  if FLowerLeft.x > ABox.UpperRight.x then Result:= False else
+  if FLowerLeft.y > ABox.UpperRight.y then Result:= False else
+  if FLowerLeft.z > ABox.UpperRight.z then Result:= False else
+  if FUpperRight.x < ABox.LowerLeft.x then Result:= False else
+  if FUpperRight.y < ABox.LowerLeft.y then Result:= False else
+  if FUpperRight.z < ABox.LowerLeft.z then Result:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DBoundingBox::Intersects (const Iz3DBoundingSphere ASphere 
+)
+
+/*
+var
+ FCenterRelative: Iz3DFloat3;
+    FClosest: Iz3DFloat3;
+    FDistance: Iz3DFloat3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FCenterRelative:= z3DFloat3.From(ASphere.Center).Subtract(Center);
+  FClosest:= z3DFloat3;
+
+  if FCenterRelative.x < -Dimensions.x * 0.5 then
+  FClosest.x:= -Dimensions.x * 0.5 else
+  if FCenterRelative.x > Dimensions.x * 0.5 then
+  FClosest.x:= Dimensions.x * 0.5 else FClosest.x:= FCenterRelative.x;
+
+  if FCenterRelative.y < -Dimensions.y * 0.5 then
+  FClosest.y:= -Dimensions.y * 0.5 else
+  if FCenterRelative.y > Dimensions.y * 0.5 then
+  FClosest.y:= Dimensions.y * 0.5 else FClosest.y:= FCenterRelative.y;
+
+  if FCenterRelative.z < -Dimensions.z * 0.5 then
+  FClosest.z:= -Dimensions.z * 0.5 else
+  if FCenterRelative.z > Dimensions.z * 0.5 then
+  FClosest.z:= Dimensions.z * 0.5 else FClosest.z:= FCenterRelative.z;
+
+  FDistance:= z3Dfloat3.From(FCenterRelative).Subtract(FClosest);
+  Result:= FDistance.LengthSq < ASphere.Radius * ASphere.Radius;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DBoundingSphere */ 
+
+ 
+Tz3DBoundingSphere::Tz3DBoundingSphere ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FRadius:= 1;
+  FCenter:= z3DFloat3;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBoundingSphere::GetCenter ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCenter;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBoundingSphere::GetRadius ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRadius;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBoundingSphere::SetRadius (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRadius:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBoundingSphere::ComputeFromMesh (const ID3DXMesh AMesh 
+)
+
+/*
+var
+ FBuffer: Pointer;
+    FVCenter: TD3DXVector3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  AMesh.LockVertexBuffer(0, FBuffer);
+  try
+    if FAILED(D3DXComputeBoundingSphere(FBuffer, AMesh.GetNumVertices, AMesh.GetNumBytesPerVertex, FVCenter, FRadius)) thenbegin      z3DTrace('Iz3DBoundingSphere.Compute: D3DXComputeBoundingSphere failed', z3DtkWarning);
+      Exit;
+   end
+    FCenter.XYZ:= FVCenter;
+  finally
+    AMesh.UnlockVertexBuffer;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DBoundingSphere::Intersects (const Iz3DBoundingBox ABox 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= ABox.Intersects(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DBoundingSphere::Intersects (const Iz3DBoundingSphere ASphere 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DFloat3.From(ASphere.Center).Subtract(FCenter).Length <= FRadius + ASphere.Radius;
+#endif /* DOXYGEN_SKIP */
+};
+
+// finished
+

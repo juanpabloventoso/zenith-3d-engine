@@ -1,0 +1,246 @@
+unit z3DFileSystem_Intf;
+
+interface
+
+uses XMLDoc, XMLIntf, z3DMath_Intf, z3DClasses_Intf;
+
+
+
+
+{==============================================================================}
+{== XML format constants                                                     ==}
+{==============================================================================}
+
+const
+
+  // Application information XML file
+  fsxmlAppInfo_Application            = 'Application';
+    fsxmlAppInfo_ApplicationTitle     = 'Title';
+    fsxmlAppInfo_ApplicationSubtitle  = 'Subtitle';
+    fsxmlAppInfo_ApplicationSceneKind = 'SceneKind';
+  fsxmlAppInfo_LinkedModules          = 'LinkedModules';
+    fsxmlAppInfo_LinkedModule         = 'LinkedModule';
+      fsxmlAppInfo_LinkedModulePath   = 'Path';
+
+type
+
+  // Basic XML file object
+
+  Iz3DXMLFile = interface(Iz3DBase)['{FAD19268-85EB-4838-9170-D0F42489CD71}']
+    function Read(ANode: IXMLNode; const AName: PAnsiChar; const ADefault: Variant): Variant; stdcall;
+    procedure Write(ANode: IXMLNode; const AName: PAnsiChar; const AValue: Variant); stdcall;
+    procedure Load(const AFileName: PWideChar); stdcall;
+    procedure Save(const AFileName: PWideChar = nil); stdcall;
+  end;
+
+  Iz3DXMLChild = interface(Iz3DBase)['{0738F51F-6E28-4720-8AA2-711D3C680F54}']
+    function Read(ANode: IXMLNode; const AName: PAnsiChar; const ADefault: Variant): Variant; stdcall;
+    procedure Write(ANode: IXMLNode; const AName: PAnsiChar; const AValue: Variant); stdcall;
+  end;
+
+  // Application information XML object
+
+  Iz3DXMLAppInfoFile = interface;
+
+  Tz3DApplicationSceneKind = (z3dask3D, z3dask2D, z3daskNonDraw);
+
+  Iz3DXMLAppInfoLinkedModule = interface;
+
+  Iz3DXMLAppInfoFile = interface(Iz3DXMLFile)['{9EB045EE-0193-48F9-AF8D-33360C1F80B1}']
+    function GetLinkedModuleCount: Integer; stdcall;
+    function GetLinkedModules(const AIndex: Integer): Iz3DXMLAppInfoLinkedModule; stdcall;
+    function GetSceneKind: Tz3DApplicationSceneKind; stdcall;
+    function GetSubtitle: PWideChar; stdcall;
+    function GetTitle: PWideChar; stdcall;
+    procedure SetSceneKind(const Value: Tz3DApplicationSceneKind); stdcall;
+    procedure SetSubtitle(const Value: PWideChar); stdcall;
+    procedure SetTitle(const Value: PWideChar); stdcall;
+    function AddLinkedModule: Iz3DXMLAppInfoLinkedModule; stdcall;
+    procedure DeleteLinkedModule(const AIndex: Integer); stdcall;
+    procedure DeleteLinkedModules; stdcall;
+    
+    property Title: PWideChar read GetTitle write SetTitle;
+    property Subtitle: PWideChar read GetSubtitle write SetSubtitle;
+    property SceneKind: Tz3DApplicationSceneKind read GetSceneKind write SetSceneKind;
+    property LinkedModuleCount: Integer read GetLinkedModuleCount;
+    property LinkedModules[const AIndex: Integer]: Iz3DXMLAppInfoLinkedModule read GetLinkedModules;
+  end;
+
+  Iz3DXMLAppInfoLinkedModule = interface(Iz3DXMLChild)['{8450E578-BC7E-45B4-943C-2E981956397E}']
+    function GetPath: PWideChar; stdcall;
+    procedure SetPath(const Value: PWideChar); stdcall;
+    
+    property Path: PWideChar read GetPath write SetPath;
+  end;
+
+
+
+
+{==============================================================================}
+{== z3D format stream                                                        ==}
+{==============================================================================}
+
+type
+
+  Iz3DObjectFile = interface(Iz3DBase)['{9837C505-CEE9-4353-B4CA-A22E651915D0}']
+    function GetPosition: Int64; stdcall;
+    procedure SetPosition(const Pos: Int64); stdcall;
+    function GetSize: Int64; stdcall;
+    procedure SetSize64(const NewSize: Int64); stdcall;
+
+    function ReadUnknown(var Buffer; Count: Longint): Longint; stdcall;
+    procedure ReadFloat3(const AValue: Iz3DFloat3); stdcall;
+    procedure ReadFloat4(const AValue: Iz3DFloat4); stdcall;
+    function ReadString: PWideChar; stdcall;
+    function ReadInteger: Integer; stdcall;
+    function ReadFloat: Single; stdcall;
+    function ReadBoolean: Boolean; stdcall;
+
+    procedure WriteUnknown(const Buffer; Count: Longint); stdcall;
+    procedure WriteFloat3(const AValue: Iz3DFloat3); stdcall;
+    procedure WriteFloat4(const AValue: Iz3DFloat4); stdcall;
+    procedure WriteVariant(const AValue: Variant); stdcall;
+    procedure WriteString(const AValue: PWideChar); stdcall;
+
+    property Position: Int64 read GetPosition write SetPosition;
+    property Size: Int64 read GetSize write SetSize64;
+  end;
+
+
+
+
+  
+{==============================================================================}
+{== z3D file format interface                                                ==}
+{==============================================================================}
+{== Interface that controls a specific format for the z3D file system. Saves ==}
+{== de properties of a custom format                                         ==}
+{==============================================================================}
+
+  Iz3DObjectFileFormat = interface(Iz3DBase)['{29156A84-B6DB-4B6C-B893-C4640F2951D6}']
+    function GetDescription: PWideChar; stdcall;
+    function GetExtension: PWideChar; stdcall;
+    function GetDefaultFolder: PWideChar; stdcall;
+    procedure SetDescription(const Value: PWideChar); stdcall;
+    procedure SetExtension(const Value: PWideChar); stdcall;
+    procedure SetDefaultFolder(const Value: PWideChar); stdcall;
+    function GetHeader: PWideChar; stdcall;
+    procedure SetHeader(const Value: PWideChar); stdcall;
+
+    procedure Expand(const ASource, ADest: PWideChar); stdcall;
+
+    property Description: PWideChar read GetDescription write SetDescription;
+    property Extension: PWideChar read GetExtension write SetExtension;
+    property DefaultFolder: PWideChar read GetDefaultFolder write SetDefaultFolder;
+    property Header: PWideChar read GetHeader write SetHeader;
+  end;
+
+
+
+
+
+
+{==============================================================================}
+{== z3D typed object file interface                                          ==}
+{==============================================================================}
+{== Implements the Iz3DObjectFile interface and extends its functionality to ==}
+{== a typed file with a specific format                                      ==}
+{==============================================================================}
+
+  Iz3DTypedObjectFile = interface(Iz3DObjectFile)['{3693F04D-3EED-4CF5-A93E-B9D71D0F641F}']
+    function GetFileName: PWideChar; stdcall;
+    function GetFormat: Iz3DObjectFileFormat; stdcall;
+
+    property Format: Iz3DObjectFileFormat read GetFormat;
+    property FileName: PWideChar read GetFileName;
+  end;
+
+
+
+
+
+{==============================================================================}
+{== z3D file system controller                                               ==}
+{==============================================================================}
+{== Global controller for the z3D file system. Manages all files and folders ==}
+{== used by the z3D engine and its applications to run                       ==}
+{==============================================================================}
+
+{==============================================================================}
+{== Folder and file structure                                                ==}
+{==============================================================================}
+
+const
+
+  fsPathDiv = '\';
+  fsFileDiv = '.';
+
+  fsPackExt    = 'zPackage';
+  fsXMLExt     = 'xml';
+  fsICOExt     = 'ico';
+  fsDDSExt     = 'dds';
+
+  fsPrefix     = 'fs_';
+
+  fsEngineCorePath            = fsPrefix+'EngineCore';
+  fsEngineResPath             = fsPrefix+'EngineRes';
+  fsCommonResPath             = fsPrefix+'Common';
+  fsBufferPath                = fsPrefix+'Buffer';
+
+  fsMaterialsFolder           = 'Materials';
+  fsMaterialTexturesFolder    = fsMaterialsFolder+fsPathDiv+'Textures';
+  fsMaterialSoundsFolder      = fsMaterialsFolder+fsPathDiv+'Sounds';
+  fsSkiesFolder               = 'Skies';
+  fsSkyTexturesFolder         = fsSkiesFolder+fsPathDiv+'Textures';
+  fsModelsFolder              = 'Models';
+  fsLightsFolder              = 'Lights';
+
+
+  fsEngineCoreResFile         = fsEngineResPath+fsPathDiv+'Core'+fsFileDiv+fsPackExt;
+
+  fsCoreResFile_z3DTheme      = 'z3DTheme.mp3';
+  fsCoreResFile_z3DAVIIntro   = 'z3DIntro.avi';
+  fsCoreResFile_z3DGUI        = 'z3DGUI.dds';
+  fsCoreResFile_z3DWallpaper  = 'z3DWP.dds';
+  fsCoreResFile_z3DLogo       = 'z3DLogo.dds';
+  fsCoreResFile_LightGlow1    = 'LightGlow1.dds';
+  fsCoreResFile_RotationNoise = 'RotationNoise.dds';
+  fsCoreResFile_ShadowEdge    = 'ShadowEdge.dds';
+
+  fsAppInfoFile               = fsPrefix+'AppInfo'+fsFileDiv+fsXMLExt;
+  fsAppIconFile               = fsPrefix+'AppIcon'+fsFileDiv+fsICOExt;
+  fsAppLogoFile               = fsPrefix+'AppLogo'+fsFileDiv+fsDDSExt;
+  fsAppWallpaperFile          = fsPrefix+'AppWP'+fsFileDiv+fsDDSExt;
+
+type
+
+  Tz3DFileType = (z3dftMaterial, z3dftMaterialTexture, z3dftMaterialSound,
+    z3dftModel, z3dftSky, z3dftSkyTexture);
+
+  Iz3DFileSystemController = interface(Iz3DBase)['{04CCB426-C930-44B2-A187-AC64C8AB630C}']
+    function GetRootPath: PWideChar; stdcall;
+    procedure SetRootPath(const Value: PWideChar); stdcall;
+    function GetObjectFormats(const AIndex: Integer): Iz3DObjectFileFormat; stdcall;
+
+    function GetFullPath(const APath: PWideChar): PWideChar; stdcall;
+    procedure Decrypt(const APack, AFiles: PWideChar); stdcall;
+    procedure DecryptF(const APack, AFiles: PWideChar); stdcall;
+    procedure Crypt(const APack, AFiles: PWideChar); stdcall;
+    procedure CryptF(const APack, AFiles: PWideChar); stdcall;
+    procedure Delete(const AFile: PWideChar); stdcall;
+    procedure FreeBuffer; stdcall;
+
+    function CreateXMLFile: Iz3DXMLFile; stdcall;
+    function CreateAppInfoFile: Iz3DXMLAppInfoFile; stdcall;
+    function CreateObjectFile(const AFileName: PWideChar; const AMode: Word): Iz3DObjectFile; stdcall;
+    function CreateTypedObjectFile(const AFileName: PWideChar; const AMode: Word;
+      const AFormat: Iz3DObjectFileFormat): Iz3DTypedObjectFile; stdcall;
+    function CreateObjectFormat: Iz3DObjectFileFormat; stdcall;
+
+    property RootPath: PWideChar read GetRootPath write SetRootPath;
+    property ObjectFormats[const AIndex: Integer]: Iz3DObjectFileFormat read GetObjectFormats;
+  end;
+
+implementation
+
+end.

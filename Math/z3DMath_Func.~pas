@@ -1,0 +1,56 @@
+unit z3DMath_Func;
+
+interface
+
+uses Direct3D9, D3DX9, z3DMath_intf;
+
+
+const
+  z3DMathDLL = 'z3DMath.dll';
+
+// FloatN constructors
+
+function z3DFloat2(const AX: Single = 0; const AY: Single = 0): Iz3DFloat2; stdcall; external z3DMathDLL;
+function z3DFloat3(const AX: Single = 0; const AY: Single = 0;
+  const AZ: Single = 0): Iz3DFloat3; stdcall; external z3DMathDLL;
+function z3DFloat4(const AX: Single = 0; const AY: Single = 0;
+  const AZ: Single = 0; const AW: Single = 0): Iz3DFloat4; stdcall; external z3DMathDLL;
+function z3DFloat4Coord(const AX: Single = 0; const AY: Single = 0;
+  const AZ: Single = 0; const AW: Single = 1): Iz3DFloat4; stdcall; external z3DMathDLL;
+
+// Matrix constructors
+
+function z3DMatrix: Iz3DMatrix; stdcall; external z3DMathDLL;
+function z3DMatrixIdentity: Iz3DMatrix; stdcall; external z3DMathDLL;
+
+// Plane functions
+
+function z3DPlane(const AA: Single = 0; const AB: Single = 0; const AC: Single = 0;
+  const AD: Single = 0): Iz3DPlane; stdcall; external z3DMathDLL;
+
+// Algebraic functions
+
+function z3DGetNormal(const AV1, AV2, AV3: Iz3DFloat3): Iz3DFloat3; stdcall; external z3DMathDLL;
+function z3DPlaneRaySHLerp(const ANormal, AEdgeI, AEdgeJ: Iz3DFloat3;
+  const AI, AJ, ACount: Integer; out ARay: Iz3DFloat3): Single; stdcall; external z3DMathDLL;
+
+// Math functions
+
+function Clamp(const AValue, AMin, AMax: Single): Single; stdcall; external z3DMathDLL;
+function Saturate(const AValue: Single): Single; overload; stdcall; external z3DMathDLL;
+function Saturate(const AValue: TD3DXVector2): TD3DXVector2; overload; stdcall; external z3DMathDLL;
+function Saturate(const AValue: TD3DXVector3): TD3DXVector3; overload; stdcall; external z3DMathDLL;
+function Saturate(const AValue: TD3DXVector4): TD3DXVector4; overload; stdcall; external z3DMathDLL;
+function Lerp(const AX, AY: Single; const AValue: Single): Single; stdcall; external z3DMathDLL;
+
+// Bounding volume functions
+
+function z3DBoundingBox: Iz3DBoundingBox; stdcall; external z3DMathDLL;
+function z3DBoundingSphere: Iz3DBoundingSphere; stdcall; external z3DMathDLL;
+
+// Time of day functions
+function z3DTimeOfDay: Iz3DTimeOfDay; stdcall;
+
+implementation
+
+end.

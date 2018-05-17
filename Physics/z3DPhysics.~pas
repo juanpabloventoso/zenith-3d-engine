@@ -1,0 +1,323 @@
+unit z3DPhysics;
+
+interface
+
+{uses Classes, z3DClasses, z3DObjects, z3DCore, D3DX9, z3DAudio;}
+
+var GFrameTime: Single;
+    GCollisionSounds: array of Tz3DSound;
+    GLastPlayTime: Double;
+
+const
+  MIN_VELOCITY_Y = 0.05;
+  OBJECT2_FRICTION = 0.2;
+  POSITION_BIAS = 0.01;
+
+procedure z3DComputePhysics(const iWorld: Iz3DWorld;
+  const iObject: Iz3DWorldDynamicObject); stdcall;
+
+implementation
+
+uses Math, z3DMath, z3DFunctions;
+
+procedure z3DComputeGravity(const iWorld: Iz3DWorld; const iObject: Iz3DWorldDynamicObject); stdcall;
+begin
+  iObject.Acceleration.Add(z3DFloat3(0, -iWorld.Gravity, 0));
+end;
+
+// Performs a sphere-to-sphere collision detection
+
+function z3DSSCollisionTest(const iWorld: Iz3DWorld; const iObject1: Iz3DWorldDynamicObject;
+  const iObject2: Iz3DWorldObject; out AMovingAway: Boolean; out ADistance: Iz3DFloat3;
+  out ALength: Single): Boolean; stdcall;
+var FDistance: Iz3DFloat3;
+    FLength: Single;
+    FDynObject2: Iz3DWorldDynamicObject;
+    FVelocity2: Iz3DFloat3;
+begin
+  Result:= False;
+  AMovingAway:= True;
+  iObject2.QueryInterface(Iz3DWorldDynamicObject, FDynObject2);
+  if FDynObject2 <> nil then FVelocity2:= FDynObject2.Velocity else FVelocity2:= z3DFloat3;
+  FDistance:= z3DFloat3.From(iObject2.Center).Subtract(iObject1.Center);
+  ADistance:= FDistance;
+  FLength:= D3DXVec3Length(FDistance.XYZ);
+  ALength:= FLength;
+  if FLength <= iObject1.BoundingSphere.Radius + iObject2.BoundingSphere.Radius then
+  begin
+    Result:= True;
+    FDistance.Normalize;
+    AMovingAway:= D3DXVec3Dot(FDistance.XYZ, iObject1.Velocity.XYZ) - D3DXVec3Dot(FDistance.XYZ, FVelocity2.XYZ) <= 0;
+  end;
+end;
+
+// Performs the default response to a sphere-to-sphere collision
+
+procedure z3DSSCollisionResponse(const iWorld: Iz3DWorld; const iObject1, iObject2: Iz3DWorldObject;
+  const ADistance: Iz3DFloat3; const ALength: Single); stdcall;
+var FVelocity1N, FVelocity1T, FVelocity2N, FVelocity2T: Iz3DFloat3;
+    FDynObject1, FDynObject2: Iz3DWorldDynamicObject;
+    FVelocity1, FVelocity2: Iz3DFloat3;
+begin
+  iObject1.QueryInterface(Iz3DWorldDynamicObject, FDynObject1);
+  iObject2.QueryInterface(Iz3DWorldDynamicObject, FDynObject2);
+  if FDynObject1 <> nil then FVelocity1:= FDynObject1.Velocity else FVelocity1:= z3DFloat3;
+  if FDynObject2 <> nil then FVelocity2:= FDynObject2.Velocity else FVelocity2:= z3DFloat3;
+  ADistance.Normalize;
+  FVelocity1N:= z3DFloat3.From(ADistance).Scale(iObject1.Subsets[0].Material.Elasticity * D3DXVec3Dot(ADistance.XYZ, FVelocity1.XYZ));
+  FVelocity1T:= FVelocity1.Scale(iObject1.Subsets[0].Material.Elasticity).Subtract(FVelocity1N);
+  FVelocity2N:= z3DFloat3.From(ADistance).Scale(iObject2.Subsets[0].Material.Elasticity * D3DXVec3Dot(ADistance.XYZ, FVelocity2.XYZ));
+  FVelocity2T:= FVelocity2.Scale(iObject2.Subsets[0].Material.Elasticity).Subtract(FVelocity2N);
+  if FDynObject1 <> nil then FDynObject1.Velocity.From(FVelocity1T.Subtract(FVelocity1N.Scale(iObject1.Subsets[0].Material.Elasticity)).Add(FVelocity2N.Scale(iObject2.Subsets[0].Material.Elasticity)));
+  if FDynObject2 <> nil then FDynObject2.Velocity.From(FVelocity2T.Subtract(FVelocity2N.Scale(iObject2.Subsets[0].Material.Elasticity)).Add(FVelocity1N.Scale(1 - iObject1.Subsets[0].Material.Elasticity)));
+  iObject1.Center.XYZ:= z3DFloat3.From(iObject1.Center).Subtract(ADistance.Scale((iObject1.BoundingSphere.Radius * 2 - ALength + POSITION_BIAS) * 0.5)).XYZ;
+  iObject2.Center.XYZ:= z3DFloat3.From(iObject2.Center).Subtract(ADistance.Scale((iObject2.BoundingSphere.Radius * 2 - ALength + POSITION_BIAS) * -0.5)).XYZ;
+//  if (FDynObject1 <> nil) and (Abs(FDynObject1.Velocity.Y) < MIN_VELOCITY_Y) then FDynObject1.Ground:= True;
+//  if (FDynObject2 <> nil) and (Abs(FDynObject2.Velocity.Y) < MIN_VELOCITY_Y) then FDynObject2.Ground:= True;
+end;
+
+// Performs a sphere-to-sphere collision
+
+function z3DSSCollision(const iWorld: Iz3DWorld; const iObject1: Iz3DWorldDynamicObject; const iObject2: Iz3DWorldObject;
+  out FGrounded: Boolean): Boolean; stdcall;
+var FDistance: Iz3DFloat3;
+    FLength: Single;
+    FMovingAway: Boolean;
+begin
+  Result:= False;
+  if z3DFloat3.From(iObject1.Center).Subtract(iObject2.Center).Length > iObject1.BoundingSphere.Radius+iObject2.BoundingSphere.Radius then Exit;
+  if z3DSSCollisionTest(iWorld, iObject1, iObject2, FMovingAway, FDistance, FLength) then
+  begin
+    z3DSSCollisionResponse(iWorld, iObject1, iObject2, FDistance, FLength);
+    Result:= True;
+  end;
+end;
+
+function z3DPlaneIntersect(const APlane1, APlane2: Iz3DPlane): Boolean;
+begin
+  // Returns if two planes have an intersection
+  Result:= ((APlane1.C > APlane2.A) and (APlane1.D > APlane2.B) and
+  (APlane1.C < APlane2.C) and (APlane1.D < APlane2.D)) or
+  ((APlane1.A < APlane2.C) and (APlane1.B < APlane2.D) and
+  (APlane1.A > APlane2.A) and (APlane1.B > APlane2.B));
+end;
+
+function z3DPlaneIncluded(const APlane1, APlane2: Iz3DPlane): Boolean;
+begin
+  // Returns if one plane is included on the other
+  Result:= ((APlane1.A > APlane2.A) and (APlane1.B > APlane2.B) and
+  (APlane1.C < APlane2.C) and (APlane1.D < APlane2.D)) or
+  ((APlane2.A > APlane1.A) and (APlane2.B > APlane1.B) and
+  (APlane2.C < APlane1.C) and (APlane2.D < APlane1.D));
+end;
+
+function z3DBBCollisionTest(const APos1, APos2, AOffset1, AOffset2, AVel1: Single;
+  const ANormalPlane1, ANormalPlane2: Iz3DPlane; const AUpper: Boolean;
+  out ALength: Single): Boolean;
+const FSign: array[Boolean] of Integer = (-1, 1);
+begin
+  // Measure the distance between the bodies
+  ALength:= APos2 + AOffset2 * FSign[AUpper] - APos1;
+
+  // The collision happens if the distance is less than the segment of the object 1
+  // and it's normal plane intersects with the normal plane of the object 2
+  Result:= ((Sign(ALength) = AVel1) or (Sign(AVel1) = 0)) and (Abs(ALength) <= AOffset1) and
+    z3DPlaneIntersect(ANormalPlane1, ANormalPlane2);
+end;
+
+procedure z3DBBCollisionResponse(const iObject1, iObject2: Iz3DWorldObject; const APos1, APos2, AOffset1, AOffset2,
+  AVel1P, AVel2P: Single; const AVel1N: Iz3DFloat2; const AUpper: Boolean;
+  const ALength: Single; out APos, AVelocity1P, AVelocity2P: Single; const AVelocityN: Iz3DFloat2);
+const FSign: array[Boolean] of Integer = (-1, 1);
+begin
+  // Return the object into the collision position
+  APos:= APos2 + AOffset2 * FSign[AUpper] - (AOffset1{ + POSITION_BIAS}) * Sign(ALength);
+
+  // Apply the force to both objects
+  AVelocity1P:= -AVel1P * iObject1.Subsets[0].Material.Elasticity;
+  AVelocity2P:= (AVel1P + AVel2P) * iObject2.Subsets[0].Material.Elasticity;
+
+  // Apply the friction
+  AVelocityN.X:= AVel1N.X - (AVel1N.X * iObject1.Subsets[0].Material.Roughness * GFrameTime);
+  AVelocityN.Y:= AVel1N.Y - (AVel1N.Y * iObject1.Subsets[0].Material.Roughness * GFrameTime);
+end;
+
+function z3DBBCollision(const iWorld: Iz3DWorld; const iObject1: Iz3DWorldDynamicObject; const iObject2: Iz3DWorldObject;
+  out FGrounded: Boolean): Boolean;
+var FLength: Single;
+    FDynObject2: Iz3DWorldDynamicObject;
+    FOffset1, FOffset2: Iz3DFloat3;
+    FCenter1: Iz3DFloat3;
+    FVelocity1, FVelocity2: Iz3DFloat3;
+    FVel1P, FVel2P, FPos: Single;
+    FVelN: Iz3DFloat2;
+    I: Integer;
+begin
+  Result:= False;
+  if z3DFloat3.From(iObject1.Center).Subtract(iObject2.Center).Length > iObject1.BoundingSphere.Radius+iObject2.BoundingSphere.Radius then Exit;
+  FVelocity1:= z3DFloat3.From(iObject1.Center).Subtract(iObject2.Center);
+  if (FVelocity1.X > (iObject1.BoundingBox.Dimensions.X+iObject2.BoundingBox.Dimensions.X) / 1.75) and
+     (FVelocity1.Y > (iObject1.BoundingBox.Dimensions.Y+iObject2.BoundingBox.Dimensions.Y) / 1.75) and
+     (FVelocity1.Z > (iObject1.BoundingBox.Dimensions.Z+iObject2.BoundingBox.Dimensions.Z) / 1.75) then Exit;
+
+  FVelocity1:= z3DFloat3.From(iObject1.Velocity);
+  FVelocity2:= z3DFloat3;
+  iObject2.QueryInterface(Iz3DWorldDynamicObject, FDynObject2);
+  if FDynObject2 <> nil then FVelocity2.From(FDynObject2.Velocity);
+  FOffset1:= z3DFloat3.From(iObject1.BoundingBox.Dimensions).Scale(0.5);
+  FOffset2:= z3DFloat3.From(iObject2.BoundingBox.Dimensions).Scale(0.5);
+  FCenter1:= z3DFloat3.From(iObject1.Center);
+  FVelN:= z3DFloat2;
+
+  // 0: Lower collision | 1: Upper collision
+  for I:= 0 to 1 do
+  begin
+
+    // X-axis collision
+    if z3DBBCollisionTest(iObject1.Center.X, iObject2.Center.X, FOffset1.X, FOffset2.X,
+    Sign(FVelocity1.X),
+    z3DPlane(iObject1.Center.Y-FOffset1.Y, iObject1.Center.Z-FOffset1.Z,
+    iObject1.Center.Y+FOffset1.Y, iObject1.Center.Z+FOffset1.Z),
+    z3DPlane(iObject2.Center.Y-FOffset2.Y, iObject2.Center.Z-FOffset2.Z,
+    iObject2.Center.Y+FOffset2.Y, iObject2.Center.Z+FOffset2.Z), I = 1, FLength) then
+    begin
+      Result:= True;
+      z3DBBCollisionResponse(iObject1, iObject2, iObject1.Center.X, iObject2.Center.X, FOffset1.X,
+      FOffset2.X, FVelocity1.X, FVelocity2.X, z3DFloat2(FVelocity1.Y, FVelocity1.Z),
+      I = 1, FLength, FPos, FVel1P, FVel2P, FVelN);
+      FCenter1.X:= FPos;
+      FVelocity1.X:= FVel1P;
+      FVelocity2.X:= FVel2P;
+      FVelocity1.YZ:= FVelN.XY;
+      iObject1.Center.From(FCenter1);
+      iObject1.Velocity.From(FVelocity1);
+      if FDynObject2 <> nil then FDynObject2.Velocity.From(FVelocity2);
+    end;
+
+    // Y-axis collision
+    if z3DBBCollisionTest(iObject1.Center.Y, iObject2.Center.Y, FOffset1.Y, FOffset2.Y,
+    Sign(FVelocity1.Y),
+    z3DPlane(iObject1.Center.X-FOffset1.X, iObject1.Center.Z-FOffset1.Z,
+    iObject1.Center.X+FOffset1.X, iObject1.Center.Z+FOffset1.Z),
+    z3DPlane(iObject2.Center.X-FOffset2.X, iObject2.Center.Z-FOffset2.Z,
+    iObject2.Center.X+FOffset2.X, iObject2.Center.Z+FOffset2.Z), I = 1, FLength) then
+    begin
+      Result:= True;
+      z3DBBCollisionResponse(iObject1, iObject2, iObject1.Center.Y, iObject2.Center.Y, FOffset1.Y,
+      FOffset2.Y, FVelocity1.Y, FVelocity2.Y, z3DFloat2(FVelocity1.X, FVelocity1.Z),
+      I = 1, FLength, FPos, FVel1P, FVel2P, FVelN);
+      FCenter1.Y:= FPos;
+      FVelocity1.Y:= FVel1P;
+      FVelocity1.XZ:= FVelN.XY;
+      iObject1.Ground:= True;
+      iObject1.Center.From(FCenter1);
+      iObject1.Velocity.From(FVelocity1);
+      if iObject1.Ground and (iObject1.Velocity.Y < MIN_VELOCITY_Y) then
+      begin
+        iObject1.Velocity.BeginInternalChange;
+        iObject1.Velocity.Y:= 0;
+        iObject1.Velocity.EndInternalChange;
+        iObject1.Ground:= True;
+      end else iObject1.Ground:= False;
+      if FDynObject2 <> nil then FDynObject2.Velocity.From(FVelocity2);
+      if (FDynObject2 <> nil) and (Abs(FDynObject2.Velocity.Y) < MIN_VELOCITY_Y) then FDynObject2.Ground:= True;
+    end;
+
+    // Z-axis collision
+    if z3DBBCollisionTest(iObject1.Center.Z, iObject2.Center.Z, FOffset1.Z, FOffset2.Z,
+    Sign(FVelocity1.Z),
+    z3DPlane(iObject1.Center.X-FOffset1.X, iObject1.Center.Y-FOffset1.Y,
+    iObject1.Center.X+FOffset1.X, iObject1.Center.Y+FOffset1.Y),
+    z3DPlane(iObject2.Center.X-FOffset2.X, iObject2.Center.Y-FOffset2.Y,
+    iObject2.Center.X+FOffset2.X, iObject2.Center.Y+FOffset2.Y), I = 1, FLength) then
+    begin
+      Result:= True;
+      z3DBBCollisionResponse(iObject1, iObject2, iObject1.Center.Z, iObject2.Center.Z, FOffset1.Z,
+      FOffset2.Z, FVelocity1.Z, FVelocity2.Z, z3DFloat2(FVelocity1.X, FVelocity1.Y),
+      I = 1, FLength, FPos, FVel1P, FVel2P, FVelN);
+      FCenter1.Z:= FPos;
+      FVelocity1.Z:= FVel1P;
+      FVelocity2.Z:= FVel2P;
+      FVelocity1.XY:= FVelN.XY;
+      iObject1.Center.From(FCenter1);
+      iObject1.Velocity.From(FVelocity1);
+      if FDynObject2 <> nil then FDynObject2.Velocity.From(FVelocity2);
+    end;
+  end;
+end;
+
+function z3DObjectCollision(const iWorld: Iz3DWorld; const iObject1: Iz3DWorldDynamicObject;
+  const iObject2: Iz3DWorldObject; out FGrounded: Boolean): Boolean;
+begin
+  if (iObject1.Shape = z3dwosSphere) and (iObject2.Shape = z3dwosSphere) then
+  Result:= z3DSSCollision(iWorld, iObject1, iObject2, FGrounded) else
+//  if (iObject1.iShape = z3DosSphere) and (iObject2.iShape = z3DosCube) then
+  Result:= z3DBBCollision(iWorld, iObject1, iObject2, FGrounded);
+end;
+
+procedure z3DComputePhysics(const iWorld: Iz3DWorld; const iObject: Iz3DWorldDynamicObject);
+const FEpsilon = 0.0001;
+var I, FSound: Integer;
+    FVelocity: Iz3DFloat3;
+    FVelY: Single;
+    FCollision, FGrounded, FPreviousGround: Boolean;
+begin
+  iObject.Acceleration.Identity;
+  FPreviousGround:= iObject.Ground;
+  FCollision:= False;
+  FVelY:= Abs(iObject.Velocity.Y) / 5;
+
+  // Compute collision between dynamic objects
+  for I:= iObject.Index+1 to iWorld.EntityCount-1 do
+  begin
+    if z3DSupports(iWorld.Entities[I], Iz3DWorldDynamicObject) and
+    z3DObjectCollision(iWorld, iObject, iWorld.Entities[I] as Iz3DWorldObject, FGrounded) then
+    begin
+      FCollision:= True;
+//      Break;
+    end;
+  end;
+
+  // Compute collision with the static world
+//  if not FCollision then
+  for I:= 0 to iWorld.EntityCount-1 do
+  begin
+    if (iWorld.Entities[I].Index <> iObject.Index) and
+    z3DSupports(iWorld.Entities[I], Iz3DWorldStaticObject) and
+    z3DObjectCollision(iWorld, iObject, iWorld.Entities[I] as Iz3DWorldObject, FGrounded) then
+    begin
+      FCollision:= True;
+//      Break;
+    end;
+  end;
+
+  // JP TEST
+//  iObject.Subsets[0].Material.ColorEmissive.Y:= Integer(not FCollision) * 0.25;
+//  iObject.Subsets[0].Material.ColorEmissive.Z:= Integer(iObject.Handled) * 0.5;
+
+  // Compute gravity if object is not lying on ground
+  if not FCollision then iObject.Ground:= False;
+  if not iObject.Ground and iObject.EnablePhysics then z3DComputeGravity(iWorld, iObject) else
+
+  // Play collision sound
+  if not FPreviousGround and (Length(GCollisionSounds) > 0) and Assigned(GCollisionSounds[0]) and
+  (z3DCore_GetTime-GLastPlayTime > 0.05) then
+  begin
+    FSound:= Random(Length(GCollisionSounds));
+    GCollisionSounds[FSound].Stop;
+    GCollisionSounds[FSound].Play(0, 0, Trunc((5 - Min(5, FVelY)) * Min(iObject.ViewCenter.Length, 50) * -100), -1,
+    Round(z3DFloat4.From(iObject.ViewCenter).Normalize.X * 1000));
+    GLastPlayTime:= z3DCore_GetTime;
+  end;
+
+  // JP TEST
+//  iObject.Acceleration.Add(z3DFloat3.From(iWorld.WindSpeed).Scale(0.1 /
+//    (iObject.Subsets[0].Material.Roughness * (1 + iObject.Dimensions.Length))));
+  // Apply the acceleration to velocity and velocity to Center
+  iObject.Acceleration.Scale(GFrameTime);
+  iObject.Velocity.Add(iObject.Acceleration);
+  FVelocity:= z3DFloat3.From(iObject.Velocity).Scale(GFrameTime);
+  iObject.Center.Add(FVelocity);
+end;
+
+end.

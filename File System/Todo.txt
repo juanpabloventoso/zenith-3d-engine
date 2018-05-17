@@ -1,0 +1,2 @@
+Ver vínculo con z3DCore (z3Dtrace)
+Ver si funca

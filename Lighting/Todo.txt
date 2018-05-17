@@ -1,0 +1,9 @@
+OJO:
+
+Se llama primero al STATIC AMBIENT
+y después al DYNAMIC AMBIENT
+
+y esto hace que los objetos de STATIC transparentes
+sean tapados por lso objetos de DYNAMIC opacos
+
+(lo mismo va a pasar con la luz directa)

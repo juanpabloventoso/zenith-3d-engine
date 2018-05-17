@@ -1,0 +1,1036 @@
+{==============================================================================}
+{== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==}
+{==============================================================================}
+{== Unit: z3DFileSystem. z3D file structure control and support              ==}
+{==============================================================================}
+
+unit z3DFileSystem_Impl;
+
+interface
+
+uses Windows, Classes, SysUtils, D3DX9, VCLUnZip, z3DClasses_Impl,
+  VCLZip, XMLDoc, XMLIntf, ActiveX, z3DMath_Intf, z3DFileSystem_Intf,
+  z3DClasses_Intf;
+
+
+
+
+type
+
+
+
+
+{==============================================================================}
+{== XML file                                                                 ==}
+{==============================================================================}
+{== Support for loading/saving XML files                                     ==}
+{==============================================================================}
+
+  Tz3DXMLFile = class(Tz3DBase, Iz3DXMLFile)
+  private
+    XML: TXMLDocument;
+  protected
+    function Read(ANode: IXMLNode; const AName: PAnsiChar; const ADefault: Variant): Variant; stdcall;
+    procedure Write(ANode: IXMLNode; const AName: PAnsiChar; const AValue: Variant); stdcall;
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    procedure Load(const AFileName: PWideChar); virtual; stdcall;
+    procedure Save(const AFileName: PWideChar = nil); virtual; stdcall;
+  end;
+
+  Tz3DXMLChild = class(Tz3DBase, Iz3DXMLChild)
+  private
+    FParent: Iz3DXMLFile;
+    FNode: IXMLNode;
+  protected
+    function Read(ANode: IXMLNode; const AName: PAnsiChar; const ADefault: Variant): Variant; stdcall;
+    procedure Write(ANode: IXMLNode; const AName: PAnsiChar; const AValue: Variant); stdcall;
+  public
+    constructor Create(const AParent: Iz3DXMLFile; const ANode: IXMLNode); virtual;
+  end;
+
+
+
+
+
+{==============================================================================}
+{== App info XML file                                                        ==}
+{==============================================================================}
+{== XML files containing application information                             ==}
+{==============================================================================}
+
+  Tz3DXMLAppInfoFile = class(Tz3DXMLFile, Iz3DXMLAppInfoFile)
+  private
+    FLinkedModules: IInterfaceList;
+    FBuffer: PWideChar;
+  protected
+    function GetLinkedModuleCount: Integer; stdcall;
+    function GetLinkedModules(const AIndex: Integer): Iz3DXMLAppInfoLinkedModule; stdcall;
+    function GetSceneKind: Tz3DApplicationSceneKind; stdcall;
+    function GetSubtitle: PWideChar; stdcall;
+    function GetTitle: PWideChar; stdcall;
+    procedure SetSceneKind(const Value: Tz3DApplicationSceneKind); stdcall;
+    procedure SetSubtitle(const Value: PWideChar); stdcall;
+    procedure SetTitle(const Value: PWideChar); stdcall;
+  protected
+    procedure ReadLinkedModules; stdcall;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    function AddLinkedModule: Iz3DXMLAppInfoLinkedModule; stdcall;
+    procedure DeleteLinkedModule(const AIndex: Integer); stdcall;
+    procedure DeleteLinkedModules; stdcall;
+  public
+    property Title: PWideChar read GetTitle write SetTitle;
+    property Subtitle: PWideChar read GetSubtitle write SetSubtitle;
+    property SceneKind: Tz3DApplicationSceneKind read GetSceneKind write SetSceneKind;
+    property LinkedModuleCount: Integer read GetLinkedModuleCount;
+    property LinkedModules[const AIndex: Integer]: Iz3DXMLAppInfoLinkedModule read GetLinkedModules;
+  end;
+
+  Tz3DXMLAppInfoLinkedModule = class(Tz3DXMLChild, Iz3DXMLAppInfoLinkedModule)
+  private
+    FBuffer: PWideChar;
+  protected
+    function GetPath: PWideChar; stdcall;
+    procedure SetPath(const Value: PWideChar); stdcall;
+  public
+    constructor Create(const AParent: Iz3DXMLFile; const ANode: IXMLNode); override;
+    destructor Destroy; override;
+  public
+    property Path: PWideChar read GetPath write SetPath;
+  end;
+
+
+
+
+{==============================================================================}
+{== z3D files                                                                ==}
+{==============================================================================}
+{== Interfaced version of TFileStream                                        ==}
+{==============================================================================}
+
+  TInterfacedFileStream = class(TFileStream, IInterface)
+  protected
+    FRefCount: Integer;
+    function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
+    function _AddRef: Integer; stdcall;
+    function _Release: Integer; stdcall;
+    function GetOwner: Iz3DBase; stdcall;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+    procedure Init(const AOwner: Iz3DBase = nil); stdcall;
+    procedure Cleanup; stdcall;
+    class function NewInstance: TObject; override;
+  public
+    property RefCount: Integer read FRefCount;
+    property Owner: Iz3DBase read GetOwner;
+  end;
+
+
+
+
+
+
+{==============================================================================}
+{== z3D object file                                                          ==}
+{==============================================================================}
+{== Access to files that prepares a z3D object                               ==}
+{==============================================================================}
+
+  Tz3DBaseFile = class(TInterfacedFileStream, Iz3DObjectFile)
+  private
+    FRTTIPropertyList: Tz3DRTTIPropertyList;
+  protected
+    function GetPosition: Int64; stdcall;
+    procedure SetPosition(const Pos: Int64); stdcall;
+    function GetSize: Int64; stdcall;
+    procedure SetSize64(const NewSize: Int64); stdcall;
+  protected
+
+    function RTTIGetPropertyList: Tz3DRTTIPropertyList;
+
+    function RTTIGetIntValue(const AProperty: PAnsiChar): Integer;
+    function RTTIGetFloatValue(const AProperty: PAnsiChar): Single;
+    function RTTIGetACharValue(const AProperty: PAnsiChar): PAnsiChar;
+    function RTTIGetWCharValue(const AProperty: PAnsiChar): PWideChar;
+    function RTTIGetIntfValue(const AProperty: PAnsiChar): IInterface;
+
+    procedure RTTISetIntValue(const AProperty: PAnsiChar; const AValue: Integer);
+    procedure RTTISetACharValue(const AProperty: PAnsiChar; const AValue: PAnsiChar);
+    procedure RTTISetWCharValue(const AProperty: PAnsiChar; const AValue: PWideChar);
+    procedure RTTISetIntfValue(const AProperty: PAnsiChar; const AValue: IInterface);
+
+  public
+    function ReadUnknown(var Buffer; Count: Longint): Longint; stdcall;
+    procedure ReadFloat3(const AValue: Iz3DFloat3); stdcall;
+    procedure ReadFloat4(const AValue: Iz3DFloat4); stdcall;
+    function ReadString: PWideChar; stdcall;
+    function ReadInteger: Integer; stdcall;
+    function ReadFloat: Single; stdcall;
+    function ReadBoolean: Boolean; stdcall;
+
+    procedure WriteUnknown(const Buffer; Count: Longint); stdcall;
+    procedure WriteFloat3(const AValue: Iz3DFloat3); stdcall;
+    procedure WriteFloat4(const AValue: Iz3DFloat4); stdcall;
+    procedure WriteVariant(const AValue: Variant); stdcall;
+    procedure WriteString(const AValue: PWideChar); stdcall;
+  public
+    property Position;
+    property Size;
+  end;
+
+
+
+
+
+{==============================================================================}
+{== z3D file formats                                                         ==}
+{==============================================================================}
+{== Information for a specific z3D format (folder, extension, description)   ==}
+{==============================================================================}
+
+  Tz3DObjectFileFormat = class(Tz3DBase, Iz3DObjectFileFormat)
+  private
+    FDescription: PWideChar;
+    FExtension: PWideChar;
+    FDefaultFolder: PWideChar;
+    FHeader: PWideChar;
+  protected
+    function GetDescription: PWideChar; stdcall;
+    function GetExtension: PWideChar; stdcall;
+    function GetDefaultFolder: PWideChar; stdcall;
+    procedure SetDescription(const Value: PWideChar); stdcall;
+    procedure SetExtension(const Value: PWideChar); stdcall;
+    procedure SetDefaultFolder(const Value: PWideChar); stdcall;
+    function GetHeader: PWideChar; stdcall;
+    procedure SetHeader(const Value: PWideChar); stdcall;
+  public
+    constructor Create(const AOwner: Iz3DBase = nil); override;
+    destructor Destroy; override;
+    procedure Expand(const ASource, ADest: PWideChar); stdcall;
+  public
+    property Description: PWideChar read GetDescription write SetDescription;
+    property Extension: PWideChar read GetExtension write SetExtension;
+    property DefaultFolder: PWideChar read GetDefaultFolder write SetDefaultFolder;
+    property Header: PWideChar read GetHeader write SetHeader;
+  end;
+
+
+
+
+
+{==============================================================================}
+{== z3D typed object file                                                    ==}
+{==============================================================================}
+{== z3D files with a specific format                                         ==}
+{==============================================================================}
+
+  Tz3DTypedObjectFile = class(Tz3DBaseFile, Iz3DTypedObjectFile)
+  private
+    FFileName: PWideChar;
+    FFormat: Iz3DObjectFileFormat;
+  protected
+    function GetFileName: PWideChar; stdcall;
+    function GetFormat: Iz3DObjectFileFormat; stdcall;
+  public
+    constructor Create(const AFileName: PWideChar; const AMode: Word;
+      const AFormat: Iz3DObjectFileFormat); virtual;
+  public
+    property Format: Iz3DObjectFileFormat read GetFormat;
+    property FileName: PWideChar read GetFileName;
+  end;
+
+
+
+
+{==============================================================================}
+{== z3D files system controller                                              ==}
+{==============================================================================}
+{== Global controller for the z3D file system. Manages all files and folders ==}
+{== used by the z3D engine and its applications to run                       ==}
+{==============================================================================}
+
+  Tz3DFileSystemController = class(Tz3DBase, Iz3DFileSystemController)
+  private
+    FRootPath: PWideChar;
+    FObjectFormats: IInterfaceList;
+  protected
+    function GetRootPath: PWideChar; stdcall;
+    procedure SetRootPath(const Value: PWideChar); stdcall;
+    function GetObjectFormats(const AIndex: Integer): Iz3DObjectFileFormat; stdcall;
+  public
+    constructor Create(const AOwner: Iz3DBase = nil); override;
+    destructor Destroy; override;
+
+    function GetFullPath(const APath: PWideChar): PWideChar; stdcall;
+    procedure Decrypt(const APack, AFiles: PWideChar); stdcall;
+    procedure DecryptF(const APack, AFiles: PWideChar); stdcall;
+    procedure Crypt(const APack, AFiles: PWideChar); stdcall;
+    procedure CryptF(const APack, AFiles: PWideChar); stdcall;
+    procedure Delete(const AFile: PWideChar); stdcall;
+    procedure FreeBuffer; stdcall;
+
+    function CreateXMLFile: Iz3DXMLFile; stdcall;
+    function CreateAppInfoFile: Iz3DXMLAppInfoFile; stdcall;
+    function CreateObjectFile(const AFileName: PWideChar; const AMode: Word): Iz3DObjectFile; stdcall;
+    function CreateTypedObjectFile(const AFileName: PWideChar; const AMode: Word; 
+      const AFormat: Iz3DObjectFileFormat): Iz3DTypedObjectFile; stdcall;
+    function CreateObjectFormat: Iz3DObjectFileFormat; stdcall;
+  public
+    property RootPath: PWideChar read GetRootPath write SetRootPath;
+    property ObjectFormats[const AIndex: Integer]: Iz3DObjectFileFormat read GetObjectFormats;
+  end;
+
+
+
+
+  
+function z3DFileSystemController: Iz3DFileSystemController; stdcall;
+function z3DCreateFileSystemController: Iz3DFileSystemController; stdcall;
+procedure z3DSetCustomFileSystemController(const AController: Iz3DFileSystemController); stdcall;
+
+implementation
+
+uses Variants, z3DCore_Func, z3DCore_Intf, z3DStrings, Forms, TypInfo;
+
+var GZip: TVCLZip;
+    GUnZip: TVCLUnZip;
+    GController: Iz3DFileSystemController;
+
+function z3DFileSystemController: Iz3DFileSystemController;
+begin
+  Result:= GController;
+end;
+
+function z3DCreateFileSystemController: Iz3DFileSystemController;
+begin
+  z3DTrace('z3DCreateFileSystemController: Creating file system controller object...', z3DtkInformation);
+  GController:= Tz3DFileSystemController.Create;
+  Result:= GController;
+end;
+
+procedure z3DSetCustomFileSystemController(const AController: Iz3DFileSystemController);
+begin
+  GController:= AController;
+end;
+
+{ Tz3DXMLFile }
+
+constructor Tz3DXMLFile.Create;
+begin
+  XML:= TXMLDocument.Create(Application);
+  XML.Options:= XML.Options + [doNodeAutoIndent];
+  CoInitialize(nil);
+  XML.Active:= True;
+end;
+
+destructor Tz3DXMLFile.Destroy;
+begin
+  XML.Free;
+  inherited;
+end;
+
+procedure Tz3DXMLFile.Load(const AFileName: PWideChar);
+begin
+  try
+    XML.Active:= False;
+    XML.FileName:= AFileName;
+    CoInitialize(nil);
+    XML.Active:= True;
+  except
+    z3DTrace(PWideChar(WideString('Iz3DXMLFile.Open: Could not open XML file '+XML.FileName)), z3DtkWarning);
+  end;
+end;
+
+function Tz3DXMLFile.Read(ANode: IXMLNode; const AName: PAnsiChar; const ADefault: Variant): Variant;
+begin
+  try
+    try
+      Result:= ANode.GetAttributeNS(AName, '');
+    except
+      z3DTrace(PWideChar(WideString('Iz3DXMLFile.Read: Could not read value from property '+AName+' (file: '+XML.FileName+')')), z3DtkWarning);
+    end;
+  finally
+    if VarIsNull(Result) then Result:= ADefault;
+  end;
+end;
+
+procedure Tz3DXMLFile.Save(const AFileName: PWideChar = nil);
+begin
+  try
+    if AFileName = nil then XML.SaveToFile(XML.FileName) else
+    XML.SaveToFile(AFileName);
+  except
+    z3DTrace(PWideChar(WideString('Iz3DXMLFile.Save: Could not save XML file '+XML.FileName)), z3DtkWarning);
+  end;
+end;
+
+procedure Tz3DXMLFile.Write(ANode: IXMLNode; const AName: PAnsiChar; const AValue: Variant);
+begin
+  try
+    ANode.SetAttributeNS(AName, '', AValue);
+  except
+    z3DTrace(PWideChar(WideString('Iz3DXMLFile.Write: Could not write value to property '+AName+' (file: '+XML.FileName+')')), z3DtkWarning);
+  end;
+end;
+
+{ Tz3DXMLChild }
+
+constructor Tz3DXMLChild.Create(const AParent: Iz3DXMLFile; const ANode: IXMLNode);
+begin
+  inherited Create;
+  FParent:= AParent;
+  FNode:= ANode;
+end;
+
+function Tz3DXMLChild.Read(ANode: IXMLNode; const AName: PAnsiChar;
+  const ADefault: Variant): Variant;
+begin
+  Result:= FParent.Read(ANode, AName, ADefault);
+end;
+
+procedure Tz3DXMLChild.Write(ANode: IXMLNode; const AName: PAnsiChar;
+  const AValue: Variant);
+begin
+  FParent.Write(ANode, AName, AValue);
+end;
+
+{ Tz3DXMLAppInfoFile }
+
+function Tz3DXMLAppInfoFile.AddLinkedModule: Iz3DXMLAppInfoLinkedModule;
+var FNew: Iz3DXMLAppInfoLinkedModule;
+begin
+  FNew:= Tz3DXMLAppInfoLinkedModule.Create(Self,
+  XML.Node.ChildNodes[fsxmlAppInfo_Application].ChildNodes[fsxmlAppInfo_LinkedModules].
+  AddChild(fsxmlAppInfo_LinkedModule));
+  FLinkedModules.Add(FNew);
+  Result:= FNew;
+end;
+
+constructor Tz3DXMLAppInfoFile.Create;
+begin
+  inherited;
+  FLinkedModules:= TInterfaceList.Create;
+  GetMem(FBuffer, 255);
+end;
+
+procedure Tz3DXMLAppInfoFile.DeleteLinkedModule(const AIndex: Integer);
+begin
+  FLinkedModules.Delete(AIndex);
+  XML.Node.ChildNodes[fsxmlAppInfo_Application].ChildNodes[fsxmlAppInfo_LinkedModules].
+  ChildNodes.Delete(AIndex);
+end;
+
+procedure Tz3DXMLAppInfoFile.DeleteLinkedModules;
+var I: Integer;
+begin
+  for I:= FLinkedModules.Count-1 downto 0 do DeleteLinkedModule(I);
+end;
+
+destructor Tz3DXMLAppInfoFile.Destroy;
+begin
+  FreeMem(FBuffer);
+  inherited;
+end;
+
+function Tz3DXMLAppInfoFile.GetLinkedModuleCount: Integer;
+begin
+  Result:= FLinkedModules.Count;
+end;
+
+function Tz3DXMLAppInfoFile.GetLinkedModules(const AIndex: Integer): Iz3DXMLAppInfoLinkedModule;
+begin
+  Result:= FLinkedModules[AIndex] as Iz3DXMLAppInfoLinkedModule;
+end;
+
+function Tz3DXMLAppInfoFile.GetSceneKind: Tz3DApplicationSceneKind;
+begin
+  Result:= Tz3DApplicationSceneKind(Read(XML.Node.ChildNodes[fsxmlAppInfo_Application],
+  fsxmlAppInfo_ApplicationSceneKind, z3dask3D));
+end;
+
+function Tz3DXMLAppInfoFile.GetSubtitle: PWideChar;
+begin
+  StringToWideChar(Read(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationSubtitle, ''), FBuffer, 255);
+  Result:= FBuffer;
+end;
+
+function Tz3DXMLAppInfoFile.GetTitle: PWideChar;
+begin
+  StringToWideChar(Read(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationTitle,
+  ExtractFileName(ExtractFilePath(XML.FileName))), FBuffer, 255);
+  Result:= FBuffer;
+end;
+
+procedure Tz3DXMLAppInfoFile.ReadLinkedModules;
+var FNew: Iz3DXMLAppInfoLinkedModule;
+    I: Integer;
+begin
+  for I:= 0 to XML.Node.ChildNodes[fsxmlAppInfo_Application].
+    ChildNodes[fsxmlAppInfo_LinkedModules].ChildNodes.Count-1 do
+  begin
+    FNew:= Tz3DXMLAppInfoLinkedModule.Create(Self,
+    XML.Node.ChildNodes[fsxmlAppInfo_Application].ChildNodes[fsxmlAppInfo_LinkedModules].ChildNodes[I]);
+    FLinkedModules.Add(FNew);
+  end;
+end;
+
+procedure Tz3DXMLAppInfoFile.SetSceneKind(const Value: Tz3DApplicationSceneKind);
+begin
+  Write(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationSceneKind, Integer(Value));
+end;
+
+procedure Tz3DXMLAppInfoFile.SetSubtitle(const Value: PWideChar);
+begin
+  Write(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationSubtitle, WideCharToString(Value));
+end;
+
+procedure Tz3DXMLAppInfoFile.SetTitle(const Value: PWideChar);
+begin
+  Write(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationTitle, WideCharToString(Value));
+end;
+
+{ Tz3DXMLAppInfoLinkedModule }
+
+constructor Tz3DXMLAppInfoLinkedModule.Create(const AParent: Iz3DXMLFile; const ANode: IXMLNode);
+begin
+  inherited;
+  GetMem(FBuffer, 255);
+end;
+
+destructor Tz3DXMLAppInfoLinkedModule.Destroy;
+begin
+  FreeMem(FBuffer);
+  inherited;
+end;
+
+function Tz3DXMLAppInfoLinkedModule.GetPath: PWideChar;
+begin
+  StringToWideChar(Read(FNode, fsxmlAppInfo_LinkedModulePath, ''), FBuffer, 255);
+  Result:= FBuffer;
+end;
+
+procedure Tz3DXMLAppInfoLinkedModule.SetPath(const Value: PWideChar);
+begin
+  Write(FNode, fsxmlAppInfo_LinkedModulePath, WideCharToString(Value));
+end;
+
+// Scene file format methods
+
+{ TInterfacedFileStream }
+
+procedure TInterfacedFileStream.AfterConstruction;
+begin
+  // Release the constructor's implicit refcount
+  InterlockedDecrement(FRefCount);
+end;
+
+procedure TInterfacedFileStream.BeforeDestruction;
+begin
+  if RefCount <> 0 then System.Error(reInvalidPtr);
+end;
+
+procedure TInterfacedFileStream.Cleanup;
+begin
+
+end;
+
+function TInterfacedFileStream.GetOwner: Iz3DBase;
+begin
+
+end;
+
+procedure TInterfacedFileStream.Init(const AOwner: Iz3DBase);
+begin
+
+end;
+
+class function TInterfacedFileStream.NewInstance: TObject;
+begin
+  Result:= inherited NewInstance;
+  TInterfacedFileStream(Result).FRefCount:= 1;
+end;
+
+function TInterfacedFileStream.QueryInterface(const IID: TGUID; out Obj): HResult;
+begin
+  if GetInterface(IID, Obj) then Result := 0
+  else Result:= E_NOINTERFACE;
+end;
+
+function TInterfacedFileStream._AddRef: Integer;
+begin
+  Result:= InterlockedIncrement(FRefCount);
+end;
+
+function TInterfacedFileStream._Release: Integer;
+begin
+  Result:= InterlockedDecrement(FRefCount);
+  if Result = 0 then Destroy;
+end;
+
+{ Tz3DBaseFile }
+
+procedure Tz3DBaseFile.WriteVariant(const AValue: Variant);
+var FInteger: Integer;
+    FSingle: Single;
+    FBoolean: Boolean;
+begin
+  case VarType(AValue) of
+    varInteger, varWord, varByte, varLongWord:
+    begin
+      FInteger:= AValue;
+      Write(FInteger, SizeOf(Integer));
+    end;
+    varSingle, varDouble, varCurrency:
+    begin
+      FSingle:= AValue;
+      Write(FSingle, SizeOf(Single));
+    end;
+    varBoolean:
+    begin
+      FBoolean:= AValue;
+      Write(FBoolean, SizeOf(Boolean));
+    end;
+    else
+    begin
+      z3DTrace(PWideChar(WideString('Iz3DFile.WriteVariant failed (value '+AValue+' is of an unknown type)')), z3DtkWarning);
+      Exit;
+    end;
+  end;
+end;
+
+procedure Tz3DBaseFile.WriteFloat3(const AValue: Iz3DFloat3);
+var FValue: TD3DXVector3;
+begin
+  FValue:= AValue.XYZ;
+  Write(FValue, SizeOf(TD3DXVector3));
+end;
+
+procedure Tz3DBaseFile.WriteFloat4(const AValue: Iz3DFloat4);
+var FValue: TD3DXVector4;
+begin
+  FValue:= AValue.XYZW;
+  Write(FValue, SizeOf(TD3DXVector4));
+end;
+
+function Tz3DBaseFile.ReadBoolean: Boolean;
+var FBoolean: Boolean;
+begin
+  Read(FBoolean, SizeOf(Boolean));
+  Result:= FBoolean;
+end;
+
+procedure Tz3DBaseFile.ReadFloat3(const AValue: Iz3DFloat3);
+var FValue: TD3DXVector3;
+begin
+  Read(FValue, SizeOf(TD3DXVector3));
+  AValue.XYZ:= FValue;
+end;
+
+procedure Tz3DBaseFile.ReadFloat4(const AValue: Iz3DFloat4);
+var FValue: TD3DXVector4;
+begin
+  Read(FValue, SizeOf(TD3DXVector4));
+  AValue.XYZW:= FValue;
+end;
+
+function Tz3DBaseFile.ReadInteger: Integer;
+var FInteger: INteger;
+begin
+  Read(FInteger, SizeOf(Integer));
+  Result:= FInteger;
+end;
+
+function Tz3DBaseFile.ReadFloat: Single;
+var FSingle: Single;
+begin
+  Read(FSingle, SizeOf(Single));
+  Result:= FSingle;
+end;
+
+function Tz3DBaseFile.ReadUnknown(var Buffer; Count: Integer): Longint;
+begin
+  ReadBuffer(Buffer, Count);
+end;
+
+procedure Tz3DBaseFile.WriteUnknown(const Buffer; Count: Integer);
+begin
+  WriteBuffer(Buffer, Count);
+end;
+
+function Tz3DBaseFile.ReadString: PWideChar;
+var FLength: Integer;
+    FResult: array of Char;
+    SResult: string;
+begin
+  FLength:= ReadInteger;
+  SetLength(FResult, FLength);
+  ReadUnknown(Pointer(FResult)^, FLength);
+  SetString(SResult, PChar(FResult), FLength);
+  StringToWideChar(SResult, z3DWideBuffer, 255);
+  Result:= z3DWideBuffer;
+//  SetString(Result, PChar(FResult), FLength);
+end;
+
+procedure Tz3DBaseFile.WriteString(const AValue: PWideChar);
+var FValue: string;
+begin
+  FValue:= WideCharToString(AValue);
+  WriteVariant(Length(FValue));
+  WriteUnknown(Pointer(FValue)^, Length(FValue));
+end;
+
+function Tz3DBaseFile.GetPosition: Int64;
+begin
+  Result:= inherited Position;
+end;
+
+procedure Tz3DBaseFile.SetSize64(const NewSize: Int64);
+begin
+  inherited Size:= NewSize;
+end;
+
+function Tz3DBaseFile.GetSize: Int64;
+begin
+  Result:= inherited GetSize;
+end;
+
+procedure Tz3DBaseFile.SetPosition(const Pos: Int64);
+begin
+  inherited Position:= Pos;
+end;
+
+function Tz3DBaseFile.RTTIGetACharValue(const AProperty: PAnsiChar): PAnsiChar;
+var FValue: string;
+begin
+  FValue:= GetPropValue(Self, AProperty);
+  Result:= PAnsiChar(FValue);
+end;
+
+function Tz3DBaseFile.RTTIGetFloatValue(const AProperty: PAnsiChar): Single;
+begin
+  Result:= GetFloatProp(Self, AProperty);
+end;
+
+function Tz3DBaseFile.RTTIGetIntfValue(const AProperty: PAnsiChar): IInterface;
+begin
+  Result:= GetInterfaceProp(Self, AProperty);
+end;
+
+function Tz3DBaseFile.RTTIGetIntValue(const AProperty: PAnsiChar): Integer;
+begin
+  Result:= GetOrdProp(Self, AProperty);
+end;
+
+function Tz3DBaseFile.RTTIGetPropertyList: Tz3DRTTIPropertyList;
+begin
+  Result:= FRTTIPropertyList;
+end;
+
+function Tz3DBaseFile.RTTIGetWCharValue(const AProperty: PAnsiChar): PWideChar;
+begin
+  StringToWideChar(GetWideStrProp(Self, AProperty), z3DWideBuffer, 255);
+  Result:= z3DWideBuffer;
+end;
+
+procedure Tz3DBaseFile.RTTISetACharValue(const AProperty, AValue: PAnsiChar);
+begin
+  SetStrProp(Self, AProperty, StrPas(AValue));
+end;
+
+procedure Tz3DBaseFile.RTTISetIntfValue(const AProperty: PAnsiChar; const AValue: IInterface);
+begin
+  SetInterfaceProp(Self, AProperty, AValue);
+end;
+
+procedure Tz3DBaseFile.RTTISetIntValue(const AProperty: PAnsiChar; const AValue: Integer);
+begin
+  SetOrdProp(Self, AProperty, AValue);
+end;
+
+procedure Tz3DBaseFile.RTTISetWCharValue(const AProperty: PAnsiChar; const AValue: PWideChar);
+begin
+  SetWideStrProp(Self, AProperty, AValue);
+end;
+
+{ Tz3DFileSystemController }
+
+constructor Tz3DFileSystemController.Create(const AOwner: Iz3DBase);
+begin
+  inherited;
+  GetMem(FRootPath, 255);
+  StringToWideChar(z3DCore_ReadRegStrValue('FileSystem', 'Root', ''), FRootPath, 255);
+  if WideCharToString(FRootPath) = '' then
+  begin
+    StringToWideChar(ExtractFilePath(Application.ExeName), FRootPath, 255);
+    z3DCore_WriteRegStrValue('FileSystem', 'Root', FRootPath);
+  end;
+  GUnZip.DestDir:= GetFullPath(fsBufferPath);
+  FObjectFormats:= TInterfaceList.Create;
+end;
+
+destructor Tz3DFileSystemController.Destroy;
+begin
+  z3DFreeWideChar(FRootPath);
+  inherited;
+end;
+
+procedure Tz3DFileSystemController.Crypt(const APack, AFiles: PWideChar);
+begin
+  GZip.Password:= z3DDS(z3DSTRINGS_CRYPTEDTEXT);
+  GZip.Password:= '';
+end;
+
+procedure Tz3DFileSystemController.CryptF(const APack, AFiles: PWideChar);
+begin
+  Crypt(GetFullPath(APack), AFiles);
+end;
+
+procedure Tz3DFileSystemController.Decrypt(const APack, AFiles: PWideChar);
+begin
+  if not FileExists(APack) then
+  begin
+    z3DTrace(PWideChar(WideString('z3DFileSystem: Unable to find system file: '+ExtractFileName(APack))), z3DtkWarning);
+    Exit;
+  end;
+  GUnZip.Password:= z3DDS(z3DSTRINGS_CRYPTEDTEXT);
+  GUnZip.ZipName:= APack;
+  try
+    try
+      GUnZip.FilesList.Text:= AFiles;
+      GUnZip.ReadZip;
+    except
+      on E: Exception do
+      z3DTrace(PWideChar(WideString('z3DFileSystem: Unknown error while opening system file: '+ExtractFileName(APack)+'. Message: '+E.Message)), z3DtkWarning);
+    end;
+    if GUnZip.UnZip = 0 then
+      z3DTrace(PWideChar(WideString('z3DFileSystem: Could not get required files from system file: '+ExtractFileName(APack))), z3DtkWarning);
+  finally
+    GUnZip.Password:= '';
+  end;
+end;
+
+procedure Tz3DFileSystemController.DecryptF(const APack, AFiles: PWideChar);
+begin
+  Decrypt(GetFullPath(APack), AFiles);
+end;
+
+procedure Tz3DFileSystemController.Delete(const AFile: PWideChar);
+begin
+  DeleteFile(WideCharToString(GetFullPath(fsBufferPath)) + fsPathDiv + WideCharToString(AFile));
+end;
+
+procedure Tz3DFileSystemController.FreeBuffer;
+var SR: TSearchRec;
+    FFiles: TStringList;
+    I: Integer;
+begin
+  FFiles:= TStringList.Create;
+  try
+    if FindFirst(WideCharToString(GetFullPath(fsBufferPath)) + fsPathDiv + '*.*', faAnyFile, SR) = 0 then
+    begin
+      repeat
+        if Pos('.', SR.Name[1]) = 0 then FFiles.Add(SR.Name);
+      until FindNext(SR) <> 0;
+      FindClose(SR);
+    end;
+    for I:= 0 to FFiles.Count-1 do
+    begin
+      if FileExists(WideCharToString(GetFullPath(fsBufferPath)) + fsPathDiv + FFiles[I]) then
+      SysUtils.DeleteFile(WideCharToString(GetFullPath(fsBufferPath)) + fsPathDiv + FFiles[I]);
+    end;
+  finally
+    FFiles.Free;
+  end;
+end;
+
+function Tz3DFileSystemController.GetFullPath(const APath: PWideChar): PWideChar;
+begin
+  if Pos(':', WideCharToString(APath)) > 0 then
+  begin
+    Result:= APath;
+    Exit;
+  end;
+  GetMem(Result, 255);
+  StringToWideChar(RootPath + WideCharToString(APath), Result, 255);
+  if not DirectoryExists(ExtractFilePath(Result)) then
+    z3DTrace(PWideChar(WideString('z3DFileSystem: Requested path does not exist: '+ExtractFilePath(Result))));
+end;
+
+function Tz3DFileSystemController.GetRootPath: PWideChar;
+begin
+  Result:= FRootPath;
+end;
+
+procedure Tz3DFileSystemController.SetRootPath(const Value: PWideChar);
+begin
+  FRootPath:= Value;
+end;
+
+function Tz3DFileSystemController.GetObjectFormats(const AIndex: Integer): Iz3DObjectFileFormat;
+begin
+  Result:= FObjectFormats[AIndex] as Iz3DObjectFileFormat;
+end;
+
+function Tz3DFileSystemController.CreateObjectFormat: Iz3DObjectFileFormat;
+begin
+  Result:= Tz3DObjectFileFormat.Create;
+  FObjectFormats.Add(Result);
+end;
+
+function Tz3DFileSystemController.CreateAppInfoFile: Iz3DXMLAppInfoFile;
+begin
+  Result:= Tz3DXMLAppInfoFile.Create;
+end;
+
+function Tz3DFileSystemController.CreateObjectFile(const AFileName: PWideChar; const AMode: Word): Iz3DObjectFile;
+begin
+  Result:= Tz3DBaseFile.Create(AFileName, AMode);
+end;
+
+function Tz3DFileSystemController.CreateTypedObjectFile(const AFileName: PWideChar; const AMode: Word;
+  const AFormat: Iz3DObjectFileFormat): Iz3DTypedObjectFile;
+begin
+  Result:= Tz3DTypedObjectFile.Create(AFileName, AMode, AFormat);
+end;
+
+function Tz3DFileSystemController.CreateXMLFile: Iz3DXMLFile;
+begin
+  Result:= Tz3DXMLFile.Create;
+end;
+
+{ Tz3DObjectFileFormat }
+
+constructor Tz3DObjectFileFormat.Create(const AOwner: Iz3DBase);
+begin
+  inherited;
+  GetMem(FDescription, 255);
+  ZeroMemory(FDescription, 255);
+  GetMem(FExtension, 255);
+  ZeroMemory(FExtension, 255);
+  GetMem(FDefaultFolder, 255);
+  ZeroMemory(FDefaultFolder, 255);
+  GetMem(FHeader, 255);
+  ZeroMemory(FHeader, 255);
+end;
+
+destructor Tz3DObjectFileFormat.Destroy;
+begin
+  FreeMem(FDescription);
+  FreeMem(FExtension);
+  FreeMem(FDefaultFolder);
+  FreeMem(FHeader);
+  inherited;
+end;
+
+procedure Tz3DObjectFileFormat.Expand(const ASource, ADest: PWideChar); stdcall;
+begin
+  // Add the default relative path if required
+  if (Pos(':', ASource) <> 0) or (ASource[0] = '\') or FileExists(ASource) then
+  StringToWideChar(ASource, ADest, 255) else
+  StringToWideChar(fsCommonResPath+fsPathDiv+DefaultFolder+fsPathDiv+ASource, ADest, 255);
+
+  // Get the absolute path
+  StringToWideChar(z3DFileSystemController.GetFullPath(ADest), ADest, 255);
+
+  // Add the default extension if required
+  if Pos('.', ASource) = 0 then
+  StringToWideChar(WideCharToString(ADest)+'.'+WideCharToString(FExtension), ADest, 255);
+end;
+
+function Tz3DObjectFileFormat.GetDescription: PWideChar;
+begin
+  Result:= FDescription;
+end;
+
+function Tz3DObjectFileFormat.GetExtension: PWideChar;
+begin
+  Result:= FExtension;
+end;
+
+function Tz3DObjectFileFormat.GetDefaultFolder: PWideChar;
+begin
+  Result:= FDefaultFolder;
+end;
+
+procedure Tz3DObjectFileFormat.SetDescription(const Value: PWideChar);
+begin
+  StringToWideChar(WideCharToString(Value), FDescription, 255);
+end;
+
+procedure Tz3DObjectFileFormat.SetExtension(const Value: PWideChar);
+begin
+  StringToWideChar(WideCharToString(Value), FExtension, 255);
+end;
+
+procedure Tz3DObjectFileFormat.SetDefaultFolder(const Value: PWideChar);
+begin
+  StringToWideChar(WideCharToString(Value), FDefaultFolder, 255);
+end;
+
+function Tz3DObjectFileFormat.GetHeader: PWideChar;
+begin
+  Result:= FHeader;
+end;
+
+procedure Tz3DObjectFileFormat.SetHeader(const Value: PWideChar);
+begin
+  StringToWideChar(WideCharToString(Value), FHeader, 255);
+end;
+
+{ Tz3DTypedObjectFile }
+
+constructor Tz3DTypedObjectFile.Create(const AFileName: PWideChar;
+  const AMode: Word; const AFormat: Iz3DObjectFileFormat);
+var FExpFileName: PWideChar;
+    FHeader: array of Char;
+    FHeaderString: string;
+begin
+  GetMem(FExpFileName, 255);
+  AFormat.Expand(AFileName, FExpFileName);
+  inherited Create(WideCharToString(FExpFileName), AMode);
+  FreeMem(FExpFileName);
+  GetMem(FFileName, 255);
+  StringToWideChar(AFileName, FFileName, 255);
+  FFormat:= AFormat;
+  SetLength(FHeader, Length(AFormat.Header));
+
+  // File header
+  if AMode and fmOpenWrite = 0 then
+  begin
+    ReadUnknown(Pointer(FHeader)^, Length(AFormat.Header));
+    SetString(FHeaderString, PChar(FHeader), Length(AFormat.Header));
+    if FHeaderString <> WideCharToString(AFormat.Header) then
+    z3DTrace(PWideChar(WideString('Iz3DTypedObjectFile.Create failed: File format is invalid ('+WideCharToString(AFileName))), z3DtkWarning);
+  end else
+  begin
+    FHeaderString:= WideCharToString(AFormat.Header);
+    WriteUnknown(Pointer(FHeaderString)^, Length(AFormat.Header));
+  end;
+end;
+
+function Tz3DTypedObjectFile.GetFileName: PWideChar;
+begin
+  Result:= FFileName;
+end;
+
+function Tz3DTypedObjectFile.GetFormat: Iz3DObjectFileFormat;
+begin
+  Result:= FFormat;
+end;
+
+initialization
+  GZip:= TVCLZip.Create(nil);
+  GZip.EncryptBeforeCompress:= True;
+  GUnZip:= TVCLUnZip.Create(nil);
+  GUnZip.EncryptBeforeCompress:= True;
+  GUnZip.OverwriteMode:= Always;
+
+finalization
+  GZip.Free;
+  GUnZip.Free;
+
+end.

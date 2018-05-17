@@ -1,0 +1,373 @@
+unit z3DMath_Intf;
+
+interface
+
+uses Direct3D9, D3DX9, z3DClasses_Intf;
+
+const
+
+  z3DPI: Single       = 3.141592654;
+
+type
+
+  Iz3DMatrix  = interface;
+
+  Iz3DFloat2 = interface;
+  Iz3DFloat3 = interface;
+  Iz3DFloat4 = interface;
+
+  Iz3DMatrix = interface(Iz3DBase)['{226F08EA-006F-4133-AA95-7E9E01BC171F}']
+    function GetPD3DMatrix: PD3DXMatrix; stdcall;
+    function Get11: Single; stdcall;
+    function Get12: Single; stdcall;
+    function Get13: Single; stdcall;
+    function Get14: Single; stdcall;
+    function Get21: Single; stdcall;
+    function Get22: Single; stdcall;
+    function Get23: Single; stdcall;
+    function Get24: Single; stdcall;
+    function Get31: Single; stdcall;
+    function Get32: Single; stdcall;
+    function Get33: Single; stdcall;
+    function Get34: Single; stdcall;
+    function Get41: Single; stdcall;
+    function Get42: Single; stdcall;
+    function Get43: Single; stdcall;
+    function Get44: Single; stdcall;
+    procedure Set11(const Value: Single); stdcall;
+    procedure Set12(const Value: Single); stdcall;
+    procedure Set13(const Value: Single); stdcall;
+    procedure Set14(const Value: Single); stdcall;
+    procedure Set21(const Value: Single); stdcall;
+    procedure Set22(const Value: Single); stdcall;
+    procedure Set23(const Value: Single); stdcall;
+    procedure Set24(const Value: Single); stdcall;
+    procedure Set31(const Value: Single); stdcall;
+    procedure Set32(const Value: Single); stdcall;
+    procedure Set33(const Value: Single); stdcall;
+    procedure Set34(const Value: Single); stdcall;
+    procedure Set41(const Value: Single); stdcall;
+    procedure Set42(const Value: Single); stdcall;
+    procedure Set43(const Value: Single); stdcall;
+    procedure Set44(const Value: Single); stdcall;
+    function GetOnChange: Tz3DBaseObjectEvent; stdcall;
+    procedure SetOnChange(const Value: Tz3DBaseObjectEvent); stdcall;
+    function GetD3DMatrix: TD3DXMatrix; stdcall;
+    function Scale(const AScale: Iz3DFloat3): Iz3DMatrix; stdcall;
+    procedure SetD3DMatrix(const Value: TD3DXMatrix); stdcall;
+    function From(const AMatrix: Iz3DMatrix): Iz3DMatrix; overload; stdcall;
+    function From(const AMatrix: TD3DXMatrix): Iz3DMatrix; overload; stdcall;
+    function LookAt(const APosition, ALookAt: Iz3DFloat3): Iz3DMatrix; stdcall; overload; stdcall;
+    function LookAt(const APosition, ALookAt, AUp: Iz3DFloat3): Iz3DMatrix; stdcall; overload; stdcall;
+    function PerspectiveFOV(const AAngle: Single; const AAspect: Single = 1; 
+      const ANear: Single = 0.01; const AFar: Single = 1000): Iz3DMatrix; stdcall;
+    function Ortho(const AWidth, AHeight: Single; const ANear: Single = 0.01;
+      const AFar: Single = 1000): Iz3DMatrix; stdcall;
+    function Multiply(const AMatrix: Iz3DMatrix): Iz3DMatrix; stdcall; overload; stdcall;
+    function Multiply(const AMatrix: TD3DXMatrix): Iz3DMatrix; stdcall; overload; stdcall;
+    function Inverse: Iz3DMatrix; stdcall; overload; stdcall;
+    function Identity: Iz3DMatrix; stdcall;
+    function Inverse(const AMatrix: Iz3DMatrix): Iz3DMatrix; stdcall; overload; stdcall;
+    function Inverse(const AMatrix: TD3DXMatrix): Iz3DMatrix; stdcall; overload; stdcall;
+    function Translation(const AX, AY, AZ: Single): Iz3DMatrix; stdcall;
+    function RotateYPR(const AYaw, APitch, ARoll: Single): Iz3DMatrix; stdcall;
+    function RotateQuat(const AQuat: TD3DXQuaternion): Iz3DMatrix; stdcall;
+    function RotateX(const AAngle: Single): Iz3DMatrix; stdcall;
+    function RotateY(const AAngle: Single): Iz3DMatrix; stdcall;
+    function RotateZ(const AAngle: Single): Iz3DMatrix; stdcall;
+    
+    property OnChange: Tz3DBaseObjectEvent read GetOnChange write SetOnChange;
+    property D3DMatrix: TD3DXMatrix read GetD3DMatrix write SetD3DMatrix;
+    property PD3DMatrix: PD3DXMatrix read GetPD3DMatrix;
+    property e11: Single read Get11 write Set11;
+    property e12: Single read Get12 write Set12;
+    property e13: Single read Get13 write Set13;
+    property e14: Single read Get14 write Set14;
+    property e21: Single read Get21 write Set21;
+    property e22: Single read Get22 write Set22;
+    property e23: Single read Get23 write Set23;
+    property e24: Single read Get24 write Set24;
+    property e31: Single read Get31 write Set31;
+    property e32: Single read Get32 write Set32;
+    property e33: Single read Get33 write Set33;
+    property e34: Single read Get34 write Set34;
+    property e41: Single read Get41 write Set41;
+    property e42: Single read Get42 write Set42;
+    property e43: Single read Get43 write Set43;
+    property e44: Single read Get44 write Set44;
+  end;
+
+
+
+
+  Iz3DFloat2 = interface(Iz3DBase)['{95FE8DA8-6D8F-477F-A04F-C2A72B647301}']
+    function GetOnChange: Tz3DBaseObjectEvent; stdcall;
+    procedure SetOnChange(const Value: Tz3DBaseObjectEvent); stdcall;
+    function GetXY: TD3DXVector2; stdcall;
+    procedure SetXY(const Value: TD3DXVector2); stdcall;
+    function GetX: Single; stdcall;
+    function GetY: Single; stdcall;
+    procedure SetX(const Value: Single); stdcall;
+    procedure SetY(const Value: Single); stdcall;
+    function From(const AVector: Iz3DFloat2): Iz3DFloat2; overload; stdcall;
+    function From(const AVector: TD3DXVector2): Iz3DFloat2; overload; stdcall;
+    function Add(const AVector: Iz3DFloat2): Iz3DFloat2; overload; stdcall;
+    function Add(const AVector: TD3DXVector2): Iz3DFloat2; overload; stdcall;
+    function Subtract(const AVector: Iz3DFloat2): Iz3DFloat2; overload; stdcall;
+    function Subtract(const AVector: TD3DXVector2): Iz3DFloat2; overload; stdcall;
+    function Scale(const AScale: Single): Iz3DFloat2; stdcall;
+    function Negate: Iz3DFloat2; stdcall;
+    function Saturate: Iz3DFloat2; stdcall;
+    function Length: Single; stdcall;
+    function LengthSq: Single; stdcall;
+    function Normalize: Iz3DFloat2; stdcall;
+
+    property OnChange: Tz3DBaseObjectEvent read GetOnChange write SetOnChange;
+    property X: Single read GetX write SetX;
+    property Y: Single read GetY write SetY;
+    property XY: TD3DXVector2 read GetXY write SetXY;
+    property R: Single read GetX write SetX;
+    property G: Single read GetY write SetY;
+    property RG: TD3DXVector2 read GetXY write SetXY;
+  end;
+
+
+
+
+  Iz3DFloat3 = interface(Iz3DBase)['{A96DBC16-431E-4F9D-8746-645082C56EAC}']
+    function GetD3DColor: TD3DColor; stdcall;
+    function GetD3DColorValue: TD3DColorValue; stdcall;
+    function GetOnChange: Tz3DBaseObjectEvent; stdcall;
+    procedure SetOnChange(const Value: Tz3DBaseObjectEvent); stdcall;
+    function GetXY: TD3DXVector2; stdcall;
+    function GetXZ: TD3DXVector2; stdcall;
+    function GetYZ: TD3DXVector2; stdcall;
+    procedure SetXY(const Value: TD3DXVector2); stdcall;
+    procedure SetXZ(const Value: TD3DXVector2); stdcall;
+    function Identity: Iz3DFloat3; stdcall;
+    procedure SetYZ(const Value: TD3DXVector2); stdcall;
+    function GetX: Single; stdcall;
+    function GetXYZ: TD3DXVector3; stdcall;
+    function GetY: Single; stdcall;
+    function GetZ: Single; stdcall;
+    function GetRGBA: TD3DXVector4; stdcall;
+    procedure SetX(const Value: Single); stdcall;
+    procedure SetXYZ(const Value: TD3DXVector3); stdcall;
+    procedure SetY(const Value: Single); stdcall;
+    procedure SetZ(const Value: Single); stdcall;
+    function Length: Single; stdcall;
+    function LengthSq: Single; stdcall;
+    function Add(const AVector: Iz3DFloat3): Iz3DFloat3; overload; stdcall;
+    function Add(const AVector: TD3DXVector3): Iz3DFloat3; overload; stdcall;
+    function Dot(const AVector: Iz3DFloat3): Single; stdcall;
+    function Cross(const AVector: Iz3DFloat3): Iz3DFloat3; stdcall;
+    function Subtract(const AVector: Iz3DFloat3): Iz3DFloat3; overload; stdcall;
+    function Subtract(const AVector: TD3DXVector3): Iz3DFloat3; overload; stdcall;
+    function Scale(const AScale: Single): Iz3DFloat3; stdcall;
+    function Negate: Iz3DFloat3; stdcall;
+    function Saturate: Iz3DFloat3; stdcall;
+    function TransformC(const AMatrix: Iz3DMatrix): Iz3DFloat3; stdcall;
+    function TransformN(const AMatrix: Iz3DMatrix): Iz3DFloat3; stdcall;
+    function Normalize: Iz3DFloat3; stdcall;
+    function From(const AVector: Iz3DFloat3): Iz3DFloat3; overload; stdcall;
+    function From(const AVector: TD3DXVector3): Iz3DFloat3; overload; stdcall;
+    function From(const AColor: TD3DColorValue): Iz3DFloat3; overload; stdcall;
+    procedure BeginInternalChange; stdcall;
+    procedure EndInternalChange; stdcall;
+
+    property OnChange: Tz3DBaseObjectEvent read GetOnChange write SetOnChange;
+    property D3DColor: TD3DColor read GetD3DColor;
+    property D3DColorValue: TD3DColorValue read GetD3DColorValue;
+    property X: Single read GetX write SetX;
+    property Y: Single read GetY write SetY;
+    property Z: Single read GetZ write SetZ;
+    property XY: TD3DXVector2 read GetXY write SetXY;
+    property XZ: TD3DXVector2 read GetXZ write SetXZ;
+    property YZ: TD3DXVector2 read GetYZ write SetYZ;
+    property XYZ: TD3DXVector3 read GetXYZ write SetXYZ;
+    property R: Single read GetX write SetX;
+    property G: Single read GetY write SetY;
+    property B: Single read GetZ write SetZ;
+    property RG: TD3DXVector2 read GetXY write SetXY;
+    property RB: TD3DXVector2 read GetXZ write SetXZ;
+    property GB: TD3DXVector2 read GetYZ write SetYZ;
+    property RGB: TD3DXVector3 read GetXYZ write SetXYZ;
+    property RGBA: TD3DXVector4 read GetRGBA;
+  end;
+
+
+
+
+
+  Iz3DFloat4 = interface(Iz3DBase)['{68C10FDF-C4B7-4662-8B09-392DB58F41D4}']
+    function GetD3DColor: TD3DColor; stdcall;
+    function GetD3DColorValue: TD3DColorValue; stdcall;
+    function GetOnChange: Tz3DBaseObjectEvent; stdcall;
+    procedure SetOnChange(const Value: Tz3DBaseObjectEvent); stdcall;
+    function GetD3DQuat: TD3DXQuaternion; stdcall;
+    procedure SetD3DQuat(const Value: TD3DXQuaternion); stdcall;
+    function GetW: Single; stdcall;
+    function GetXYW: TD3DXVector3; stdcall;
+    function GetXYZW: TD3DXVector4; stdcall;
+    function GetXZW: TD3DXVector3; stdcall;
+    function GetYZW: TD3DXVector3; stdcall;
+    procedure SetW(const Value: Single); stdcall;
+    procedure SetXYW(const Value: TD3DXVector3); stdcall;
+    procedure SetXYZW(const Value: TD3DXVector4); stdcall;
+    procedure SetXZW(const Value: TD3DXVector3); stdcall;
+    procedure SetYZW(const Value: TD3DXVector3); stdcall;
+    function GetXY: TD3DXVector2; stdcall;
+    function GetXZ: TD3DXVector2; stdcall;
+    function GetYZ: TD3DXVector2; stdcall;
+    procedure SetXY(const Value: TD3DXVector2); stdcall;
+    procedure SetXZ(const Value: TD3DXVector2); stdcall;
+    procedure SetYZ(const Value: TD3DXVector2); stdcall;
+    function GetX: Single; stdcall;
+    function GetXYZ: TD3DXVector3; stdcall;
+    function GetY: Single; stdcall;
+    function GetZ: Single; stdcall;
+    procedure SetX(const Value: Single); stdcall;
+    procedure SetXYZ(const Value: TD3DXVector3); stdcall;
+    procedure SetY(const Value: Single); stdcall;
+    procedure SetZ(const Value: Single); stdcall;
+    function Add(const AVector: Iz3DFloat4): Iz3DFloat4; overload; stdcall;
+    function Add(const AVector: TD3DXVector4): Iz3DFloat4; overload; stdcall;
+    function Subtract(const AVector: Iz3DFloat4): Iz3DFloat4; overload; stdcall;
+    function Multiply(const AVector: Iz3DFloat4): Iz3DFloat4; stdcall;
+    function Subtract(const AVector: TD3DXVector4): Iz3DFloat4; overload; stdcall;
+    function Scale(const AScale: Single): Iz3DFloat4; stdcall;
+    function Negate: Iz3DFloat4; stdcall;
+    function Saturate: Iz3DFloat4; stdcall;
+    function Transform(const AMatrix: Iz3DMatrix): Iz3DFloat4; stdcall;
+    function Identity: Iz3DFloat4; stdcall;
+    function RotationMatrix(const AMatrix: Iz3DMatrix): Iz3DFloat4; stdcall;
+    function Dot(const AVector: Iz3DFloat4): Single; stdcall;
+    function Normalize: Iz3DFloat4; stdcall;
+    function From(const AVector: Iz3DFloat4): Iz3DFloat4; overload; stdcall;
+    function From(const AVector: TD3DXVector4): Iz3DFloat4; overload; stdcall;
+    function From(const AColor: TD3DColorValue): Iz3DFloat4; overload; stdcall;
+    function Length: Single; stdcall;
+    function LengthSq: Single; stdcall;
+
+    property D3DQuat: TD3DXQuaternion read GetD3DQuat write SetD3DQuat;
+    property D3DColor: TD3DColor read GetD3DColor;
+    property D3DColorValue: TD3DColorValue read GetD3DColorValue;
+    property OnChange: Tz3DBaseObjectEvent read GetOnChange write SetOnChange;
+    property X: Single read GetX write SetX;
+    property Y: Single read GetY write SetY;
+    property Z: Single read GetZ write SetZ;
+    property W: Single read GetW write SetW;
+    property XY: TD3DXVector2 read GetXY write SetXY;
+    property XZ: TD3DXVector2 read GetXZ write SetXZ;
+    property YZ: TD3DXVector2 read GetYZ write SetYZ;
+    property XYZ: TD3DXVector3 read GetXYZ write SetXYZ;
+    property XYW: TD3DXVector3 read GetXYW write SetXYW;
+    property XZW: TD3DXVector3 read GetXZW write SetXZW;
+    property YZW: TD3DXVector3 read GetYZW write SetYZW;
+    property XYZW: TD3DXVector4 read GetXYZW write SetXYZW;
+    property R: Single read GetX write SetX;
+    property G: Single read GetY write SetY;
+    property B: Single read GetZ write SetZ;
+    property A: Single read GetW write SetW;
+    property RG: TD3DXVector2 read GetXY write SetXY;
+    property RB: TD3DXVector2 read GetXZ write SetXZ;
+    property GB: TD3DXVector2 read GetYZ write SetYZ;
+    property RGB: TD3DXVector3 read GetXYZ write SetXYZ;
+    property RGBA: TD3DXVector4 read GetXYZW write SetXYZW;
+    property RGA: TD3DXVector3 read GetXYW write SetXYW;
+    property RBA: TD3DXVector3 read GetXZW write SetXZW;
+    property GBA: TD3DXVector3 read GetYZW write SetYZW;
+  end;
+
+
+
+
+
+
+  Iz3DPlane = interface(Iz3DBase)['{6D62675F-6538-48C5-9F61-2CD0FEA79FC0}']
+    function GetOnChange: Tz3DBaseObjectEvent; stdcall;
+    procedure SetOnChange(const Value: Tz3DBaseObjectEvent); stdcall;
+    function GetA: Single; stdcall;
+    function GetB: Single; stdcall;
+    function GetC: Single; stdcall;
+    function GetD: Single; stdcall;
+    function GetABCD: TD3DXPlane; stdcall;
+    procedure SetABCD(const Value: TD3DXPlane); stdcall;
+    procedure SetA(const Value: Single); stdcall;
+    procedure SetB(const Value: Single); stdcall;
+    procedure SetC(const Value: Single); stdcall;
+    procedure SetD(const Value: Single); stdcall;
+
+    function Intersects(const APlane: Iz3DPlane): Boolean; stdcall;
+    function Included(const APlane: Iz3DPlane): Boolean; stdcall;
+    function GetNormal: Iz3DFloat3; stdcall;
+    function Normalize: Iz3DPlane; stdcall;
+    function Dot(const AVector: Iz3DFloat3): Single; stdcall;
+
+    property OnChange: Tz3DBaseObjectEvent read GetOnChange write SetOnChange;
+    property A: Single read GetA write SetA;
+    property B: Single read GetB write SetB;
+    property C: Single read GetC write SetC;
+    property D: Single read GetD write SetD;
+    property ABCD: TD3DXPlane read GetABCD write SetABCD;
+  end;
+
+
+
+  
+  Iz3DBoundingSphere = interface;
+
+  Iz3DBoundingBox = interface(Iz3DBase)['{AE5A1947-DE52-4C85-AC97-3CEF5B60CB05}']
+    function GetLowerLeft: Iz3DFloat3; stdcall;
+    function GetUpperRight: Iz3DFloat3; stdcall;
+    function GetDimensions: Iz3DFloat3; stdcall;
+    function GetCenter: Iz3DFloat3; stdcall;
+
+    procedure ComputeFromMesh(const AMesh: ID3DXMesh); stdcall;
+    function Intersects(const ABox: Iz3DBoundingBox): Boolean; overload; stdcall;
+    function Intersects(const ASphere: Iz3DBoundingSphere): Boolean; overload; stdcall;
+
+    property Center: Iz3DFloat3 read GetCenter;
+    property LowerLeft: Iz3DFloat3 read GetLowerLeft;
+    property UpperRight: Iz3DFloat3 read GetUpperRight;
+    property Dimensions: Iz3DFloat3 read GetDimensions;
+  end;
+
+
+
+
+  Iz3DBoundingSphere = interface(Iz3DBase)['{8E182B3F-709B-4F24-A44D-A1C70DB65897}']
+    function GetCenter: Iz3DFloat3; stdcall;
+    function GetRadius: Single; stdcall;
+    procedure SetRadius(const Value: Single); stdcall;
+
+    procedure ComputeFromMesh(const AMesh: ID3DXMesh); stdcall;
+    function Intersects(const ABox: Iz3DBoundingBox): Boolean; overload; stdcall;
+    function Intersects(const ASphere: Iz3DBoundingSphere): Boolean; overload; stdcall;
+
+    property Center: Iz3DFloat3 read GetCenter;
+    property Radius: Single read GetRadius write SetRadius;
+  end;
+
+
+
+
+  Iz3DTimeOfDay = interface(Iz3DBase)['{70795724-9BAF-43E9-8225-1F41CCB7A589}']
+    function GetHours: Integer; stdcall;
+    function GetMinutes: Integer; stdcall;
+    function GetSeconds: Integer; stdcall;
+    procedure SetHours(const Value: Integer); stdcall;
+    procedure SetMinutes(const Value: Integer); stdcall;
+    procedure SetSeconds(const Value: Integer); stdcall;
+
+    function ToInteger: Integer; stdcall;
+    function ToFloat: Single; stdcall;
+
+    property Hours: Integer read GetHours write SetHours;
+    property Minutes: Integer read GetMinutes write SetMinutes;
+    property Seconds: Integer read GetSeconds write SetSeconds;
+  end;
+  
+implementation
+
+end.

@@ -1,0 +1,5474 @@
+
+
+
+
+
+     
+       
+     
+
+
+/*==============================================================================*/ 
+/*== Arcball interface                                                        ==*/ 
+/*==============================================================================*/ 
+/*== Mouse rotation handler                                                   ==*/ 
+/*==============================================================================*/ 
+
+
+    class Tz3DArcBall : public Tz3DBase,Iz3DArcBall
+{
+public:
+
+  private:
+      Iz3DMatrix FRotationMatrix; 
+
+      Iz3DMatrix FTranslationMatrix; 
+
+      Iz3DMatrix FTranslationMatrixDelta; 
+
+      TPoint FOffset; 
+
+      Integer FWidth; 
+
+      Integer FHeight; 
+
+      Iz3DFloat2 FCenter; 
+
+      Single FRadius; 
+
+      Single FTranslationRadius; 
+
+      Iz3DFloat4 FDownQuat; 
+
+      Iz3DFloat4 FCurrentQuat; 
+
+      Boolean FDragging; 
+
+      TPoint FLastMousePoint; 
+
+      Iz3DFloat3 FDownPoint; 
+
+      Iz3DFloat3 FCurrentPoint; 
+
+  protected:
+       
+SetHeight (const Integer Value 
+);
+ ;
+       
+SetWidth (const Integer Value 
+);
+ ;
+       
+SetOffset (const TPoint Value 
+);
+ ;
+      
+Iz3DFloat4 GetCurrentQuat ();
+ ;
+      
+Boolean GetDragging ();
+ ;
+      
+Integer GetHeight ();
+ ;
+      
+TPoint GetOffset ();
+ ;
+      
+Single GetRadius ();
+ ;
+      
+Single GetTranslationRadius ();
+ ;
+      
+Integer GetWidth ();
+ ;
+       
+SetRadius (const Single Value 
+);
+ ;
+       
+SetTranslationRadius (const Single Value 
+);
+ ;
+         
+Iz3DFloat3 ScreenToVector (const Single AScreenX ,
+const Single AScreenY 
+);
+ ;
+       
+OnBegin (Integer AX ,
+Integer AY 
+);
+ ;
+       
+OnMove (Integer AX ,
+Integer AY 
+);
+ ;
+     
+OnEnd ();
+ ;
+     
+Reset ();
+ ;
+             
+LRESULT HandleMessages (HWND hWnd ,
+Cardinal uMsg ,
+WPARAM wParam ,
+LPARAM lParam 
+);
+ ; ;
+  public:
+         
+Tz3DArcBall (const Iz3DBase AOwner = nil 
+);
+ ;
+          
+HandleMessages (TMsg &Msg ,
+Boolean &Handled 
+);
+ ; ;
+      
+Iz3DMatrix RotationMatrix ();
+ ;
+      
+Iz3DMatrix TranslationMatrix ();
+ ;
+      
+Iz3DMatrix TranslationDeltaMatrix ();
+ ;
+  public:
+       /** \sa GetDragging For reading*/
+Boolean Dragging; 
+
+         /** \sa GetTranslationRadius For reading   \sa SetTranslationRadius For writing */
+Single TranslationRadius; 
+
+         /** \sa GetRadius For reading   \sa SetRadius For writing */
+Single Radius; 
+
+         /** \sa GetWidth For reading   \sa SetWidth For writing */
+Integer Width; 
+
+         /** \sa GetHeight For reading   \sa SetHeight For writing */
+Integer Height; 
+
+         /** \sa GetOffset For reading   \sa SetOffset For writing */
+TPoint Offset; 
+
+       /** \sa GetCurrentQuat For reading*/
+Iz3DFloat4 CurrentQuat; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Base camera interface                                                    ==*/ 
+/*==============================================================================*/ 
+/*== Ancestor for all cameras                                                 ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DCameraKeys : public Tz3DBase,Iz3DCameraKeys
+{
+public:
+
+  private:
+      Boolean FEnableDefaultKeys; 
+
+      Boolean FAutoZoom; 
+
+      Char FMoveForward; 
+
+      Char FMoveBackward; 
+
+      Char FMoveRight; 
+
+      Char FMoveLeft; 
+
+      Char FMoveUp; 
+
+      Char FMoveDown; 
+
+      Char FZoomIn; 
+
+      Char FZoomOut; 
+
+  protected:
+      
+Boolean GetAutoZoom ();
+ ;
+      
+Char GetZoomIn ();
+ ;
+      
+Char GetZoomOut ();
+ ;
+       
+SetAutoZoom (const Boolean Value 
+);
+ ;
+       
+SetZoomIn (const Char Value 
+);
+ ;
+       
+SetZoomOut (const Char Value 
+);
+ ;
+      
+Boolean GetEnableDefaultKeys ();
+ ;
+       
+SetEnableDefaultKeys (const Boolean Value 
+);
+ ;
+      
+Char GetMoveBackward ();
+ ;
+      
+Char GetMoveDown ();
+ ;
+      
+Char GetMoveForward ();
+ ;
+      
+Char GetMoveLeft ();
+ ;
+      
+Char GetMoveRight ();
+ ;
+      
+Char GetMoveUp ();
+ ;
+       
+SetMoveBackward (const Char Value 
+);
+ ;
+       
+SetMoveDown (const Char Value 
+);
+ ;
+       
+SetMoveForward (const Char Value 
+);
+ ;
+       
+SetMoveLeft (const Char Value 
+);
+ ;
+       
+SetMoveRight (const Char Value 
+);
+ ;
+       
+SetMoveUp (const Char Value 
+);
+ ;
+  public:
+         
+Tz3DCameraKeys (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetEnableDefaultKeys For reading   \sa SetEnableDefaultKeys For writing */
+Boolean EnableDefaultKeys; 
+
+         /** \sa GetMoveForward For reading   \sa SetMoveForward For writing */
+Char MoveForward; 
+
+         /** \sa GetMoveBackward For reading   \sa SetMoveBackward For writing */
+Char MoveBackward; 
+
+         /** \sa GetMoveRight For reading   \sa SetMoveRight For writing */
+Char MoveRight; 
+
+         /** \sa GetMoveLeft For reading   \sa SetMoveLeft For writing */
+Char MoveLeft; 
+
+         /** \sa GetMoveUp For reading   \sa SetMoveUp For writing */
+Char MoveUp; 
+
+         /** \sa GetMoveDown For reading   \sa SetMoveDown For writing */
+Char MoveDown; 
+
+         /** \sa GetZoomIn For reading   \sa SetZoomIn For writing */
+Char ZoomIn; 
+
+         /** \sa GetZoomOut For reading   \sa SetZoomOut For writing */
+Char ZoomOut; 
+
+         /** \sa GetAutoZoom For reading   \sa SetAutoZoom For writing */
+Boolean AutoZoom; 
+
+ };
+
+
+    class Tz3DBaseCamera : public Tz3DScenarioLinkedEntity,Iz3DBaseCamera
+{
+public:
+
+  private:
+      Iz3DCameraKeys FCameraKeys; 
+
+      Iz3DMatrix FViewMatrix; 
+
+      Iz3DMatrix FProjectionMatrix; 
+
+     Tz3DGamePad FGamePad[-1]; /*!< [0..999..-1] */
+
+      Iz3DFloat3 FGamePadLeftThumb; 
+
+      Iz3DFloat3 FGamePadRightThumb; 
+
+      Boolean FInvertPitch; 
+
+     Double FGamePadLastActive[999]; /*!< [0..999] */
+
+      Integer FKeyDownCount; 
+
+    () Byte FKeys[999]; /*!< [999..999..999] */
+
+      Iz3DFloat3 FKeyboardDirection; 
+
+      TPoint FLastMousePosition; 
+
+      Boolean FMouseLButtonDown; 
+
+      Boolean FMouseMButtonDown; 
+
+      Boolean FMouseRButtonDown; 
+
+      Integer FCurrentButtonMask; 
+
+      Integer FMouseWheelDelta; 
+
+      Iz3DFloat2 FMouseDelta; 
+
+      Integer FSmoothFrameCount; 
+
+      Iz3DFloat3 FDefaultEye; 
+
+      Iz3DFloat3 FDefaultLookAt; 
+
+      Iz3DFloat3 FPosition; 
+
+      Iz3DFloat3 FLookAt; 
+
+      Single FCameraYawAngle; 
+
+      Single FCameraPitchAngle; 
+
+      TRect FDragRect; 
+
+      Iz3DFloat3 FVelocity; 
+
+      Boolean FSmoothMovement; 
+
+      Iz3DFloat3 FVelocityDrag; 
+
+      Single FDragTimer; 
+
+      Single FTotalDragTime; 
+
+      Iz3DFloat2 FRotVelocity; 
+
+      Single FRotationScale; 
+
+      Single FMoveScale; 
+
+      Boolean FEnableMovement; 
+
+      Boolean FEnableYMovement; 
+
+      Boolean FClipping; 
+
+      Boolean FActive; 
+
+      Single FZoom; 
+
+      Iz3DFloat3 FClipMin; 
+
+      Iz3DFloat3 FClipMax; 
+
+      Single FMaxZoom; 
+
+      Single FMinZoom; 
+
+      Single FZoomFactor; 
+
+      Tz3DZoomMode FZoomMode; 
+
+  protected:
+      
+Single GetZoomFactor ();
+ ;
+       
+SetZoomFactor (const Single Value 
+);
+ ;
+      
+Single GetMaxZoom ();
+ ;
+      
+Single GetMinZoom ();
+ ;
+      
+Tz3DZoomMode GetZoomMode ();
+ ;
+       
+SetMaxZoom (const Single Value 
+);
+ ;
+       
+SetMinZoom (const Single Value 
+);
+ ;
+       
+SetZoomMode (const Tz3DZoomMode Value 
+);
+ ;
+       
+VectorChanged (const Iz3DBase ASender 
+);
+ ; ;
+      
+Iz3DCameraKeys GetKeys ();
+ ;
+      
+Single GetZoom ();
+ ;
+      
+Boolean GetDragging ();
+ ;
+       
+SetZoom (const Single Value 
+);
+ ;
+      
+Iz3DFloat3 GetClipMax ();
+ ;
+      
+Iz3DFloat3 GetClipMin ();
+ ;
+      
+Boolean GetClipping ();
+ ;
+      
+TRect GetDragRect ();
+ ;
+      
+Boolean GetActive ();
+ ;
+      
+Boolean GetEnableMovement ();
+ ;
+      
+Boolean GetEnableYMovement ();
+ ;
+      
+Boolean GetInvertPitch ();
+ ;
+      
+Iz3DFloat3 GetLookAt ();
+ ;
+      
+Boolean GetMouseLButtonDown ();
+ ;
+      
+Boolean GetMouseMButtonDown ();
+ ;
+      
+Boolean GetMouseRButtonDown ();
+ ;
+      
+Single GetMoveScale ();
+ ;
+      
+Iz3DFloat3 GetPosition ();
+ ;
+      
+Integer GetSmoothFrameCount ();
+ ;
+      
+Boolean GetSmoothMovement ();
+ ;
+      
+Single GetTotalDragTime ();
+ ;
+       
+SetClipping (const Boolean Value 
+);
+ ;
+       
+SetActive (const Boolean Value 
+);
+ ;
+       
+SetEnableMovement (const Boolean Value 
+);
+ ;
+       
+SetEnableYMovement (const Boolean Value 
+);
+ ;
+       
+SetInvertPitch (const Boolean Value 
+);
+ ;
+       
+SetMoveScale (const Single Value 
+);
+ ;
+       
+SetSmoothFrameCount (const Integer Value 
+);
+ ;
+       
+SetSmoothMovement (const Boolean Value 
+);
+ ;
+       
+SetTotalDragTime (const Single Value 
+);
+ ;
+        
+Tz3DCameraInputKeys MapKey (const LongWord AKey 
+);
+ ; ;
+        
+Boolean IsKeyDown (const Byte AKey 
+);
+ ;
+        
+Boolean WasKeyDown (const Byte AKey 
+);
+ ;
+       
+ConstrainToBoundary (Iz3DFloat3 &AVector 
+);
+ ;
+       
+UpdateVelocity (const Single AElapsedTime 
+);
+ ; ;
+          
+GetInput (const Boolean AGetKeyboardInput ,
+const Boolean AGetMouseInput ,
+const Boolean AGetGamepadInput ,
+const Boolean AResetCursorAfterMove 
+);
+ ;
+                           
+z3DMessage (const HWND AWnd ,
+const Cardinal AMsg ,
+const Integer AwParam ,
+const Integer AlParam ,
+Boolean &ADefault ,
+Integer &AResult 
+);
+ ; ;
+     
+z3DFrameMove ();
+ ; ;
+     
+z3DResetDevice ();
+ ; ;
+     
+UpdateViewParams ();
+ ; ;
+     
+UpdateProjection ();
+ ; ;
+  public:
+         
+Tz3DBaseCamera (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DBaseCamera ();
+ ;
+         .01     
+SetScalers (const Single ARotationScaler = 0 ,
+const Single AMoveScaler = 5 
+);
+ ;
+       
+SetDragRect (const TRect ARect 
+);
+ ; ;
+      
+Iz3DMatrix ViewMatrix ();
+ ;
+      
+Iz3DMatrix ProjectionMatrix ();
+ ;
+  public:
+       /** \sa GetMouseLButtonDown For reading*/
+Boolean MouseLButtonDown; 
+
+       /** \sa GetMouseMButtonDown For reading*/
+Boolean MouseMButtonDown; 
+
+       /** \sa GetMouseRButtonDown For reading*/
+Boolean MouseRButtonDown; 
+
+       /** \sa GetKeys For reading*/
+Iz3DCameraKeys Keys; 
+
+       /** \sa GetDragging For reading*/
+Boolean Dragging; 
+
+         /** \sa GetDragRect For reading   \sa SetDragRect For writing */
+TRect DragRect; 
+
+         /** \sa GetTotalDragTime For reading   \sa SetTotalDragTime For writing */
+Single DragTime; 
+
+          /** \sa GetActive For reading   \sa SetActive For writing */
+Boolean Active; 
+
+          /** \sa GetInvertPitch For reading   \sa SetInvertPitch For writing */
+Boolean InvertPitch; 
+
+         /** \sa GetEnableMovement For reading   \sa SetEnableMovement For writing */
+Boolean EnablePosMovement; 
+
+          /** \sa GetEnableYMovement For reading   \sa SetEnableYMovement For writing */
+Boolean EnableYMovement; 
+
+          /** \sa GetSmoothMovement For reading   \sa SetSmoothMovement For writing */
+Boolean SmoothMovement; 
+
+          /** \sa GetClipping For reading   \sa SetClipping For writing */
+Boolean Clipping; 
+
+       /** \sa GetClipMin For reading*/
+Iz3DFloat3 ClipMin; 
+
+       /** \sa GetClipMax For reading*/
+Iz3DFloat3 ClipMax; 
+
+          /** \sa GetSmoothFrameCount For reading   \sa SetSmoothFrameCount For writing */
+Integer SmoothFrames; 
+
+       /** \sa GetPosition For reading*/
+Iz3DFloat3 Position; 
+
+       /** \sa GetLookAt For reading*/
+Iz3DFloat3 LookAt; 
+
+         /** \sa GetMoveScale For reading   \sa SetMoveScale For writing */
+Single MoveScale; 
+
+         /** \sa GetZoom For reading   \sa SetZoom For writing */
+Single Zoom; 
+
+         /** \sa GetZoomFactor For reading   \sa SetZoomFactor For writing */
+Single ZoomFactor; 
+
+         /** \sa GetMaxZoom For reading   \sa SetMaxZoom For writing */
+Single MaxZoom; 
+
+         /** \sa GetMinZoom For reading   \sa SetMinZoom For writing */
+Single MinZoom; 
+
+         /** \sa GetZoomMode For reading   \sa SetZoomMode For writing */
+Tz3DZoomMode ZoomMode; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== First person camera interface                                            ==*/ 
+/*==============================================================================*/ 
+/*== Camera that centers its view on a model                                  ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DBaseCameraMouseButtons : public Tz3DBase,Iz3DObjectCameraMouseButtons
+{
+public:
+
+  private:
+      Tz3DMouseButton FRotateObject; 
+
+      Tz3DMouseButton FZoom; 
+
+      Tz3DMouseButton FRotateCamera; 
+
+  protected:
+       
+SetRotateCamera (const Tz3DMouseButton Value 
+);
+ ;
+       
+SetRotateObject (const Tz3DMouseButton Value 
+);
+ ;
+       
+SetZoom (const Tz3DMouseButton Value 
+);
+ ;
+      
+Tz3DMouseButton GetRotateCamera ();
+ ;
+      
+Tz3DMouseButton GetRotateObject ();
+ ;
+      
+Tz3DMouseButton GetZoom ();
+ ;
+  public:
+         
+Tz3DBaseCameraMouseButtons (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+          /** \sa GetRotateObject For reading   \sa SetRotateObject For writing */
+Tz3DMouseButton RotateObject; 
+
+          /** \sa GetZoom For reading   \sa SetZoom For writing */
+Tz3DMouseButton Zoom; 
+
+          /** \sa GetRotateCamera For reading   \sa SetRotateCamera For writing */
+Tz3DMouseButton RotateCamera; 
+
+ };
+
+
+    class Tz3DObjectCamera : public Tz3DBaseCamera,Iz3DObjectCamera
+{
+public:
+
+  private:
+      Iz3DArcBall FWorldArcBall; 
+
+      Iz3DArcBall FViewArcBall; 
+
+      Iz3DMatrix FObjectLastRot; 
+
+      Iz3DMatrix FObjectRot; 
+
+      Iz3DMatrix FWorldMatrix; 
+
+      Integer FRotateObjectButtonMask; 
+
+      Integer FZoomButtonMask; 
+
+      Integer FRotateCameraButtonMask; 
+
+      Boolean FAttached; 
+
+      Boolean FLimitPitch; 
+
+      Single FRadius; 
+
+      Single FDefaultRadius; 
+
+      Single FMinRadius; 
+
+      Single FMaxRadius; 
+
+      Boolean FDragSinceLastUpdate; 
+
+      Iz3DObjectCameraMouseButtons FMouseButtons; 
+
+      Iz3DMatrix FCameraRotLast; 
+
+      Iz3DScenarioObject FObject; 
+
+  protected:
+      
+Boolean GetAttached ();
+ ;
+      
+Boolean GetLimitPitch ();
+ ;
+      
+Single GetMaxRadius ();
+ ;
+      
+Single GetMinRadius ();
+ ;
+      
+Single GetRadius ();
+ ;
+       
+SetAttached (const Boolean Value 
+);
+ ;
+       
+SetLimitPitch (const Boolean Value 
+);
+ ;
+       
+SetMaxRadius (const Single Value 
+);
+ ;
+       
+SetMinRadius (const Single Value 
+);
+ ;
+       
+SetRadius (const Single Value 
+);
+ ;
+      
+Iz3DObjectCameraMouseButtons GetMouseButtons ();
+ ;
+                        
+SetButtonMasks (const Integer ARotateObjectButtonMask = z3DcMouseLeftButton ,
+const Integer AZoomButtonMask = z3DcMouseWheel ,
+const Integer ARotateCameraButtonMask = z3DcMouseRightButton 
+);
+ ;
+     
+z3DFrameMove ();
+ ; ;
+     
+z3DResetDevice ();
+ ; ;
+                           
+z3DMessage (const HWND AWnd ,
+const Cardinal AMsg ,
+const Integer AwParam ,
+const Integer AlParam ,
+Boolean &ADefault ,
+Integer &AResult 
+);
+ ; ;
+     
+UpdateViewParams ();
+ ; ;
+  public:
+       
+SetDragRect (const TRect ARect 
+);
+ ; ;
+         
+Tz3DObjectCamera (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DObjectCamera ();
+ ;
+             .9
+SetWindow (const Integer AWidth ,
+const Integer AHeight ,
+const Single AArcballRadius = 0 
+);
+ ;
+      
+Iz3DMatrix GetWorldMatrix ();
+ ;
+       
+SetWorldMatrix (const Iz3DMatrix AMatrix 
+);
+ ;
+      
+Iz3DMatrix ObjectMatrix ();
+ ;
+       
+SetObject (const Iz3DScenarioObject AObject 
+);
+ ;
+  public:
+       /** \sa GetMouseButtons For reading*/
+Iz3DObjectCameraMouseButtons MouseButtons; 
+
+          /** \sa GetAttached For reading   \sa SetAttached For writing */
+Boolean Attached; 
+
+          /** \sa GetLimitPitch For reading   \sa SetLimitPitch For writing */
+Boolean LimitPitch; 
+
+         /** \sa GetRadius For reading   \sa SetRadius For writing */
+Single Radius; 
+
+         /** \sa GetMinRadius For reading   \sa SetMinRadius For writing */
+Single MinRadius; 
+
+         /** \sa GetMaxRadius For reading   \sa SetMaxRadius For writing */
+Single MaxRadius; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== First person camera interface                                            ==*/ 
+/*==============================================================================*/ 
+/*== Camera that acts like an entity looking at the world                     ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DFirstPersonCameraRotateButtons : public Tz3DBase,Iz3DFirstPersonCameraRotateButtons
+{
+public:
+
+  private:
+      Iz3DFirstPersonCamera FOwner; 
+
+      Boolean FIgnoreButtons; 
+
+      Boolean FMiddle; 
+
+      Boolean FRight; 
+
+      Boolean FLeft; 
+
+  protected:
+       
+SetIgnoreButtons (const Boolean Value 
+);
+ ;
+       
+SetLeft (const Boolean Value 
+);
+ ;
+       
+SetMiddle (const Boolean Value 
+);
+ ;
+       
+SetRight (const Boolean Value 
+);
+ ;
+      
+Boolean GetIgnoreButtons ();
+ ;
+      
+Boolean GetLeft ();
+ ;
+      
+Boolean GetMiddle ();
+ ;
+      
+Boolean GetRight ();
+ ;
+  public:
+       
+Tz3DFirstPersonCameraRotateButtons (const Iz3DFirstPersonCamera AOwner 
+);
+
+  public:
+         /** \sa GetLeft For reading   \sa SetLeft For writing */
+Boolean Left; 
+
+         /** \sa GetMiddle For reading   \sa SetMiddle For writing */
+Boolean Middle; 
+
+         /** \sa GetRight For reading   \sa SetRight For writing */
+Boolean Right; 
+
+         /** \sa GetIgnoreButtons For reading   \sa SetIgnoreButtons For writing */
+Boolean IgnoreButtons; 
+
+ };
+
+
+     class Tz3DFirstPersonCamera : public Tz3DBaseCamera,Iz3DScenarioDynamicObject
+{
+public:
+
+  private:
+      Iz3DMatrix FCameraWorld; 
+
+      Integer FActiveButtonMask; 
+
+      Boolean FResetCursorAfterMove; 
+
+      Iz3DFirstPersonCameraRotateButtons FRotateButtons; 
+
+      Iz3DScenarioDynamicObject FObject; 
+
+
+      Iz3DBoundingBox FBoundingBox; 
+
+      Iz3DBoundingSphere FBoundingSphere; 
+
+      Iz3DScenarioObjectSubset FSubset; 
+
+      Iz3DFloat3 FSWOAcceleration; 
+
+      Iz3DFloat3 FSWOVelocity; 
+
+      Boolean FGround; 
+
+      Boolean FEnableFlashLight; 
+
+      Iz3DLight FFlashLight; 
+
+  protected:
+      
+Boolean GetEnableFlashLight ();
+ ;
+       
+SetEnableFlashLight (const Boolean Value 
+);
+ ;
+      
+Boolean GetResetCursorAfterMove ();
+ ;
+      
+Iz3DFirstPersonCameraRotateButtons GetRotateButtons ();
+ ;
+       
+SetResetCursorAfterMove (const Boolean Value 
+);
+ ;
+     
+z3DFrameMove ();
+ ; ;
+         
+SetButtons (const Boolean ALeft ,
+const Boolean AMiddle ,
+const Boolean ARight 
+);
+ ;
+
+
+
+      
+Iz3DFloat3 GetCenter ();
+ ;
+      
+Iz3DFloat4 GetViewCenter ();
+ ;
+      
+Boolean GetVisible ();
+ ;
+      
+Iz3DBoundingBox GetBoundingBox ();
+ ;
+      
+Iz3DBoundingSphere GetBoundingSphere ();
+ ;
+      
+Tz3DScenarioObjectShape GetShape ();
+ ;
+      
+Integer GetSubsetCount ();
+ ;
+        
+Iz3DScenarioObjectSubset GetSubsets (const Integer I 
+);
+ ;
+       
+SetVisible (const Boolean Value 
+);
+ ;
+
+     
+Show ();
+ ;
+     
+Hide ();
+ ;
+
+      
+Iz3DFloat3 GetAcceleration ();
+ ;
+      
+Iz3DFloat3 GetVelocity ();
+ ;
+      
+Boolean GetGround ();
+ ;
+       
+SetGround (const Boolean Value 
+);
+ ;
+      
+Boolean GetEnablePhysics ();
+ ;
+       
+SetEnablePhysics (const Boolean Value 
+);
+ ;
+       
+VectorChanged (const Iz3DBase ASender 
+);
+ ; ;
+       
+UpdateVelocity (const Single AElapsedTime 
+);
+ ; ;
+       
+z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+
+      ; ;
+     
+z3DStopScenario ();
+ ; ;
+                  
+z3DKeyboard (const Cardinal AChar ,
+const Boolean AKeyDown ,
+const Boolean AAltDown 
+);
+ ; ;
+  public:
+         
+Tz3DFirstPersonCamera (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DFirstPersonCamera ();
+ ;
+       
+SetFirstPerson (const Iz3DScenarioDynamicObject AObject 
+);
+ ;
+      
+Iz3DMatrix GetWorldMatrix ();
+ ;
+      
+Iz3DFloat3 GetWorldRight ();
+ ;
+      
+Iz3DFloat3 GetWorldUp ();
+ ;
+      
+Iz3DFloat3 GetWorldAhead ();
+ ;
+      
+Iz3DFloat3 GetEyePt ();
+ ;
+  public:
+       /** \sa GetRotateButtons For reading*/
+Iz3DFirstPersonCameraRotateButtons RotateButtons; 
+
+          /** \sa GetResetCursorAfterMove For reading   \sa SetResetCursorAfterMove For writing */
+Boolean ResetCursorAfterMove; 
+
+
+
+
+       /** \sa GetShape For reading*/
+Tz3DScenarioObjectShape Shape; 
+
+       /** \sa GetBoundingSphere For reading*/
+Iz3DBoundingSphere BoundingSphere; 
+
+       /** \sa GetBoundingBox For reading*/
+Iz3DBoundingBox BoundingBox; 
+
+       /** \sa GetCenter For reading*/
+Iz3DFloat3 Center; 
+
+       /** \sa GetViewCenter For reading*/
+Iz3DFloat4 ViewCenter; 
+
+    /*[const I: Integer]*/   /** \sa GetSubsets For reading*/
+Iz3DScenarioObjectSubset Subsets; 
+
+       /** \sa GetSubsetCount For reading*/
+Integer SubsetCount; 
+
+         /** \sa GetVisible For reading   \sa SetVisible For writing */
+Boolean Visible; 
+
+
+       /** \sa GetAcceleration For reading*/
+Iz3DFloat3 Acceleration; 
+
+       /** \sa GetVelocity For reading*/
+Iz3DFloat3 Velocity; 
+
+         /** \sa GetGround For reading   \sa SetGround For writing */
+Boolean Ground; 
+
+         /** \sa GetEnablePhysics For reading   \sa SetEnablePhysics For writing */
+Boolean EnablePhysics; 
+
+
+         /** \sa GetEnableFlashLight For reading   \sa SetEnableFlashLight For writing */
+Boolean EnableFlashLight; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Camera controller interface                                              ==*/ 
+/*==============================================================================*/ 
+/*== Manages and controls camera creation and allows to easy activate or      ==*/ 
+/*== disable a camera                                                         ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DCameraController : public Tz3DBase,Iz3DCameraController
+{
+public:
+
+  private:
+      IInterfaceList FCameras; 
+
+      Integer FActiveCameraIndex; 
+
+  protected:
+      
+Integer GetCameraCount ();
+ ;
+      
+Iz3DBaseCamera GetActiveCamera ();
+ ;
+       
+SetActiveCamera (const Iz3DBaseCamera Value 
+);
+ ;
+        
+Iz3DBaseCamera GetCameras (const Integer AIndex 
+);
+ ;
+  public:
+         
+Tz3DCameraController (const Iz3DBase AOwner = nil 
+);
+ ;
+       
+AddCamera (const Iz3DBaseCamera ACamera 
+);
+ ;
+       
+RemoveCamera (const Iz3DBaseCamera ACamera 
+);
+ ;
+      
+Iz3DObjectCamera CreateObjectCamera ();
+ ;
+      
+Iz3DFirstPersonCamera CreateFirstPersonCamera ();
+ ;
+  public:
+    /*[const AIndex: Integer]*/   /** \sa GetCameras For reading*/
+Iz3DBaseCamera Cameras; 
+
+       /** \sa GetCameraCount For reading*/
+Integer CameraCount; 
+
+         /** \sa GetActiveCamera For reading   \sa SetActiveCamera For writing */
+Iz3DBaseCamera ActiveCamera; 
+
+ };
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Sky box interface                                                        ==*/ 
+/*==============================================================================*/ 
+/*== Creates a skybox with an environment map texture                         ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DSkyBox : public Tz3DBase,Iz3DSkyBox
+{
+public:
+
+  private:
+      Iz3DVertexBuffer FVertexBuffer; 
+
+      Iz3DCubeTexture FTexture; 
+
+      Boolean FActive; 
+
+  protected:
+      
+Boolean GetActive ();
+ ;
+      
+PWideChar GetFileName ();
+ ;
+      
+Iz3DCubeTexture GetTexture ();
+ ;
+       
+SetActive (const Boolean Value 
+);
+ ;
+       
+SetFileName (const PWideChar Value 
+);
+ ;
+     
+UpdateVertexBuffer ();
+ ;
+     
+CreateTexture ();
+ ;
+
+     
+FrameRender ();
+ ;
+     
+StartScenario ();
+ ;
+     
+ResetDevice ();
+ ;
+     
+FrameMove ();
+ ;
+         
+Init (const Iz3DBase AOwner = nil 
+);
+ ; ;
+     
+Cleanup ();
+ ; ;
+  public:
+         
+Tz3DSkyBox (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+       /** \sa GetTexture For reading*/
+Iz3DCubeTexture Texture; 
+
+         /** \sa GetFileName For reading   \sa SetFileName For writing */
+PWideChar FileName; 
+
+         /** \sa GetActive For reading   \sa SetActive For writing */
+Boolean Active; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Sky interface                                                            ==*/ 
+/*==============================================================================*/ 
+/*== Manages a sky emulation for the scene and allows to use automatic lights ==*/ 
+/*== like stars or planets                                                    ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DSky : public Tz3DLinked,Iz3DSky
+{
+public:
+
+  private:
+      Iz3DSkyBox FSkyBox; 
+
+      Tz3DSkyDomeMode FDomeMode; 
+
+      Boolean FActive; 
+
+      Iz3DWorld FWorld; 
+
+  protected:
+      
+Iz3DWorld GetWorld ();
+ ;
+       
+SetWorld (const Iz3DWorld Value 
+);
+ ;
+      
+Tz3DSkyDomeMode GetDomeMode ();
+ ;
+       
+SetDomeMode (const Tz3DSkyDomeMode Value 
+);
+ ;
+      
+Iz3DSkyBox GetSkyBox ();
+ ;
+      
+Boolean GetActive ();
+ ;
+       
+SetActive (const Boolean Value 
+);
+ ;
+
+     
+z3DResetDevice ();
+ ; ;
+       
+z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ; ;
+     
+z3DFrameMove ();
+ ; ;
+     
+z3DFrameRender ();
+ ; ;
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+     
+Cleanup ();
+ ; ;
+  public:
+      
+Iz3DLight AddStarLight ();
+ ;
+  public:
+       /** \sa GetSkyBox For reading*/
+Iz3DSkyBox SkyBox; 
+
+         /** \sa GetDomeMode For reading   \sa SetDomeMode For writing */
+Tz3DSkyDomeMode DomeMode; 
+
+         /** \sa GetActive For reading   \sa SetActive For writing */
+Boolean Active; 
+
+         /** \sa GetWorld For reading   \sa SetWorld For writing */
+Iz3DWorld World; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Earth sky interface                                                      ==*/ 
+/*==============================================================================*/ 
+/*== A specific descendant from the sky interface that manages a earth-like   ==*/ 
+/*== sky with sunlight and/or moonlight                                       ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DEarthSky : public Tz3DSky,Iz3DEarthSky
+{
+public:
+
+  private:
+      Iz3DLight FSunLight; 
+
+      Iz3DLight FMoonLight; 
+
+      Integer FTime; 
+
+      Boolean FEnableSunLight; 
+
+      Boolean FEnableMoonLight; 
+
+      Iz3DFloat3 FMoonHorizonColor; 
+
+      Iz3DFloat3 FSunHorizonColor; 
+
+      Iz3DFloat3 FMoonZenithColor; 
+
+      Iz3DFloat3 FSunZenithColor; 
+
+      Boolean FAutoSetFog; 
+
+      Boolean FAutoSetAmbient; 
+
+  protected:
+      
+Boolean GetAutoSetAmbient ();
+ ;
+      
+Boolean GetAutoSetFog ();
+ ;
+       
+SetAutoSetAmbient (const Boolean Value 
+);
+ ;
+       
+SetAutoSetFog (const Boolean Value 
+);
+ ;
+      
+Iz3DFloat3 GetMoonHorizonColor ();
+ ;
+      
+Iz3DFloat3 GetMoonZenithColor ();
+ ;
+      
+Iz3DFloat3 GetSunHorizonColor ();
+ ;
+      
+Iz3DFloat3 GetSunZenithColor ();
+ ;
+      
+Boolean GetEnableMoonLight ();
+ ;
+      
+Boolean GetEnableSunLight ();
+ ;
+       
+SetEnableMoonLight (const Boolean Value 
+);
+ ;
+       
+SetEnableSunLight (const Boolean Value 
+);
+ ;
+      
+Integer GetTime ();
+ ;
+       
+SetTime (const Integer Value 
+);
+ ;
+      
+Iz3DLight GetSunLight ();
+ ;
+      
+Iz3DLight GetMoonLight ();
+ ;
+     
+UpdateSky ();
+ ;
+     
+CreateLights ();
+ ;
+     
+z3DFrameRender ();
+ ; ;
+       
+z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ; ;
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+     
+Cleanup ();
+ ; ;
+  public:
+         
+Tz3DEarthSky (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetAutoSetFog For reading   \sa SetAutoSetFog For writing */
+Boolean AutoSetFog; 
+
+         /** \sa GetAutoSetAmbient For reading   \sa SetAutoSetAmbient For writing */
+Boolean AutoSetAmbient; 
+
+       /** \sa GetSunLight For reading*/
+Iz3DLight SunLight; 
+
+       /** \sa GetMoonLight For reading*/
+Iz3DLight MoonLight; 
+
+         /** \sa GetTime For reading   \sa SetTime For writing */
+Integer Time; 
+
+         /** \sa GetEnableSunLight For reading   \sa SetEnableSunLight For writing */
+Boolean EnableSunLight; 
+
+         /** \sa GetEnableMoonLight For reading   \sa SetEnableMoonLight For writing */
+Boolean EnableMoonLight; 
+
+       /** \sa GetSunHorizonColor For reading*/
+Iz3DFloat3 SunHorizonColor; 
+
+       /** \sa GetMoonHorizonColor For reading*/
+Iz3DFloat3 MoonHorizonColor; 
+
+       /** \sa GetSunZenithColor For reading*/
+Iz3DFloat3 SunZenithColor; 
+
+       /** \sa GetMoonZenithColor For reading*/
+Iz3DFloat3 MoonZenithColor; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Sky controller interface                                                 ==*/ 
+/*==============================================================================*/ 
+/*== Controls the sky emulation by managing different sky types               ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DSkyController : public Tz3DBase,Iz3DSkyController
+{
+public:
+
+  private:
+      Iz3DEffect FEffect; 
+
+      IInterfaceList FSkies; 
+
+      Integer FActiveSky; 
+
+  protected:
+      
+Iz3DEffect GetEffect ();
+ ;
+        
+Iz3DSky GetSkies (const Integer AIndex 
+);
+ ;
+      
+Iz3DSky GetActiveSky ();
+ ;
+       
+SetActiveSky (const Iz3DSky Value 
+);
+ ;
+      
+Integer GetSkyCount ();
+ ;
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+     
+Cleanup ();
+ ; ;
+  public:
+      
+Iz3DSky CreateSky ();
+ ;
+      
+Iz3DEarthSky CreateEarthSky ();
+ ;
+       
+AddSky (const Iz3DSky ASky 
+);
+ ;
+  public:
+         /** \sa GetActiveSky For reading   \sa SetActiveSky For writing */
+Iz3DSky ActiveSky; 
+
+       /** \sa GetSkyCount For reading*/
+Integer SkyCount; 
+
+    /*[const AIndex: Integer]*/   /** \sa GetSkies For reading*/
+Iz3DSky Skies; 
+
+       /** \sa GetEffect For reading*/
+Iz3DEffect Effect; 
+
+ };
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Rope object                                                              ==*/ 
+/*==============================================================================*/ 
+/*== Creates a generic rope (cable, thread, etc.) in the scenario             ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DRope : public Tz3DScenarioObject,Iz3DRope
+{
+public:
+
+  private:
+      Iz3DFloat3 FPointA; 
+
+      Iz3DFloat3 FPointB; 
+
+      Single FLength; 
+
+      Single FWidth; 
+
+      Iz3DMaterial FMaterial; 
+
+      Iz3DRopeController FController; 
+
+  protected:
+      
+Single GetLength ();
+ ;
+      
+Iz3DMaterial GetMaterial ();
+ ;
+      
+Iz3DFloat3 GetPointA ();
+ ;
+      
+Iz3DFloat3 GetPointB ();
+ ;
+      
+Single GetWidth ();
+ ;
+       
+SetLength (const Single Value 
+);
+ ;
+       
+SetWidth (const Single Value 
+);
+ ;
+  public:
+       
+Tz3DRope (const Iz3DRopeController AController 
+);
+
+       
+Render (const Iz3DFloat3 AViewOrigin 
+);
+ ;
+  public:
+       /** \sa GetPointA For reading*/
+Iz3DFloat3 PointA; 
+
+       /** \sa GetPointB For reading*/
+Iz3DFloat3 PointB; 
+
+         /** \sa GetLength For reading   \sa SetLength For writing */
+Single Length; 
+
+         /** \sa GetWidth For reading   \sa SetWidth For writing */
+Single Width; 
+
+       /** \sa GetMaterial For reading*/
+Iz3DMaterial Material; 
+
+ };
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== Rope controller                                                          ==*/ 
+/*==============================================================================*/ 
+/*== Manages a set of ropes with similar properties and shares a buffer       ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DRopeController : public Tz3DLinked,Iz3DRopeController
+{
+public:
+
+  private:
+      Integer FSegments; 
+
+      Iz3DVertexBuffer FRopeBuffer; 
+
+      IInterfaceList FRopes; 
+
+  protected:
+      
+Integer GetRopeCount ();
+ ;
+        
+Iz3DRope GetRopes (const Integer I 
+);
+ ;
+      
+Iz3DVertexBuffer GetRopeBuffer ();
+ ;
+      
+Integer GetSegments ();
+ ;
+       
+SetSegments (const Integer Value 
+);
+ ;
+     
+z3DLightingRender ();
+ ; ;
+     
+z3DDirectLightRender ();
+ ; ;
+     
+z3DFrameRender ();
+ ; ;
+  public:
+         
+Tz3DRopeController (const Iz3DBase AOwner = nil 
+);
+ ;
+      
+Iz3DRope CreateRope ();
+ ;
+       
+RemoveRope (const Iz3DRope ARope 
+);
+ ;
+                 
+RenderRopes (const Iz3DFloat3 AViewOrigin ,
+const Boolean AUniform = False 
+);
+ ;
+  public:
+    /*[const I: Integer]*/   /** \sa GetRopes For reading*/
+Iz3DRope Ropes; 
+
+       /** \sa GetRopeBuffer For reading*/
+Iz3DVertexBuffer RopeBuffer; 
+
+       /** \sa GetRopeCount For reading*/
+Integer RopeCount; 
+
+         /** \sa GetSegments For reading   \sa SetSegments For writing */
+Integer Segments; 
+
+ };
+
+
+
+
+
+
+
+     
+Iz3DFloat4 z3DBallPointsToQuat (const Iz3DFloat3 AFrom ,
+const Iz3DFloat3 ATo 
+);
+ ;
+
+  
+Iz3DArcBall z3DCreateArcBall ();
+ ;
+
+// Camera controller management
+
+  
+Iz3DCameraController z3DCreateCameraController ();
+ ;
+   
+z3DSetCustomCameraController (const Iz3DCameraController AController 
+);
+ ;
+  
+Iz3DCameraController z3DCameraController ();
+ ;
+
+// Sky controller management
+
+  
+Iz3DSkyController z3DSkyController ();
+ ;
+  
+Iz3DSkyController z3DCreateSkyController ();
+ ;
+   
+z3DSetCustomSkyController (const Iz3DSkyController AController 
+);
+ ;
+
+// Rope controller management (TEMP JP: HAY QUE VER COMO HACERLO MULTIPLE)
+
+  
+Iz3DRopeController z3DRopeController ();
+ ;
+  
+Iz3DRopeController z3DCreateRopeController ();
+ ;
+   
+z3DSetCustomRopeController (const Iz3DRopeController AController 
+);
+ ;
+
+
+
+     
+     
+    
+/*
+var
+ GCameraController: Iz3DCameraController;
+
+  
+Iz3DArcBall z3DCreateArcBall ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DArcBall.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DCameraController z3DCreateCameraController ()
+{
+#ifndef DOXYGEN_SKIP
+  GCameraController:= Tz3DCameraController.Create;
+  Result:= GCameraController;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomCameraController (const Iz3DCameraController AController 
+)
+{
+#ifndef DOXYGEN_SKIP
+  GCameraController:= AController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DCameraController z3DCameraController ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= GCameraController;
+#endif /* DOXYGEN_SKIP */
+};
+/*
+var
+ GSkyController: Iz3DSkyController;
+
+  
+Iz3DSkyController z3DSkyController ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= GSkyController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DSkyController z3DCreateSkyController ()
+{
+#ifndef DOXYGEN_SKIP
+  GSkyController:= Tz3DSkyController.Create;
+  Result:= GSkyController;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomSkyController (const Iz3DSkyController AController 
+)
+{
+#ifndef DOXYGEN_SKIP
+  GSkyController:= AController;
+#endif /* DOXYGEN_SKIP */
+};
+/*
+var
+ GRopeController: Iz3DRopeController;
+
+  
+Iz3DRopeController z3DRopeController ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  Result:= GRopeController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRopeController z3DCreateRopeController ()
+ ;{
+#ifndef DOXYGEN_SKIP
+  GRopeController:= Tz3DRopeController.Create;
+  Result:= GRopeController;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomRopeController (const Iz3DRopeController AController 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  GRopeController:= AController;
+#endif /* DOXYGEN_SKIP */
+};
+
+
+     
+Iz3DFloat4 z3DBallPointsToQuat (const Iz3DFloat3 AFrom ,
+const Iz3DFloat3 ATo 
+)
+
+/*
+var
+ FPart: Iz3DFloat3;
+    FDot: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FDot:= z3DFloat3.From(AFrom).Dot(ATo);
+  FPart:= z3DFloat3.From(AFrom).Cross(ATo);
+  Result:= z3DFloat4;
+  Result.XYZ:= FPart.XYZ;
+  Result.W:= FDot;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DArcBall */ 
+
+ 
+Tz3DArcBall::Tz3DArcBall ()
+
+/*
+var
+ FRect: TRect;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+  Reset;
+  FRotationMatrix:= z3DMatrix;
+  FTranslationMatrix:= z3DMatrix;
+  FTranslationMatrixDelta:= z3DMatrix;
+  FDownPoint:= z3DFloat3;
+  FCurrentPoint:= z3DFloat3;
+  FDownQuat:= z3DFloat4;
+  FCurrentQuat:= z3DFloat4;
+  FOffset.x:= 0;
+  FOffset.y:= 0;
+  FRadius:= 0.9;
+  GetClientRect(GetForegroundWindow, FRect);
+  FWidth:= FRect.Right;
+  FHeight:= FRect.Bottom;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DArcBall::Reset ()
+{
+#ifndef DOXYGEN_SKIP
+  FDownQuat.Identity;
+  FCurrentQuat.Identity;
+  FRotationMatrix.Identity;
+  FTranslationMatrix.Identity;
+  FTranslationMatrixDelta.Identity;
+  FDragging:= False;
+  FTranslationRadius:= 1;
+  FRadius:= 1;
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Iz3DFloat3 Tz3DArcBall::ScreenToVector (const Single AScreenX ,
+const Single AScreenY 
+)
+
+/*
+var
+ FX, FY, FZ, FMag, FScale: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FX:= -(AScreenX - FOffset.x - FWidth / 2)  / (FRadius * FWidth / 2);
+  FY:=  (AScreenY - FOffset.y - FHeight / 2) / (FRadius * FHeight / 2);
+  FZ:= 0;
+  FMag:= FX*FX + FY*FY;
+  if (FMag > 1) thenbegin    FScale:= 1 / Sqrt(FMag);
+    FX:= FX * FScale;
+    FY:= FY * FScale;
+ endelse FZ:= Sqrt(1 - FMag) 
+  Result:= z3DFloat3(FX, FY, FZ);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DArcBall::OnBegin (Integer AX ,
+Integer AY 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if (AX >= FOffset.x) and (AX < FOffset.x + FWidth) and
+  (AY >= FOffset.y) and (AY < FOffset.y + FHeight) thenbegin    FDragging:= True;
+    FDownQuat:= FCurrentQuat;
+    FDownPoint:= ScreenToVector(AX, AY);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DArcBall::OnMove (Integer AX ,
+Integer AY 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FDragging thenbegin    FCurrentPoint:= ScreenToVector(AX, AY);
+    FCurrentQuat.From(FDownQuat).Multiply(z3DBallPointsToQuat(FDownPoint, FCurrentPoint));
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DArcBall::OnEnd ()
+{
+#ifndef DOXYGEN_SKIP
+  FDragging:= False;
+  FDownQuat:= FCurrentQuat;
+#endif /* DOXYGEN_SKIP */
+};
+
+         
+LRESULT Tz3DArcBall::HandleMessages (HWND hWnd ,
+Cardinal uMsg ,
+WPARAM wParam ,
+LPARAM lParam 
+)
+
+/*
+var
+ FMouseX: Integer;
+    FMouseY: Integer;
+    FDeltaX: Single;
+    FDeltaY: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FMouseX:= LOWORD(DWORD(lParam));
+  FMouseY:= HIWORD(DWORD(lParam));
+  Result:= iTrue;
+  case uMsg of
+
+    WM_LBUTTONDOWN, WM_LBUTTONDBLCLK:
+    begin      SetCapture(hWnd);
+      OnBegin(FMouseX, FMouseY);
+      Exit;
+   end
+    WM_LBUTTONUP:
+    begin      ReleaseCapture;
+      OnEnd;
+      Exit;
+   end
+    WM_CAPTURECHANGED:
+    begin      if (THandle(lParam) <> hWnd) thenbegin        ReleaseCapture;
+        OnEnd;
+     end
+      Exit;
+   end
+    WM_RBUTTONDOWN, WM_RBUTTONDBLCLK, WM_MBUTTONDOWN, WM_MBUTTONDBLCLK:
+    begin      SetCapture(hWnd);
+      FLastMousePoint.x:= FMouseX;
+      FLastMousePoint.y:= FMouseY;
+      Exit;
+   end
+    WM_RBUTTONUP, WM_MBUTTONUP:
+    begin      ReleaseCapture;
+      Exit;
+   end
+    WM_MOUSEMOVE:
+    begin      if (MK_LBUTTON and wParam <> 0) then OnMove(FMouseX, FMouseY) else
+      if (MK_RBUTTON and wParam <> 0) or (MK_MBUTTON and wParam <> 0) thenbegin        FDeltaX:= (FLastMousePoint.x-FMouseX) * FTranslationRadius / FWidth;
+        FDeltaY:= (FLastMousePoint.y-FMouseY) * FTranslationRadius / FHeight;
+        if (wParam and MK_RBUTTON <> 0) thenbegin          FTranslationMatrixDelta.Translation(-2*FDeltaX, 2*FDeltaY, 0);
+          FTranslationMatrix.Multiply(FTranslationMatrixDelta);
+       endelsebegin          FTranslationMatrixDelta.Translation(0, 0, 5*FDeltaY) 
+          FTranslationMatrix.Multiply(FTranslationMatrixDelta);
+       end
+        FLastMousePoint.x:= FMouseX;
+        FLastMousePoint.y:= FMouseY;
+     end
+      Exit;
+   end
+ end
+  Result:= iFalse;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DArcBall::HandleMessages (TMsg &Msg ,
+Boolean &Handled 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Handled:= HandleMessages(Msg.hwnd, Msg.message, Msg.wParam, Msg.lParam) <> 0;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DArcBall::RotationMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRotationMatrix.RotateQuat(FCurrentQuat.D3DQuat);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DArcBall::TranslationMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTranslationMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DArcBall::TranslationDeltaMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTranslationMatrixDelta;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DArcBall::SetHeight (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FHeight <> Value thenbegin    FHeight:= Value;
+    FCenter.X:= FWidth / 2;
+    FCenter.Y:= FHeight / 2;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DArcBall::SetWidth (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FWidth <> Value thenbegin    FWidth:= Value;
+    FCenter.X:= FWidth / 2;
+    FCenter.Y:= FHeight / 2;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DArcBall::SetOffset (const TPoint Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOffset.X:= Value.X;
+  FOffset.Y:= Value.Y;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat4 Tz3DArcBall::GetCurrentQuat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCurrentQuat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DArcBall::GetDragging ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDragging;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DArcBall::GetHeight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FHeight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TPoint Tz3DArcBall::GetOffset ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOffset;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DArcBall::GetRadius ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRadius;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DArcBall::GetTranslationRadius ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTranslationRadius;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DArcBall::GetWidth ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWidth;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DArcBall::SetRadius (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRadius:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DArcBall::SetTranslationRadius (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FTranslationRadius:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DBaseCamera */ 
+
+ 
+Tz3DBaseCamera::Tz3DBaseCamera ()
+
+/*
+//const
+ FMin = (-2147483647-1);
+      FMax = 2147483647;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited Create;
+
+  // Link this object to all the events generated by the z3D Engine
+  Notifications:= [z3dlnDevice, z3dlnFrameMove, z3dlnMessages, z3dlnKeyboard];
+
+  FCameraKeys:= Tz3DCameraKeys.Create;
+  FKeyDownCount:= 0;
+  ZeroMemory(@FKeys, SizeOf(Byte)*DWORD(z3dckMaxKeys));
+  ZeroMemory(@FGamePad, SizeOf(Tz3DGamePad)*INPUT_MAX_CONTROLLERS);
+  FPosition:= z3DFloat3(0, 1, 0);
+  FPosition.OnChange:= VectorChanged;
+  FLookAt:= z3DFloat3(0, 1, 1);
+  FLookAt.OnChange:= VectorChanged;
+  FClipMin:= z3DFloat3;
+  FClipMin.OnChange:= VectorChanged;
+  FClipMax:= z3DFloat3;
+  FClipMax.OnChange:= VectorChanged;
+  FViewMatrix:= z3DMatrix;
+  FProjectionMatrix:= z3DMatrix;
+  GetCursorPos(FLastMousePosition);
+  FMouseLButtonDown:= False;
+  FMouseMButtonDown:= False;
+  FMouseRButtonDown:= False;
+  FCurrentButtonMask:= 0;
+  FMouseWheelDelta:= 0;
+  FZoom:= 100;
+  FMaxZoom:= 1000;
+  FMinZoom:= 50;
+  FZoomFactor:= 1.05;
+  FZoomMode:= z3dzmConstant;
+  FActive:= True;
+  FCameraYawAngle:= 0;
+  FCameraPitchAngle:= 0;
+  SetRect(FDragRect, FMin, FMin, FMax, FMax);
+  FVelocity:= z3DFloat3;
+  FSmoothMovement:= True;
+  FSmoothFrameCount:= 2;
+  FVelocityDrag:= z3DFloat3;
+  FDragTimer:= 0;
+  FTotalDragTime:= 0.25;
+  FRotVelocity:= z3DFloat2;
+  FRotationScale:= 0.01;
+  FMoveScale:= 1;
+  FInvertPitch:= False;
+  FEnableYMovement:= True;
+  FEnableMovement:= True;
+  FMouseDelta:= z3DFloat2;
+  FClipping:= False;
+  FClipMin:= z3DFloat3(-1, -1, -1);
+  FClipMax:= z3DFloat3(1, 1, 1);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBaseCamera::~Tz3DBaseCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  FLookAt:= nil;
+  FPosition:= nil;
+  FClipMin:= nil;
+  FClipMax:= nil;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBaseCamera::UpdateProjection ()
+
+/*
+var
+ FAspectRatio: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not z3DGlobalEngine.Options.LockAspectRatio then FAspectRatio:= 1 else
+  FAspectRatio:= z3DCore_GetBackBufferSurfaceDesc.Width/z3DCore_GetBackBufferSurfaceDesc.Height;
+  FProjectionMatrix.PerspectiveFOV(z3DPI / (FZoom * 0.04), FAspectRatio, 0.05, z3DGlobalEngine.Scenario.Bounds.Radius * 2);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBaseCamera::UpdateViewParams ()
+
+/*
+var
+ FInvView: Iz3DMatrix;
+    FZBasis: Iz3DFloat3;
+    FLen: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FDefaultEye:= FPosition;
+  FDefaultLookAt:= FLookAt;
+  FViewMatrix.LookAt(FPosition, FLookAt);
+  FInvView:= z3DMatrix.From(FViewMatrix).Inverse;
+  FZBasis:= z3DFloat3(FInvView.e31, FInvView.e32, FInvView.e33);
+  FCameraYawAngle:= ArcTan2(FZBasis.x, FZBasis.z);
+  FLen:= Sqrt(FZBasis.z*FZBasis.z + FZBasis.x*FZBasis.x);
+  FCameraPitchAngle:= -ArcTan2(FZBasis.y, FLen);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetDragRect (const TRect ARect 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDragRect:= ARect;
+#endif /* DOXYGEN_SKIP */
+};
+
+     .01     
+Tz3DBaseCamera::SetScalers (const Single ARotationScaler = 0 ,
+const Single AMoveScaler = 5 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRotationScale:= ARotationScaler;
+  FMoveScale:= AMoveScaler;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DBaseCamera::ViewMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FViewMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DBaseCamera::ProjectionMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FProjectionMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetDragging ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMouseLButtonDown or FMouseMButtonDown or FMouseRButtonDown;
+#endif /* DOXYGEN_SKIP */
+};
+
+                   
+Tz3DBaseCamera::z3DMessage (const HWND AWnd ,
+const Cardinal AMsg ,
+const Integer AwParam ,
+const Integer AlParam ,
+Boolean &ADefault ,
+Integer &AResult 
+)
+
+/*
+var
+ FMappedKey: Tz3DCameraInputKeys;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+  if not FActive then Exit;
+  case AMsg of
+
+    WM_KEYDOWN:
+    begin      FMappedKey:= MapKey(AwParam);
+      if (FMappedKey <> z3dckUnknown) then
+      if (not IsKeyDown(FKeys[FMappedKey])) thenbegin        FKeys[FMappedKey]:= z3DcWasDownMask or z3DcIsDownMask;
+        Inc(FKeyDownCount);
+     end
+   end
+    WM_KEYUP:
+    begin      FMappedKey:= MapKey(AwParam);
+      if (FMappedKey <> z3dckUnknown)/*TODO JP: VER QUE MIERDA ES ESTO: and (DWORD(FMappedKey) < 8) */ thenbegin        FKeys[FMappedKey]:= FKeys[FMappedKey] and not z3DcIsDownMask;
+        Dec(FKeyDownCount);
+     end
+   end
+    WM_RBUTTONDOWN, WM_MBUTTONDOWN, WM_LBUTTONDOWN, WM_RBUTTONDBLCLK,
+    WM_MBUTTONDBLCLK, WM_LBUTTONDBLCLK:
+    begin      if (AMsg = WM_LBUTTONDOWN) or (AMsg = WM_RBUTTONDBLCLK) thenbegin        FMouseLButtonDown:= True;
+        FCurrentButtonMask:= FCurrentButtonMask or z3DcMouseLeftButton;
+     end
+      if (AMsg = WM_MBUTTONDOWN) or (AMsg = WM_MBUTTONDBLCLK) thenbegin        FMouseMButtonDown:= True;
+        FCurrentButtonMask:= FCurrentButtonMask or z3DcMouseMiddleButton;
+     end
+      if (AMsg = WM_RBUTTONDOWN) or (AMsg = WM_RBUTTONDBLCLK) thenbegin        FMouseRButtonDown:= True;
+        FCurrentButtonMask:= FCurrentButtonMask or z3DcMouseRightButton;
+     end
+      SetCapture(AWnd);
+      GetCursorPos(FLastMousePosition);
+      AResult:= iTrue;
+      Exit;
+   end
+    WM_RBUTTONUP, WM_MBUTTONUP, WM_LBUTTONUP:
+    begin      if (AMsg = WM_LBUTTONUP) thenbegin        FMouseLButtonDown:= False;
+        FCurrentButtonMask:= FCurrentButtonMask and not z3DcMouseLeftButton;
+     end
+      if (AMsg = WM_MBUTTONUP) thenbegin        FMouseMButtonDown:= False;
+        FCurrentButtonMask:= FCurrentButtonMask and not z3DcMouseMiddleButton;
+     end
+      if (AMsg = WM_RBUTTONUP) thenbegin        FMouseRButtonDown:= False;
+        FCurrentButtonMask:= FCurrentButtonMask and not z3DcMouseRightButton;
+     end
+      if (not FMouseLButtonDown  and not FMouseRButtonDown and not FMouseMButtonDown) then
+      ReleaseCapture;
+   end
+    WM_CAPTURECHANGED:
+    begin      if (THandle(AlParam) <> AWnd) thenbegin        if (FCurrentButtonMask and z3DcMouseLeftButton <> 0) or (FCurrentButtonMask and
+        z3DcMouseMiddleButton <> 0) or (FCurrentButtonMask and z3DcMouseRightButton <> 0) thenbegin          FMouseLButtonDown:= False;
+          FMouseMButtonDown:= False;
+          FMouseRButtonDown:= False;
+          FCurrentButtonMask:= FCurrentButtonMask and not z3DcMouseLeftButton;
+          FCurrentButtonMask:= FCurrentButtonMask and not z3DcMouseMiddleButton;
+          FCurrentButtonMask:= FCurrentButtonMask and not z3DcMouseRightButton;
+          ReleaseCapture;
+       end
+     end
+   end
+    WM_MOUSEWHEEL:
+    FMouseWheelDelta:= Smallint(HIWORD(DWORD(AwParam))) div 120;
+ end
+  AResult:= iFalse;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DBaseCamera::GetInput (const Boolean AGetKeyboardInput ,
+const Boolean AGetMouseInput ,
+const Boolean AGetGamepadInput ,
+const Boolean AResetCursorAfterMove 
+)
+
+/*
+var
+ FCurrentMouseDelta: TPoint;
+    FCurrentMousePos: TPoint;
+    FCenter: TPoint;
+    FMonitor: Tz3DMonitorInfo;
+    FPercentOfNew: Single;
+    FPercentOfOld: Single;
+    FUserIndex: DWORD;
+    FMostRecentlyActive: Integer;
+    FMostRecentlyActiveTime: Double;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FKeyboardDirection:= z3DFloat3;
+  if AGetKeyboardInput thenbegin    // Movement
+    if IsKeyDown(FKeys[z3dckMove]) then FKeyboardDirection.z:= FKeyboardDirection.z + 1;
+    if IsKeyDown(FKeys[z3dckMoveBackward]) then FKeyboardDirection.z:= FKeyboardDirection.z - 1;
+    if FEnableYMovement thenbegin      if IsKeyDown(FKeys[z3dckMoveUp]) then FKeyboardDirection.y:= FKeyboardDirection.y + 1;
+      if IsKeyDown(FKeys[z3dckMoveDown]) then FKeyboardDirection.y:= FKeyboardDirection.y - 1;
+   end
+
+    // Strafe
+    if IsKeyDown(FKeys[z3dckStrafeRight]) then FKeyboardDirection.x:= FKeyboardDirection.x + 1;
+    if IsKeyDown(FKeys[z3dckStrafeLeft]) then FKeyboardDirection.x:= FKeyboardDirection.x - 1;
+
+    // Jump
+    if FEnableYMovement then
+    if IsKeyDown(FKeys[z3dckJump]) then FKeyboardDirection.y:= FKeyboardDirection.y + 1.5;
+
+    // Zoom in
+    if IsKeyDown(FKeys[z3dckZoomIn]) and (Zoom < MaxZoom) thenbegin      case ZoomMode of
+
+        z3dzmConstant: Zoom:= Zoom + ZoomFactor;
+        z3dzmLinear: Zoom:= Zoom * ZoomFactor;
+        z3dzmExponential: Zoom:= Power(Zoom, ZoomFactor);
+     end
+      if Zoom > MaxZoom then Zoom:= MaxZoom;
+   end
+
+    // Zoom out
+    if IsKeyDown(FKeys[z3dckZoomOUt]) and (Zoom > MinZoom) thenbegin      case ZoomMode of
+
+        z3dzmConstant: Zoom:= Zoom - ZoomFactor;
+        z3dzmLinear: Zoom:= Zoom / ZoomFactor;
+        z3dzmExponential: Zoom:= Power(Zoom, 1/ZoomFactor);
+     end
+      if Zoom < MinZoom then Zoom:= MinZoom;
+   end
+
+ end
+  if AGetMouseInput thenbegin    if GetCursorPos(FCurrentMousePos) thenbegin      FCurrentMouseDelta.x:= FCurrentMousePos.x - FLastMousePosition.x;
+      FCurrentMouseDelta.y:= FCurrentMousePos.y - FLastMousePosition.y;
+      FLastMousePosition:= FCurrentMousePos;
+   endelsebegin      FCurrentMouseDelta.x:= 0 
+      FCurrentMouseDelta.y:= 0;
+   end
+    if (AResetCursorAfterMove and z3DCore_IsActive) thenbegin      FMonitor.cbSize:= SizeOf(TMonitorInfo);
+      z3DGetMonitorInfo(z3DMonitorFromWindow(z3DCore_GetHWND, MONITOR_DEFAULTTONEAREST), FMonitor);
+      FCenter.x:= (FMonitor.rcMonitor.left + FMonitor.rcMonitor.right) div 2;
+      FCenter.y:= (FMonitor.rcMonitor.top + FMonitor.rcMonitor.bottom) div 2;
+      SetCursorPos(FCenter.x, FCenter.y);
+      FLastMousePosition:= FCenter;
+   end
+    FPercentOfNew:=  1 / FSmoothFrameCount;
+    FPercentOfOld:=  1 - FPercentOfNew;
+    FMouseDelta.x:= FMouseDelta.x*FPercentOfOld + FCurrentMouseDelta.x*FPercentOfNew;
+    FMouseDelta.y:= FMouseDelta.y*FPercentOfOld + FCurrentMouseDelta.y*FPercentOfNew;
+ end
+  if AGetGamepadInput thenbegin    FGamePadLeftThumb:= z3DFloat3;
+    FGamePadRightThumb:= z3DFloat3;
+    for FUserIndex:= 0 to INPUT_MAX_CONTROLLERS - 1 dobegin      z3DGetGamepadState(FUserIndex, FGamePad[FUserIndex], True, True);
+      if ((FGamePad[FUserIndex].wButtons <> 0) or (FGamePad[FUserIndex].sThumbLX <> 0) or
+      (FGamePad[FUserIndex].sThumbLX <> 0) or (FGamePad[FUserIndex].sThumbRX <> 0) or
+      (FGamePad[FUserIndex].sThumbRY <> 0) or (FGamePad[FUserIndex].bLeftTrigger <> 0) or
+      (FGamePad[FUserIndex].bRightTrigger <> 0)) then
+      FGamePadLastActive[FUserIndex]:= z3DCore_GetTime;
+   end
+    FMostRecentlyActive:= -1;
+    FMostRecentlyActiveTime:= 0.0;
+    for FUserIndex:= 0 to INPUT_MAX_CONTROLLERS - 1 dobegin      if (FGamePadLastActive[FUserIndex] > fMostRecentlyActiveTime) thenbegin        FMostRecentlyActiveTime:= FGamePadLastActive[FUserIndex];
+        FMostRecentlyActive:= FUserIndex;
+     end
+   end
+    if (FMostRecentlyActive >= 0) and (FGamePad[FMostRecentlyActive].bConnected) thenbegin      FGamePadLeftThumb.x:= FGamePad[FMostRecentlyActive].FThumbLX;
+      FGamePadLeftThumb.y:= 0;
+      FGamePadLeftThumb.z:= FGamePad[FMostRecentlyActive].FThumbLY;
+      FGamePadRightThumb.x:= FGamePad[FMostRecentlyActive].FThumbRX;
+      FGamePadRightThumb.y:= 0;
+      FGamePadRightThumb.z:= FGamePad[FMostRecentlyActive].FThumbRY;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::UpdateVelocity (const Single AElapsedTime 
+)
+
+/*
+var
+ FAcceleration: Iz3DFloat3;
+    FParam1, FParam2: Iz3DFloat2;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FParam1:= z3DFloat2.From(FMouseDelta).Scale(FRotationScale);
+  FParam2:= z3DFloat2.From(z3DFloat2(FGamePadRightThumb.x, -FGamePadRightThumb.z)).Scale(0.02);
+  FRotVelocity:= z3DFloat2.From(FParam1).Add(FParam2);
+  FAcceleration:= z3DFloat3.From(FKeyboardDirection).Add(FGamePadLeftThumb).Normalize.Scale(FMoveScale);
+  if FSmoothMovement thenbegin    if FAcceleration.LengthSq > 0 thenbegin      FVelocity:= FAcceleration;
+      FDragTimer:= FTotalDragTime;
+      FVelocityDrag:= z3DFloat3.From(FAcceleration).Scale(1 / FDragTimer);
+   endelsebegin      if (FDragTimer > 0) thenbegin        FVelocity.Subtract(z3DFloat3.From(FVelocityDrag).Scale(AElapsedTime)) 
+        FDragTimer:= FDragTimer - AElapsedTime;
+     endelse FVelocity.Identity 
+   end
+ endelse FVelocity:= FAcceleration 
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DBaseCamera::IsKeyDown (const Byte AKey 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= ((AKey and z3dcIsDownMask) = z3dcIsDownMask);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Boolean Tz3DBaseCamera::WasKeyDown (const Byte AKey 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= ((AKey and z3DcWasDownMask) = z3DcWasDownMask);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::ConstrainToBoundary (Iz3DFloat3 &AVector 
+)
+{
+#ifndef DOXYGEN_SKIP
+  AVector.x:= Max(AVector.x, FClipMin.x);
+  AVector.y:= Max(AVector.y, FClipMin.y);
+  AVector.z:= Max(AVector.z, FClipMin.z);
+  AVector.x:= Min(AVector.x, FClipMax.x);
+  AVector.y:= Min(AVector.y, FClipMax.y);
+  AVector.z:= Min(AVector.z, FClipMax.z);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Tz3DCameraInputKeys Tz3DBaseCamera::MapKey (const LongWord AKey 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3dckUnknown;
+  if FCameraKeys.EnableDefaultKeys thenbegin    case AKey of
+
+      VK_CONTROL: Result:= z3dckControlDown;
+      VK_LEFT:    Result:= z3dckStrafeLeft;
+      VK_RIGHT:   Result:= z3dckStrafeRight;
+      VK_UP:      Result:= z3dckMoveForward;
+      VK_DOWN:    Result:= z3dckMoveBackward;
+      VK_PRIOR:   Result:= z3dckMoveUp;
+      VK_NEXT:    Result:= z3dckMoveDown;
+      VK_NUMPAD4: Result:= z3dckStrafeLeft;
+      VK_NUMPAD6: Result:= z3dckStrafeRight;
+      VK_NUMPAD8: Result:= z3dckMoveForward;
+      VK_NUMPAD2: Result:= z3dckMoveBackward;
+      VK_NUMPAD9: Result:= z3dckMoveUp;
+      VK_NUMPAD3: Result:= z3dckMoveDown;
+      VK_HOME:    Result:= z3dckReset;
+   end
+ end
+  if AKey = Ord(FCameraKeys.MoveLeft) then Result:= z3dckStrafeLeft else
+  if AKey = Ord(FCameraKeys.MoveRight) then Result:= z3dckStrafeRight else
+  if AKey = Ord(FCameraKeys.MoveForward) then Result:= z3dckMove else
+  if AKey = Ord(FCameraKeys.MoveBackward) then Result:= z3dckMoveBackward else
+  // TODO JP
+  if AKey = VK_SPACE then Result:= z3dckJump else
+  if AKey = Ord(FCameraKeys.ZoomIn) then Result:= z3dckZoomIn else
+  if AKey = Ord(FCameraKeys.ZoomOut) then Result:= z3dckZoomOut else
+  if AKey = Ord(FCameraKeys.MoveUp) then Result:= z3dckMoveUp else
+  if AKey = Ord(FCameraKeys.MoveDown) then Result:= z3dckMoveDown;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBaseCamera::z3DFrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if not Active or not z3DGlobalEngine.Scenario.Enabled or z3DGlobalEngine.Desktop.Visible then Exit;
+  z3DGlobalEngine.ViewMatrix.D3DMatrix:= FViewMatrix.D3DMatrix;
+  z3DGlobalEngine.ProjectionMatrix.D3DMatrix:= FProjectionMatrix.D3DMatrix;
+  z3DGlobalEngine.ViewPosition.XYZ:= FPosition.XYZ;
+  z3DGlobalEngine.ViewLookAt.XYZ:= FLookAt.XYZ;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBaseCamera::z3DResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  UpdateProjection;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetZoom (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FZoom <> Value thenbegin    FZoom:= Value;
+    if z3DCore_GetState.DeviceCreated then UpdateProjection;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBaseCamera::GetClipMax ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FClipMax;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBaseCamera::GetClipMin ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FClipMin;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetClipping ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FClipping;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TRect Tz3DBaseCamera::GetDragRect ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDragRect;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetActive ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FActive;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetEnableMovement ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableMovement;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetEnableYMovement ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableYMovement;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetInvertPitch ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FInvertPitch;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBaseCamera::GetLookAt ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLookAt;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetMouseLButtonDown ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMouseLButtonDown;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetMouseMButtonDown ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMouseMButtonDown;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetMouseRButtonDown ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMouseRButtonDown;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBaseCamera::GetMoveScale ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoveScale;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DBaseCamera::GetPosition ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPosition;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DBaseCamera::GetSmoothFrameCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSmoothFrameCount;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseCamera::GetSmoothMovement ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSmoothMovement;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBaseCamera::GetTotalDragTime ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTotalDragTime;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetClipping (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FClipping:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetActive (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FActive:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetEnableMovement (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableMovement:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetEnableYMovement (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableYMovement:= value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetInvertPitch (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FInvertPitch:= value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetMoveScale (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMoveScale:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetSmoothFrameCount (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FSmoothFrameCount:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetSmoothMovement (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FSmoothMovement:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetTotalDragTime (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FTotalDragTime:= value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBaseCamera::GetZoom ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FZoom;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DCameraKeys Tz3DBaseCamera::GetKeys ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCameraKeys;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::VectorChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  UpdateViewParams;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBaseCamera::GetMaxZoom ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaxZoom;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBaseCamera::GetMinZoom ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMinZoom;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DZoomMode Tz3DBaseCamera::GetZoomMode ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FZoomMode;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetMaxZoom (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMaxZoom:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetMinZoom (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMinZoom:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetZoomMode (const Tz3DZoomMode Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FZoomMode:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBaseCamera::GetZoomFactor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FZoomFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCamera::SetZoomFactor (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FZoomFactor:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DBaseCameraMouseButtons */ 
+
+ 
+Tz3DBaseCameraMouseButtons::Tz3DBaseCameraMouseButtons ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FRotateObject:= z3DmbLeft;
+  FZoom:= z3DmbWheel;
+  FRotateCamera:= z3DmbRight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DMouseButton Tz3DBaseCameraMouseButtons::GetRotateCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRotateCamera;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DMouseButton Tz3DBaseCameraMouseButtons::GetRotateObject ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRotateObject;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DMouseButton Tz3DBaseCameraMouseButtons::GetZoom ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FZoom;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCameraMouseButtons::SetRotateCamera (const Tz3DMouseButton Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FRotateCamera <> Value thenbegin    FRotateCamera:= Value;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCameraMouseButtons::SetRotateObject (const Tz3DMouseButton Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FRotateObject <> Value thenbegin    FRotateObject:= Value;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseCameraMouseButtons::SetZoom (const Tz3DMouseButton Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FZoom <> Value thenbegin    FZoom:= Value;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DObjectCamera */ 
+
+ 
+Tz3DObjectCamera::Tz3DObjectCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  FWorldArcBall:= Tz3DArcBall.Create;
+  FViewArcBall:= Tz3DArcBall.Create;
+  inherited Create;
+  FEnableMovement:= False;
+  FMouseButtons:= Tz3DBaseCameraMouseButtons.Create;
+  FWorldMatrix:= z3DMatrixIdentity;
+  FObjectRot:= z3DMatrixIdentity;
+  FObjectLastRot:= z3DMatrixIdentity;
+  FCameraRotLast:= z3DMatrixIdentity;
+  FRadius:= 5;
+  FDefaultRadius:= 5;
+  FMinRadius:= 1;
+  FMaxRadius:= 3.402823466e+38;
+  FLimitPitch:= True;
+  FAttached:= False;
+  FDragSinceLastUpdate:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DObjectCamera::~Tz3DObjectCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  FMouseButtons:= nil;
+  FWorldArcBall:= nil;
+  FViewArcBall:= nil;
+  inherited Destroy;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DObjectCamera::z3DFrameMove ()
+
+/*
+var
+ FPosDelta: Iz3DFloat3;
+    FCameraRot: Iz3DMatrix;
+    FWorldUp, FWorldAhead: Iz3DFloat3;
+    FPosDeltaWorld: Iz3DFloat3;
+    FInvView: Iz3DMatrix;
+    FObjectLastRotInv: Iz3DMatrix;
+    FObjectRot: Iz3DMatrix;
+    FXBasis: Iz3DFloat3;
+    FYBasis: Iz3DFloat3;
+    FZBasis: Iz3DFloat3;
+    FTrans: Iz3DMatrix;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Active or not z3DGlobalEngine.Scenario.Enabled or z3DGlobalEngine.Desktop.Visible then Exit;
+  if IsKeyDown(FKeys[z3dckReset]) then z3DResetDevice;
+  if (not FDragSinceLastUpdate) and (FKeyDownCount = 0) then Exit;
+  FDragSinceLastUpdate:= False;
+  GetInput(FEnableMovement, FCurrentButtonMask <> 0, True, False);
+  UpdateVelocity(z3DCore_GetElapsedTime);
+  FPosDelta:= z3DFloat3.From(FVelocity).Scale(z3DCore_GetElapsedTime);
+  if (FMouseWheelDelta <> 0) and (FZoomButtonMask = z3DcMouseWheel) then
+  FRadius:= FRadius - FMouseWheelDelta * FRadius * 0.1;
+  FRadius:= Min(FMaxRadius, FRadius);
+  FRadius:= Max(FMinRadius, FRadius);
+  FMouseWheelDelta:= 0;
+  FCameraRot:= z3DMatrix.From(FViewArcBall.RotationMatrix).Inverse;
+  FWorldUp:= z3DFloat3(0, 1, 0).TransformC(FCameraRot);
+  FWorldAhead:= z3DFloat3(0, 0, 1).TransformC(FCameraRot);
+  FPosDeltaWorld:= z3DFloat3.From(FPosDelta).TransformC(FCameraRot);
+  FLookAt.BeginInternalChange;
+  FLookAt.Add(FPosDeltaWorld);
+  if FClipping then ConstrainToBoundary(FLookAt);
+  FLookAt.EndInternalChange;
+  FPosition.BeginInternalChange;
+  FPosition.From(FLookAt).Subtract(z3DFloat3.From(FWorldAhead).Scale(FRadius));
+  FPosition.EndInternalChange;
+  FViewMatrix.LookAt(FPosition, FLookAt, FWorldUp);
+  FInvView:= z3DMatrix.From(FViewMatrix).Inverse;
+  FInvView.e41:= 0;
+  FInvView.e42:= 0;
+  FInvView.e43:= 0;
+  FObjectLastRotInv:= z3DMatrix.From(FObjectLastRot).Inverse;
+  FObjectRot:= FWorldArcBall.RotationMatrix;
+  FObjectRot.Multiply(z3DMatrix.From(FObjectRot).Multiply(FInvView).Multiply(FObjectLastRotInv).Multiply(FViewMatrix));
+  if (FViewArcBall.Dragging and FAttached and not IsKeyDown(FKeys[z3dckControlDown]) ) then
+    FObjectRot.Multiply(z3DMatrix.From(FCameraRotLast).Inverse.Multiply(FCameraRot));
+  FCameraRotLast:= FCameraRot;
+  FObjectLastRot:= FObjectRot;
+  FXBasis:= z3DFloat3(FObjectRot.e11, FObjectRot.e12, FObjectRot.e13).Normalize;
+  FYBasis:= z3DFloat3(FObjectRot.e21, FObjectRot.e22, FObjectRot.e23);
+  FZBasis:= z3DFloat3(FObjectRot.e31, FObjectRot.e32, FObjectRot.e33);
+  FYBasis.From(FZBasis).Cross(FXBasis).Normalize;
+  FZBasis.From(FXBasis).Cross(FYBasis);
+  FObjectRot.e41:= FLookAt.x;
+  FObjectRot.e42:= FLookAt.y;
+  FObjectRot.e43:= FLookAt.z;
+  FTrans:= z3DMatrix.Translation(-FObject.Center.x, -FObject.Center.y, -FObject.Center.z);
+  FWorldMatrix:= z3DMatrix.From(FTrans).Multiply(FObjectRot);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectCamera::SetDragRect (const TRect ARect 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited SetDragRect(ARect);
+  FWorldArcBall.SetOffset(Point(ARect.Left, ARect.Top));
+  FViewArcBall.SetOffset(Point(ARect.Left, ARect.Top));
+  SetWindow(ARect.Right - ARect.Left, ARect.Bottom - ARect.Top);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DObjectCamera::z3DResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  SetWindow(z3DCore_GetBackBufferSurfaceDesc^.Width, z3DCore_GetBackBufferSurfaceDesc^.Height);
+  FWorldMatrix.Identity;
+  FRadius:= FDefaultRadius;
+  FWorldArcBall.Reset;
+  FViewArcBall.Reset;
+  FDragSinceLastUpdate:= True;
+  SetButtonMasks(Cz3DCameraMouseButton[FMouseButtons.RotateObject],
+  Cz3DCameraMouseButton[FMouseButtons.Zoom], Cz3DCameraMouseButton[FMouseButtons.RotateCamera]);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DObjectCamera::UpdateViewParams ()
+
+/*
+var
+ FRotation: Iz3DMatrix;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+  FRotation:= z3DMatrix.LookAt(FPosition, FLookAt);
+  FViewArcBall.CurrentQuat.RotationMatrix(FRotation);
+  SetRadius(z3DFloat3.From(FLookAt).Subtract(FPosition).Length);
+  FDragSinceLastUpdate:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+                   
+Tz3DObjectCamera::z3DMessage (const HWND AWnd ,
+const Cardinal AMsg ,
+const Integer AwParam ,
+const Integer AlParam ,
+Boolean &ADefault ,
+Integer &AResult 
+)
+
+/*
+var
+ FMouseX: Integer;
+    FMouseY: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+  if (((AMsg = WM_LBUTTONDOWN) or (AMsg = WM_LBUTTONDBLCLK)) and (FRotateObjectButtonMask and z3DcMouseLeftButton <> 0)) or
+  (((AMsg = WM_MBUTTONDOWN) or (AMsg = WM_MBUTTONDBLCLK)) and (FRotateObjectButtonMask and z3DcMouseMiddleButton <> 0)) or
+  (((AMsg = WM_RBUTTONDOWN) or (AMsg = WM_RBUTTONDBLCLK)) and (FRotateObjectButtonMask and z3DcMouseRightButton <> 0)) thenbegin    FMouseX:= LOWORD(DWORD(AlParam));
+    FMouseY:= HIWORD(DWORD(AlParam));
+    FWorldArcBall.OnBegin(FMouseX, FMouseY);
+ end
+  if (((AMsg = WM_LBUTTONDOWN) or (AMsg = WM_LBUTTONDBLCLK)) and (FRotateCameraButtonMask and z3DcMouseLeftButton <> 0)) or
+  (((AMsg = WM_MBUTTONDOWN) or (AMsg = WM_MBUTTONDBLCLK)) and (FRotateCameraButtonMask and z3DcMouseMiddleButton <> 0)) or
+  (((AMsg = WM_RBUTTONDOWN) or (AMsg = WM_RBUTTONDBLCLK)) and (FRotateCameraButtonMask and z3DcMouseRightButton <> 0)) thenbegin    FMouseX:= LOWORD(DWORD(AlParam));
+    FMouseY:= HIWORD(DWORD(AlParam));
+    FViewArcBall.OnBegin(FMouseX, FMouseY);
+ end
+  if (AMsg = WM_MOUSEMOVE) thenbegin    FMouseX:= LOWORD(DWORD(AlParam));
+    FMouseY:= HIWORD(DWORD(AlParam));
+    FWorldArcBall.OnMove(FMouseX, FMouseY);
+    FViewArcBall.OnMove(FMouseX, FMouseY);
+ end
+  if ((AMsg = WM_LBUTTONUP) and (FRotateObjectButtonMask and z3DcMouseLeftButton <> 0)) or
+  ((AMsg = WM_MBUTTONUP) and (FRotateObjectButtonMask and z3DcMouseMiddleButton <> 0)) or
+  ((AMsg = WM_RBUTTONUP) and (FRotateObjectButtonMask and z3DcMouseRightButton <> 0)) then
+  FWorldArcBall.OnEnd;
+  if ((AMsg = WM_LBUTTONUP) and (FRotateCameraButtonMask and z3DcMouseLeftButton <> 0)) or
+  ((AMsg = WM_MBUTTONUP) and (FRotateCameraButtonMask and z3DcMouseMiddleButton <> 0)) or
+  ((AMsg = WM_RBUTTONUP) and (FRotateCameraButtonMask and z3DcMouseRightButton <> 0)) then
+  FViewArcBall.OnEnd;
+  if (AMsg = WM_CAPTURECHANGED) and (THandle(AlParam) <> AWnd) thenbegin    if (FRotateObjectButtonMask and z3DcMouseLeftButton <> 0) or
+    (FRotateObjectButtonMask and z3DcMouseMiddleButton <> 0) or
+    (FRotateObjectButtonMask and z3DcMouseRightButton <> 0) then
+    FWorldArcBall.OnEnd;
+    if (FRotateCameraButtonMask and z3DcMouseLeftButton <> 0) or
+    (FRotateCameraButtonMask and z3DcMouseMiddleButton <> 0) or
+    (FRotateCameraButtonMask and z3DcMouseRightButton <> 0) then
+    FViewArcBall.OnEnd;
+ end
+  if (AMsg = WM_LBUTTONDOWN) or (AMsg = WM_LBUTTONDBLCLK) or (AMsg = WM_MBUTTONDOWN) or
+  (AMsg = WM_MBUTTONDBLCLK) or (AMsg = WM_RBUTTONDOWN) or (AMsg = WM_RBUTTONDBLCLK) or
+  (AMsg = WM_LBUTTONUP) or (AMsg = WM_MBUTTONUP) or (AMsg = WM_RBUTTONUP) or
+  (AMsg = WM_MOUSEWHEEL) or (AMsg = WM_MOUSEMOVE) then FDragSinceLastUpdate:= True;
+  AResult:= iFalse;
+#endif /* DOXYGEN_SKIP */
+};
+
+                
+Tz3DObjectCamera::SetButtonMasks (const Integer ARotateObjectButtonMask = z3DcMouseLeftButton ,
+const Integer AZoomButtonMask = z3DcMouseWheel ,
+const Integer ARotateCameraButtonMask = z3DcMouseRightButton 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRotateObjectButtonMask:= ARotateObjectButtonMask;
+  FZoomButtonMask:= AZoomButtonMask;
+  FRotateCameraButtonMask:= ARotateCameraButtonMask;
+#endif /* DOXYGEN_SKIP */
+};
+
+         .9
+Tz3DObjectCamera::SetWindow (const Integer AWidth ,
+const Integer AHeight ,
+const Single AArcballRadius = 0 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FWorldArcBall.Width:= AWidth;
+  FWorldArcBall.Height:= AHeight;
+  FWorldArcBall.Radius:= AArcballRadius;
+  FViewArcBall.Width:= AWidth;
+  FViewArcBall.Height:= AHeight;
+  FViewArcBall.Radius:= AArcballRadius;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DObjectCamera::GetWorldMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWorldMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DObjectCamera::ObjectMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWorldMatrix;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectCamera::SetObject (const Iz3DScenarioObject AObject 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLookAt:= AObject.Center;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectCamera::SetWorldMatrix (const Iz3DMatrix AMatrix 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FWorldMatrix:= AMatrix;
+  FDragSinceLastUpdate:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectCamera::SetMaxRadius (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FMaxRadius <> Value thenbegin    FMaxRadius := Value;
+    FDragSinceLastUpdate:= True;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectCamera::SetMinRadius (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FMinRadius <> Value thenbegin    FMinRadius := Value;
+    FDragSinceLastUpdate:= True;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectCamera::SetRadius (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FRadius <> Value thenbegin    FRadius := Value;
+    FDragSinceLastUpdate:= True;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DObjectCameraMouseButtons Tz3DObjectCamera::GetMouseButtons ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMouseButtons;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DObjectCamera::GetAttached ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAttached;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DObjectCamera::GetLimitPitch ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLimitPitch;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DObjectCamera::GetMaxRadius ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaxRadius;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DObjectCamera::GetMinRadius ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMinRadius;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DObjectCamera::GetRadius ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRadius;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectCamera::SetAttached (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAttached:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectCamera::SetLimitPitch (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLimitPitch:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DFirstPersonCameraRotateButtons */ 
+
+   
+Tz3DFirstPersonCameraRotateButtons::Tz3DFirstPersonCameraRotateButtons (const Iz3DFirstPersonCamera AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FOwner:= AOwner;
+  FLeft:= False;
+  FMiddle:= False;
+  FRight:= False;
+  FIgnoreButtons:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCameraRotateButtons::GetIgnoreButtons ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FIgnoreButtons;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCameraRotateButtons::GetLeft ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLeft;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCameraRotateButtons::GetMiddle ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMiddle;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCameraRotateButtons::GetRight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRight;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCameraRotateButtons::SetIgnoreButtons (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FIgnoreButtons:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCameraRotateButtons::SetLeft (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLeft:= Value;
+  FOwner.SetButtons(FLeft, FMiddle, FRight);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCameraRotateButtons::SetMiddle (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMiddle:= Value;
+  FOwner.SetButtons(FLeft, FMiddle, FRight);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCameraRotateButtons::SetRight (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRight:= Value;
+  FOwner.SetButtons(FLeft, FMiddle, FRight);
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DFirstPersonCamera */ 
+
+ 
+Tz3DFirstPersonCamera::Tz3DFirstPersonCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FResetCursorAfterMove:= True;
+  FRotateButtons:= Tz3DFirstPersonCameraRotateButtons.Create(Self);
+  FActiveButtonMask:= $07;
+  FEnableFlashLight:= True;
+
+
+  FBoundingBox:= z3DBoundingBox;
+  FBoundingBox.Dimensions.X:= 0.50;
+  FBoundingBox.Dimensions.Y:= 1.7;
+  FBoundingBox.Dimensions.Z:= 0.40;
+  FBoundingSphere:= z3DBoundingSphere;
+  FBoundingSphere.Radius:= 0.85;
+  FSubset:= Tz3DScenarioObjectSubset.Create(Self);
+  FSubset.Material.Density:= 0.5;
+  FSubset.Material.Elasticity:= 0;
+  FSubset.Material.Roughness:= 0.5;
+  FSWOAcceleration:= z3DFloat3;
+  FSWOVelocity:= z3DFloat3;
+  FGround:= False;
+
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFirstPersonCamera::~Tz3DFirstPersonCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  FRotateButtons:= nil;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFirstPersonCamera::z3DFrameMove ()
+
+/*
+var
+ FPosDelta: Iz3DFloat3;
+    FYawDelta: Single;
+    FPitchDelta: Single;
+    FCameraRot, FInvOffsetView: Iz3DMatrix;
+    FWorldUp, FWorldAhead: Iz3DFloat3;
+    FPosDeltaWorld: Iz3DFloat3;
+    FOffset: Iz3DFloat3;
+    FNormalLookAt: Iz3DFloat3;
+    AElapsedTime: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Active or not z3DGlobalEngine.Scenario.Enabled or z3DGlobalEngine.Desktop.Visible then Exit;
+  AElapsedTime:= z3DCore_GetElapsedTime;
+  if z3DCore_GetGlobalTimer.IsStopped then AElapsedTime:= 1.0 / z3DCore_GetFPS;
+  if IsKeyDown(FKeys[z3dckReset]) then z3DResetDevice;
+  GetInput(FEnableMovement, (FActiveButtonMask and FCurrentButtonMask <> 0) or
+  FRotateButtons.IgnoreButtons, True, FResetCursorAfterMove);
+  UpdateVelocity(AElapsedTime);
+  FPosDelta:= z3DFloat3.From(FVelocity).Scale(AElapsedTime);
+  if (FActiveButtonMask and FCurrentButtonMask <> 0) or (FRotateButtons.IgnoreButtons) or
+  (FGamePadRightThumb.x <> 0) or (FGamePadRightThumb.z <> 0) thenbegin    FYawDelta:= FRotVelocity.x;
+    FPitchDelta:= FRotVelocity.y;
+    if (FInvertPitch) then FPitchDelta:= - FPitchDelta;
+    FCameraPitchAngle:= FCameraPitchAngle + FPitchDelta;
+    FCameraYawAngle:= FCameraYawAngle + FYawDelta;
+    FCameraPitchAngle:= Max(-z3DPI / 2, FCameraPitchAngle);
+    FCameraPitchAngle:= Min(+z3DPI / 2, FCameraPitchAngle);
+ end
+  FCameraRot:= z3DMatrix.RotateYPR(FCameraYawAngle, FCameraPitchAngle, 0);
+  FWorldUp:= z3DFloat3(0, 1, 0).TransformC(FCameraRot);
+  FWorldAhead:= z3DFloat3(0, 0, 1).TransformC(FCameraRot);
+  if not FEnableYMovement then FCameraRot.RotateYPR(FCameraYawAngle, 0, 0);
+  FPosDeltaWorld:= z3DFloat3.From(FPosDelta).TransformC(FCameraRot);
+  FPosition.BeginInternalChange;
+  FPosition.Add(FPosDeltaWorld);
+  FPosition.EndInternalChange;
+  if FClipping then ConstrainToBoundary(FPosition);
+  FLookAt.BeginInternalChange;
+  FLookAt.From(FPosition).Add(FWorldAhead);
+  FLookAt.EndInternalChange;
+  FViewMatrix.LookAt(FPosition, FLookAt, FWorldUp);
+  if FEnableFlashLight and (FFlashLight <> nil) thenbegin    FFlashLight.Position.From(FPosition).Add(z3DFloat3(0.1, -0.25, 0.15));
+    FFlashLight.Direction.From(FLookAt).Subtract(FPosition).Normalize;
+ end
+  if Assigned(FObject) thenbegin    // Angle
+    FNormalLookAt:= z3DFloat3.From(FLookAt).Subtract(FPosition);
+    if FNormalLookAt.Z >= 0 then
+/*TODO JP    FObject.Angle.Y:= RadToDeg(ArcCos(FViewMatrix.e31) + D3DX_PI / 2) else
+    FObject.Angle.Y:= RadToDeg(-ArcCos(FViewMatrix.e31) + D3DX_PI / 2);
+    FObject.Angle.X:= RadToDeg(ArcSin(FViewMatrix.e23));*/ 
+    // Position
+    FInvOffsetView:= z3DMatrix.Inverse(FViewMatrix);
+    FInvOffsetView.e41:= 0;
+    FInvOffsetView.e42:= 0;
+    FInvOffsetView.e43:= 0;
+    FOffset:= z3DFloat3(0.01, -1.44, -0.1).TransformC(FInvOffsetView);
+    FObject.Center.X:= FPosition.X+FOffset.X;
+    FObject.Center.Y:= FPosition.Y+FOffset.Y;
+    FObject.Center.Z:= FPosition.Z+FOffset.Z;
+ end
+  FCameraWorld:= z3DMatrix.From(FViewMatrix).Inverse;
+  if FPosDeltaWorld.Length > 0.0001 thenbegin    FBoundingBox.Center.From(FPosition);
+    FBoundingSphere.Center.From(FPosition);
+ end
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMatrix Tz3DFirstPersonCamera::GetWorldMatrix ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCameraWorld;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFirstPersonCamera::GetWorldRight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DFloat3(FCameraWorld.e11, FCameraWorld.e12, FCameraWorld.e13);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFirstPersonCamera::GetWorldUp ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DFloat3(FCameraWorld.e21, FCameraWorld.e22, FCameraWorld.e23);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFirstPersonCamera::GetWorldAhead ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DFloat3(FCameraWorld.e31, FCameraWorld.e32, FCameraWorld.e33);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFirstPersonCamera::GetEyePt ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DFloat3(FCameraWorld.e41, FCameraWorld.e42, FCameraWorld.e43);
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Tz3DFirstPersonCamera::SetButtons (const Boolean ALeft ,
+const Boolean AMiddle ,
+const Boolean ARight 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FActiveButtonMask:= IfThen(ALeft, z3DcMouseLeftButton, 0) or
+  IfThen(AMiddle, z3DcMouseMiddleButton, 0) or IfThen(ARight, z3DcMouseRightButton, 0);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::SetFirstPerson (const Iz3DScenarioDynamicObject AObject 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FObject:= AObject;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCamera::GetResetCursorAfterMove ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FResetCursorAfterMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFirstPersonCameraRotateButtons Tz3DFirstPersonCamera::GetRotateButtons ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRotateButtons;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::SetResetCursorAfterMove (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FResetCursorAfterMove:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+
+  
+Iz3DFloat3 Tz3DFirstPersonCamera::GetAcceleration ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSWOAcceleration;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBoundingBox Tz3DFirstPersonCamera::GetBoundingBox ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBoundingBox;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBoundingSphere Tz3DFirstPersonCamera::GetBoundingSphere ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBoundingSphere;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFirstPersonCamera::GetCenter ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPosition;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCamera::GetEnablePhysics ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCamera::GetGround ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGround;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DScenarioObjectShape Tz3DFirstPersonCamera::GetShape ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3dsosCube;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DFirstPersonCamera::GetSubsetCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= 1;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Iz3DScenarioObjectSubset Tz3DFirstPersonCamera::GetSubsets (const Integer I 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSubset;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DFirstPersonCamera::GetVelocity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSWOVelocity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat4 Tz3DFirstPersonCamera::GetViewCenter ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DFloat4(FPosition.X, FPosition.Y, FPosition.Z, 1);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCamera::GetVisible ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFirstPersonCamera::Hide ()
+{
+#ifndef DOXYGEN_SKIP
+  //
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::SetEnablePhysics (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  //
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::SetGround (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FGround:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::SetVisible (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFirstPersonCamera::Show ()
+{
+#ifndef DOXYGEN_SKIP
+  //
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::VectorChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FBoundingBox.Center.From(FPosition);
+  FBoundingSphere.Center.From(FPosition);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::UpdateVelocity (const Single AElapsedTime 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DFirstPersonCamera::GetEnableFlashLight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableFlashLight;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::SetEnableFlashLight (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnableFlashLight <> Value thenbegin    FEnableFlashLight:= Value;
+    if not Value and (FFlashLight <> nil) then FFlashLight.Enabled:= False;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFirstPersonCamera::z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if (AStage = z3dssCreatingScenarioObjects) and (FFlashLight = nil) thenbegin    FFlashLight:= z3DLightingController.CreateLight;
+    StringToWideChar('z3DFirstPersonCamera_FlashLight'+IntToStr(FFlashLight.Index), z3DWideBuffer, 255);
+    FFlashLight.Name:= z3DWideBuffer;
+    FFlashLight.Enabled:= False;
+    FFlashLight.Color.R:= 0.87;
+    FFlashLight.Color.G:= 0.8;
+    FFlashLight.Color.B:= 0.6;
+    FFlashLight.Style:= z3dlsSpot;
+    FFlashLight.Angle:= 130;
+    FFlashLight.Effects.Glow:= False;
+    FFlashLight.Effects.StaticShadows:= False;
+    FFlashLight.Sharpness:= 60;
+    FFlashLight.Size:= 0.1;
+    FFlashLight.Range:= 50;
+    FFlashLight.Intensity:= 1;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFirstPersonCamera::z3DStopScenario ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FFlashLight:= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+        
+Tz3DFirstPersonCamera::z3DKeyboard (const Cardinal AChar ,
+const Boolean AKeyDown ,
+const Boolean AAltDown 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if (AChar = Ord('F')) and AKeyDown and FEnableFlashLight and (FFlashLight <> nil) then
+  FFlashLight.Enabled:= not FFlashLight.Enabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DCameraKeys */ 
+
+ 
+Tz3DCameraKeys::Tz3DCameraKeys ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FEnableDefaultKeys:= True;
+  FAutoZoom:= False;
+  FMove:= 'W';
+  FMoveBackward:= 'S';
+  FMoveRight:= 'D';
+  FMoveLeft:= 'A';
+  FMoveUp:= 'E';
+  FMoveDown:= 'Q';
+  FZoomIn:= 'Z';
+  FZoomOut:= 'X';
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DCameraKeys::GetAutoZoom ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAutoZoom;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DCameraKeys::GetEnableDefaultKeys ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableDefaultKeys;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Char Tz3DCameraKeys::GetMoveBackward ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoveBackward;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Char Tz3DCameraKeys::GetMoveDown ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoveDown;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Char Tz3DCameraKeys::GetMoveForward ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoveForward;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Char Tz3DCameraKeys::GetMoveLeft ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoveLeft;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Char Tz3DCameraKeys::GetMoveRight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoveRight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Char Tz3DCameraKeys::GetMoveUp ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoveUp;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Char Tz3DCameraKeys::GetZoomIn ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FZoomIn;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Char Tz3DCameraKeys::GetZoomOut ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FZoomOut;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetAutoZoom (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAutoZoom:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetEnableDefaultKeys (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableDefaultKeys:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetMoveBackward (const Char Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMoveBackward:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetMoveDown (const Char Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMoveDown:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetMoveForward (const Char Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMove:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetMoveLeft (const Char Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMoveLeft:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetMoveRight (const Char Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMoveRight:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetMoveUp (const Char Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMoveUp:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetZoomIn (const Char Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FZoomIn:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraKeys::SetZoomOut (const Char Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FZoomOut:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DCameraController */ 
+
+   
+Tz3DCameraController::AddCamera (const Iz3DBaseCamera ACamera 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FCameras.Add(ACamera);
+  SetActiveCamera(ACamera);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFirstPersonCamera Tz3DCameraController::CreateFirstPersonCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DFirstPersonCamera.Create;
+  AddCamera(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DObjectCamera Tz3DCameraController::CreateObjectCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DObjectCamera.Create;
+  AddCamera(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DCameraController::Tz3DCameraController ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FCameras:= TInterfaceList.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBaseCamera Tz3DCameraController::GetActiveCamera ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Cameras[FActiveCameraIndex];
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DCameraController::GetCameraCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCameras.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DBaseCamera Tz3DCameraController::GetCameras (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCameras[AIndex] as Iz3DBaseCamera;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraController::RemoveCamera (const Iz3DBaseCamera ACamera 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FCameras.Remove(ACamera);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DCameraController::SetActiveCamera (const Iz3DBaseCamera Value 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FActiveCameraIndex:= FCameras.IndexOf(Value);
+  for I:= 0 to CameraCount-1 do
+  if Cameras[I] = Value as Iz3DBaseCamera then
+  Cameras[I].Active:= True else Cameras[I].Active:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+
+
+
+/* Tz3DSkyBox */ 
+
+ 
+Tz3DSkyBox::Tz3DSkyBox ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  Init;
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Tz3DSkyBox::Init (const Iz3DBase AOwner = nil 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FActive:= True;
+  FTexture:= z3DCreateCubeTexture;
+  FTexture.Source:= z3dtsFileName;
+  FTexture.AutoGenerateMipMaps:= False;
+  FVertexBuffer:= z3DCreateVertexBuffer;
+  FVertexBuffer.Format.AddElement(0, z3dvefFloat4, z3dvemDefault, z3dveuPosition, 0);
+  FVertexBuffer.SetParams(4, D3DUSAGE_WRITEONLY, D3DPOOL_MANAGED);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSkyBox::Cleanup ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  z3DCleanupFree(FVertexBuffer);
+  z3DCleanupFree(FTexture);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSkyBox::CreateTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  if FActive thenbegin    FTexture.CreateD3DTexture;
+    z3DSkyController.Effect.Texture['GSkyboxTexture']:= FTexture;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSkyBox::FrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  if not z3DGlobalEngine.Scenario.Enabled then Exit;
+  z3DSkyController.Effect.Matrix['GInvViewProjectionMatrix']:=
+  z3DMatrix.From(z3DGlobalEngine.ViewMatrix).Multiply(z3DGlobalEngine.ProjectionMatrix).Inverse;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSkyBox::FrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  // Set the effect params
+  z3DSkyController.Effect.Technique:= 'z3DSkies_Skybox';
+
+  // Draw the skybox
+  FVertexBuffer.Prepare;
+  FVertexBuffer.Render(z3DSkyController.Effect);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSkyBox::ResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if z3DGlobalEngine.Scenario.Enabled thenbegin    CreateTexture;
+    UpdateVertexBuffer;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSkyBox::StartScenario ()
+{
+#ifndef DOXYGEN_SKIP
+  CreateTexture;
+  UpdateVertexBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSkyBox::SetFileName (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FTexture.FileName:= Value;
+  if z3DGlobalEngine.Scenario.Enabled then CreateTexture;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DSkyBox::GetActive ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FActive;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DSkyBox::GetFileName ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTexture.FileName;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DCubeTexture Tz3DSkyBox::GetTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTexture;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSkyBox::SetActive (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FActive <> Value thenbegin    FActive:= Value;
+    CreateTexture;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSkyBox::UpdateVertexBuffer ()
+
+/*
+var
+ FVertexArray: Pz3DSkyboxVertArray;
+    FHighW, FHighH, FLowW, FLowH: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Fill the vertex buffer
+  FVertexArray:= FVertexBuffer.Lock(D3DLOCK_DISCARD);
+  try
+    // Map texels to pixels
+    FHighW:= -1 - (1 / z3DCore_GetBackBufferSurfaceDesc.Width);
+    FHighH:= -1 - (1 / z3DCore_GetBackBufferSurfaceDesc.Height);
+    FLowW:= 1 + (1 / z3DCore_GetBackBufferSurfaceDesc.Width);
+    FLowH:= 1 + (1 / z3DCore_GetBackBufferSurfaceDesc.Height);
+    FVertexArray[0].Position:= D3DXVector4(FLowW, FLowH, 1, 1);
+    FVertexArray[1].Position:= D3DXVector4(FLowW, FHighH, 1, 1);
+    FVertexArray[2].Position:= D3DXVector4(FHighW, FLowH, 1, 1);
+    FVertexArray[3].Position:= D3DXVector4(FHighW, FHighH, 1, 1);
+  finally
+    FVertexBuffer.Unlock;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DSky */ 
+
+  
+Iz3DLight Tz3DSky::AddStarLight ()
+{
+#ifndef DOXYGEN_SKIP
+  if z3DLightingController = nil thenbegin    z3DTrace('Iz3DSky.AddStarLight failed (must create a lighting controller): Returning NULL', z3DtkWarning);
+    Result:= nil;
+    Exit; 
+ end
+
+  // Starlight default parameters
+  Result:= z3DLightingController.CreateLight;
+  with Result dobegin    Style:= z3dlsDirectional;
+    Range:= 500;
+    Size:= 25;
+    Direction.X:= 0.2;
+    Direction.Y:= -1;
+    Direction.Z:= 0.2;
+    Enabled:= True;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSky::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FSkyBox:= Tz3DSkyBox.Create;
+  FDomeMode:= z3dsdmDynamic;
+  FActive:= True;
+  if (z3DGlobalScenario <> nil) and (z3DGlobalScenario.Worlds[0] <> nil) then
+  World:= z3DGlobalScenario.Worlds[0];
+
+  // Link this object to the desired events generated by the z3D Engine
+  Notifications:= [z3dlnDevice, z3dlnFrameMove, z3dlnFrameRender];
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSky::Cleanup ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FWorld:= nil;
+  z3DCleanupFree(FSkyBox);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DSkyDomeMode Tz3DSky::GetDomeMode ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDomeMode;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DSky::GetActive ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FActive;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DSkyBox Tz3DSky::GetSkyBox ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSkyBox;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DWorld Tz3DSky::GetWorld ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWorld;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSky::SetDomeMode (const Tz3DSkyDomeMode Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDomeMode:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSky::SetActive (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FActive:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSky::SetWorld (const Iz3DWorld Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FWorld:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSky::z3DFrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  if FDomeMode = z3dsdmSkyBox then FSkyBox.FrameMove;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSky::z3DFrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if not z3DGlobalEngine.Scenario.Enabled or
+  (z3DGlobalEngine.Renderer.RenderStage = z3drsDepth) then Exit;
+  if FDomeMode = z3dsdmSkyBox then FSkyBox.FrameRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSky::z3DResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  if not z3DGlobalEngine.Scenario.Enabled then Exit;
+  if FDomeMode = z3dsdmSkyBox then FSkyBox.ResetDevice;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSky::z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if AStage <> z3dssCreatingWorld then Exit;
+  if FDomeMode = z3dsdmSkyBox then FSkyBox.StartScenario;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DEarthSky */ 
+
+ 
+Tz3DEarthSky::Tz3DEarthSky ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEarthSky::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FMoonHorizonColor:= z3DFloat3(0.739607, 0.574125, 0.351229);
+  FSunHorizonColor:= z3DFloat3(0.705189, 0.526078, 0.144841);
+  FMoonZenithColor:= z3DFloat3(0.417562, 0.551183, 0.722384);
+  FSunZenithColor:= z3DFloat3(0.612256, 0.594730, 0.520998);
+  FEnableMoonLight:= True;
+  FEnableSunLight:= True;
+  FTime:= 1500;
+  FAutoSetFog:= True;
+  FAutoSetAmbient:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEarthSky::Cleanup ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FSunLight:= nil;
+  FMoonLight:= nil;
+  z3DCleanupFree(FMoonHorizonColor);
+  z3DCleanupFree(FSunHorizonColor);
+  z3DCleanupFree(FMoonZenithColor);
+  z3DCleanupFree(FSunZenithColor);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEarthSky::CreateLights ()
+{
+#ifndef DOXYGEN_SKIP
+  if FSunLight <> nil then Exit;
+  if z3DLightingController = nil thenbegin    z3DTrace('Iz3DEarthSky.CreateLights failed (must create a lighting controller first)', z3DtkWarning);
+    Exit;
+ end
+
+  // Sunlight default parameters
+  FSunLight:= z3DLightingController.CreateLight;
+  with FSunLight dobegin    Style:= z3dlsDirectional;
+    Size:= 25;
+    Direction.X:= -0.001;
+    Range:= 500;
+    Enabled:= False;
+ end
+
+  // Moonlight default parameters
+  FMoonLight:= z3DLightingController.CreateLight;
+  with FMoonLight dobegin    Style:= z3dlsDirectional;
+    Size:= 28;
+    Direction.X:= 0.001;
+    Range:= 500;
+    Enabled:= False;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEarthSky::GetEnableMoonLight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableMoonLight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEarthSky::GetEnableSunLight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableSunLight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DEarthSky::GetMoonHorizonColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoonHorizonColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLight Tz3DEarthSky::GetMoonLight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoonLight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DEarthSky::GetMoonZenithColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMoonZenithColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DEarthSky::GetSunHorizonColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSunHorizonColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLight Tz3DEarthSky::GetSunLight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSunLight;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DEarthSky::GetSunZenithColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSunZenithColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DEarthSky::GetTime ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTime;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEarthSky::SetEnableMoonLight (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableMoonLight:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEarthSky::SetEnableSunLight (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableSunLight:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEarthSky::SetTime (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FTime <> Value thenbegin    FTime:= Value;
+    UpdateSky;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEarthSky::UpdateSky ()
+
+/*
+var
+ FSHAmount: Single;
+    FTOD: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  if not z3DGlobalEngine.Device.Created or (World = nil) then Exit;
+  
+  // Sunlight parameters
+  if FEnableSunLight and (FSunLight <> nil) thenbegin    with FSunLight dobegin      Enabled:= (FTime > 600) and (FTime < 2000);
+      if Enabled thenbegin        Direction.Y:= (FTime - 700) / 1200;
+        Direction.X:= (Direction.Y - 0.5) * 2;
+        Direction.Y:= -Direction.Y * (1 - Direction.Y) * 4;
+        FSHAmount:= Power(Max(0, -Direction.Y), 0.75);
+        Color.R:= Lerp(SunHorizonColor.X, SunZenithColor.X, FSHAmount);
+        Color.G:= Lerp(SunHorizonColor.Y, SunZenithColor.Y, FSHAmount);
+        Color.B:= Lerp(SunHorizonColor.Z, SunZenithColor.Z, FSHAmount);
+        if Direction.Y > 0 thenbegin          Intensity:= 0.01;
+          Effects.GlowFactor:= 150;
+       endelsebegin          Intensity:= 1.75 + FSHAmount 
+          Effects.GlowFactor:= 0.25 + (1 - Intensity * 0.33);
+          Size:= 24 + Effects.GlowFactor * 2;
+       end
+     end
+   end
+ end
+
+  // Moonlight parameters
+  if FEnableMoonLight and (FMoonLight <> nil) thenbegin    with FMoonLight dobegin      Enabled:= (FTime < 600) or (FTime > 2000);
+      if Enabled thenbegin        if FTime > 2000 then Direction.Y:= (FTime - 2000) / 1000 else
+        Direction.Y:= (FTime + 400) / 1000;
+
+        Direction.X:= (Direction.Y - 0.5) * 2;
+        Direction.Y:= -Direction.Y * (1 - Direction.Y) * 4;
+        FSHAmount:= Power(Max(0, -Direction.Y), 0.5);
+        Color.R:= Lerp(SunHorizonColor.X, MoonZenithColor.X, FSHAmount);
+        Color.G:= Lerp(SunHorizonColor.Y, MoonZenithColor.Y, FSHAmount);
+        Color.B:= Lerp(SunHorizonColor.Z, MoonZenithColor.Z, FSHAmount);
+        FMoonLight.Intensity:= Max(0, -Direction.Y) * 0.5;
+        FMoonLight.Effects.GlowFactor:=  1 / (FMoonLight.Intensity * 1.75 + 0.001);
+     end
+   end
+ end
+
+  case FTime of
+
+
+    // After midnight
+    0..500:begin      z3DSkyController.Effect.Color3['GSkyColorTop']:= z3DFloat3;
+      z3DSkyController.Effect.Color3['GSkyColorMid']:= z3DFloat3;
+      z3DSkyController.Effect.Color3['GSkyColorBottom']:= z3DFloat3;
+
+      if FAutoSetAmbient thenbegin        World.AmbientColor.R:= 0.137255;
+        World.AmbientColor.G:= 0.180392;
+        World.AmbientColor.B:= 0.231372;
+     end
+
+      if FAutoSetFog then
+      World.Fog.Color.RGB:= z3DFloat3.RGB;
+   end
+
+    // Sunrise
+    501..700:begin      FTOD:= (FTime - 501) / (700 - 501);
+      z3DSkyController.Effect.Color3['GSkyColorTop']:= z3DFloat3(Lerp(0, 0.411764, FTOD),
+      Lerp(0, 0.654901, FTOD), Lerp(0, 0.894117, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorMid']:= z3DFloat3(Lerp(0, 0.549019, FTOD),
+      Lerp(0, 0.707843, FTOD), Lerp(0, 0.833333, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorBottom']:= z3DFloat3(Lerp(0, 0.780392, FTOD),
+      Lerp(0, 0.874509, FTOD), Lerp(0, 0.874509, FTOD));
+
+      if FAutoSetAmbient thenbegin        World.AmbientColor.R:= Lerp(0.137255, 0.394902, FTOD);
+        World.AmbientColor.G:= Lerp(0.180392, 0.434117, FTOD);
+        World.AmbientColor.B:= Lerp(0.231372, 0.532157, FTOD);
+     end
+
+      if FAutoSetFog then
+      World.Fog.Color.RGB:= z3DFloat3(Lerp(0, 0.780392, FTOD),
+      Lerp(0, 0.874509, FTOD), Lerp(0, 0.874509, FTOD)).RGB;
+   end
+
+    // Morning
+    701..1300:begin      FTOD:= Power((FTime - 701) / (1300 - 701), 0.5);
+      z3DSkyController.Effect.Color3['GSkyColorTop']:= z3DFloat3(Lerp(0.411764, 0.439215, FTOD),
+      Lerp(0.654901, 0.643137, FTOD), Lerp(0.894117, 0.928627, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorMid']:= z3DFloat3(Lerp(0.549019, 0.536078, FTOD),
+      Lerp(0.707843, 0.702549, FTOD), Lerp(0.833333, 0.901960, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorBottom']:= z3DFloat3(Lerp(0.780392, 0.678431, FTOD),
+      Lerp(0.874509, 0.854902, FTOD), Lerp(0.874509, 0.984313, FTOD));
+
+      if FAutoSetAmbient thenbegin        World.AmbientColor.R:= Lerp(0.394902, 0.677647, FTOD);
+        World.AmbientColor.G:= Lerp(0.434117, 0.712568, FTOD);
+        World.AmbientColor.B:= Lerp(0.532157, 0.818823, FTOD);
+     end
+
+      if FAutoSetFog then
+      World.Fog.Color.RGB:= z3DFloat3(Lerp(0.780392, 0.678431, FTOD),
+      Lerp(0.874509, 0.854902, FTOD), Lerp(0.874509, 0.984313, FTOD)).RGB;
+   end
+
+    // Afternoon
+    1301..1900:begin      FTOD:= Power((FTime - 1301) / (1900 - 1301), 2);
+      z3DSkyController.Effect.Color3['GSkyColorTop']:= z3DFloat3(Lerp(0.439215, 0.235294, FTOD),
+      Lerp(0.643137, 0.494117, FTOD), Lerp(0.928627, 0.640196, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorMid']:= z3DFloat3(Lerp(0.536078, 0.409804, FTOD),
+      Lerp(0.702549, 0.468627, FTOD), Lerp(0.901960, 0.605882, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorBottom']:= z3DFloat3(Lerp(0.678431, 0.576470, FTOD),
+      Lerp(0.854902, 0.564705, FTOD), Lerp(0.984313, 0.537254, FTOD));
+
+      if FAutoSetAmbient thenbegin        World.AmbientColor.R:= Lerp(0.677647, 0.372549, FTOD);
+        World.AmbientColor.G:= Lerp(0.712568, 0.450000, FTOD);
+        World.AmbientColor.B:= Lerp(0.818823, 0.523529, FTOD);
+     end
+
+      if FAutoSetFog then
+      World.Fog.Color.RGB:= z3DFloat3(Lerp(0.678431, 0.576470, FTOD),
+      Lerp(0.854902, 0.564705, FTOD), Lerp(0.984313, 0.537254, FTOD)).RGB;
+   end
+
+    // Sunset
+    1901..2000:begin      FTOD:= (FTime - 1901) / (2000 - 1901);
+      z3DSkyController.Effect.Color3['GSkyColorTop']:= z3DFloat3(Lerp(0.235294, 0.066666, FTOD),
+      Lerp(0.494117, 0.082352, FTOD), Lerp(0.640196, 0.121568, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorMid']:= z3DFloat3(Lerp(0.409804, 0.076470, FTOD),
+      Lerp(0.468627, 0.108621, FTOD), Lerp(0.605882, 0.130784, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorBottom']:= z3DFloat3(Lerp(0.576470, 0.098039, FTOD),
+      Lerp(0.564705, 0.125490, FTOD), Lerp(0.537254, 0.156862, FTOD));
+
+      if FAutoSetAmbient thenbegin        World.AmbientColor.R:= Lerp(0.372549, 0.134313, FTOD);
+        World.AmbientColor.G:= Lerp(0.450000, 0.211568, FTOD);
+        World.AmbientColor.B:= Lerp(0.523529, 0.295490, FTOD);
+     end
+
+      if FAutoSetFog then
+      World.Fog.Color.RGB:= z3DFloat3(Lerp(0.576470, 0.098039, FTOD),
+      Lerp(0.564705, 0.125490, FTOD), Lerp(0.537254, 0.156862, FTOD)).RGB;
+   end
+
+    // Night
+    2001..2400:begin      FTOD:= Power((FTime - 2001) / (2400 - 2001), 0.5);
+      z3DSkyController.Effect.Color3['GSkyColorTop']:= z3DFloat3(Lerp(0.066666, 0, FTOD),
+      Lerp(0.082352, 0, FTOD), Lerp(0.121568, 0, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorMid']:= z3DFloat3(Lerp(0.076470, 0, FTOD),
+      Lerp(0.108627, 0, FTOD), Lerp(0.130784, 0, FTOD));
+      z3DSkyController.Effect.Color3['GSkyColorBottom']:= z3DFloat3(Lerp(0.098039, 0, FTOD),
+      Lerp(0.125490, 0, FTOD), Lerp(0.156862, 0, FTOD));
+
+      if FAutoSetAmbient thenbegin        World.AmbientColor.R:= Lerp(0.134313, 0.137255, FTOD);
+        World.AmbientColor.G:= Lerp(0.211568, 0.180392, FTOD);
+        World.AmbientColor.B:= Lerp(0.295490, 0.231372, FTOD);
+     end
+
+      if FAutoSetFog then
+      World.Fog.Color.RGB:= z3DFloat3(Lerp(0.098039, 0, FTOD),
+      Lerp(0.125490, 0, FTOD), Lerp(0.156862, 0, FTOD)).RGB;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DEarthSky::z3DFrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  if not z3DGlobalEngine.Scenario.Enabled or
+  (z3DGlobalEngine.Renderer.RenderStage = z3drsDepth) then Exit;
+  if FDomeMode = z3dsdm thenbegin    z3DSkyController.Effect.Technique:= 'z3DSkies_SimpleSky';
+    z3DSkyController.Effect.Param['GAltitude']:= -z3DFloat3.From(z3DGlobalEngine.ViewLookAt).
+    Subtract(z3DGlobalEngine.ViewPosition).Normalize.Y + 0.5;
+    z3DGlobalEngine.Renderer.Blend([], z3DSkyController.EFfect);
+ endelse inherited 
+
+#endif /* DOXYGEN_SKIP */
+};
+   
+Tz3DEarthSky::z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if AStage = z3dssCreatingWorldObjects thenbegin    CreateLights;
+    UpdateSky;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEarthSky::GetAutoSetAmbient ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAutoSetAmbient;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DEarthSky::GetAutoSetFog ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAutoSetFog;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEarthSky::SetAutoSetAmbient (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAutoSetAmbient:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DEarthSky::SetAutoSetFog (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAutoSetFog:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DSkyController */ 
+
+   
+Tz3DSkyController::AddSky (const Iz3DSky ASky 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FSkies.Add(ASky);
+  SetActiveSky(ASky);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSkyController::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FEffect:= z3DCreateEffect;
+  FEffect.FileName:= PWideChar(WideString(z3DRES_SKIES_EFFECT));
+  FSkies:= TInterfaceList.Create;
+  FActiveSky:= -1;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSkyController::Cleanup ()
+{
+#ifndef DOXYGEN_SKIP
+  z3DCleanupFree(FEffect);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DEarthSky Tz3DSkyController::CreateEarthSky ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DEarthSky.Create;
+  AddSky(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DSky Tz3DSkyController::CreateSky ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DSky.Create;
+  AddSky(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DSky Tz3DSkyController::GetActiveSky ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSkies[FActiveSky] as Iz3DSky;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DEffect Tz3DSkyController::GetEffect ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEffect;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DSky Tz3DSkyController::GetSkies (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSkies[AIndex] as Iz3DSky;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DSkyController::GetSkyCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSkies.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSkyController::SetActiveSky (const Iz3DSky Value 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FActiveSky:= FSkies.IndexOf(Value);
+  for I:= 0 to SkyCount-1 do
+  if Skies[I] = Value as Iz3DSky then
+  Skies[I].Active:= True else Skies[I].Active:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DRope */ 
+
+   
+Tz3DRope::Tz3DRope (const Iz3DRopeController AController 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FController:= AController;
+  FPointA:= z3DFloat3(-1, -1, -1);
+  FPointB:= z3DFloat3(1, 1, 1);
+  FLength:= 2.5;
+  FWidth:= 0.02;
+  FMaterial:= z3DMaterialController.CreateMaterial;
+  FMaterial.ColorDiffuse.RGB:= D3DXVector3(0.1, 0.05, 0.07);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DRope::GetLength ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLength;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DMaterial Tz3DRope::GetMaterial ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaterial;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DRope::GetPointA ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPointA;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DRope::GetPointB ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPointB;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DRope::GetWidth ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FWidth;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRope::SetLength (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLength:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRope::SetWidth (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FWidth:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRope::Render (const Iz3DFloat3 AViewOrigin 
+)
+
+/*
+var
+ FSegmentVec, FBillboard: Iz3DFloat3;
+    I: Integer;
+    FWindIntensity, FCableLength, FAnchorsLength: Single;
+    FMovementScale: Iz3DFloat3;
+    FBufferData: Pz3DRopeVertexArray;
+    FWorld: Iz3DWorld;
+
+     
+PrepareSegment (const Integer ASegment 
+)
+
+/*
+var
+ FLerp: Single;
+  */
+{
+#ifndef DOXYGEN_SKIP
+
+    FLerp:= ASegment / (FController.Segments-1);
+    FBufferData[ASegment*2].Position.x:= FLerp * (PointB.X - PointA.X) + PointA.X;
+
+    // Bend the rope if inside a world with gravity
+    if FWorld <> nil then FBufferData[ASegment*2].Position.y:= Sin(FLerp * D3DX_PI) *
+    (1 - Saturate(FWindIntensity/80)) * (-(FCableLength - FAnchorsLength) / 2) +
+    (FLerp * (PointB.Y - PointA.Y) + PointA.Y) else
+    FBufferData[ASegment*2].Position.y:= FLerp * (PointB.Y - PointA.Y) + PointA.Y;
+
+    FBufferData[ASegment*2].Position.z:= FLerp * (PointB.Z - PointA.Z) + PointA.Z;
+
+    // Move the rope if inside a world and wind is present
+    if FWindIntensity > 0.01 thenbegin      FMovementScale.x:= Cos(z3DCore_GetTime * Sin((FPointA.Y+FPointB.Z) * 4) * 0.1805 * FWindIntensity);
+      FMovementScale.y:= Abs(Sin(z3DCore_GetTime * Cos((FPointA.X+FPointB.Z) * 2) * 0.1631 * FWindIntensity) * 0.5 + 0.5);
+      FMovementScale.z:= Sin(z3DCore_GetTime * Cos((FPointA.X+FPointB.Y) * 3) * 0.1986 * FWindIntensity);
+
+      FMovementScale.x:= FMovementScale.x + Cos(FMovementScale.Y * 2) + FWorld.WindSpeed.X/25;
+      FMovementScale.y:= FMovementScale.y + Cos(FMovementScale.Z * 2) - FWorld.WindSpeed.Y/25;
+      FMovementScale.z:= FMovementScale.z + Cos(FMovementScale.X * 2) + FWorld.WindSpeed.Z/25;
+      FMovementScale.Normalize;
+
+      FMovementScale.Scale(((FCableLength - FAnchorsLength) / 2) * Sin((ASegment / (FController.Segments-1)) * D3DX_PI) * Saturate(FWindIntensity/100));
+
+      FBufferData[ASegment*2].Position.x:= FBufferData[ASegment*2].Position.x + FMovementScale.x;
+      FBufferData[ASegment*2].Position.y:= FBufferData[ASegment*2].Position.y - FMovementScale.y;
+      FBufferData[ASegment*2].Position.z:= FBufferData[ASegment*2].Position.z + FMovementScale.z;
+   end
+    FBufferData[ASegment*2].TexCoord.x:= FLerp;
+    FBufferData[ASegment*2].TexCoord.y:= 0;
+    FBufferData[ASegment*2+1].TexCoord.x:= FLerp;
+    FBufferData[ASegment*2+1].TexCoord.y:= 1;
+ 
+#endif /* DOXYGEN_SKIP */
+};{
+#ifndef DOXYGEN_SKIP
+  if not Visible then Exit;
+
+  for I:= 0 to z3DGlobalScenario.WorldCount-1 do
+  if z3DGlobalScenario.Worlds[I].IndexOf(Self as Iz3DScenarioEntity) <> -1 thenbegin    FWorld:= z3DGlobalScenario.Worlds[I];
+    Break;
+ end
+
+  FAnchorsLength:= z3DFloat3.From(FPointA).Subtract(FPointB).Length;
+  FCableLength:= Max(FLength, FAnchorsLength);
+  if FWorld <> nil then FWindIntensity:= FWorld.WindSpeed.Length else FWindIntensity:= 0;
+  FMovementScale:= z3DFloat3;
+  FSegmentVec:= z3DFloat3;
+  FBillboard:= z3DFloat3;
+
+  FBufferData:= FController.RopeBuffer.Lock(D3DLOCK_DISCARD);
+  try
+    for I:= 0 to FController.Segments-1 dobegin      if I <> 1 then PrepareSegment(I);
+      if I = 0 thenbegin        PrepareSegment(I+1);
+        FSegmentVec.From(FBufferData[(I+1)*2].Position).Subtract(FBufferData[I*2].Position);
+     endelse FSegmentVec.From(FBufferData[I*2].Position).Subtract(FBufferData[(I-1)*2].Position) 
+
+      // Get the billboard extent
+      FBillboard.From(FBufferData[I*2].Position).Subtract(AViewOrigin);
+      FSegmentVec.Cross(FBillboard).Normalize.Scale(FWidth / 2);
+
+      // Extrude the strip using the billboard plane to reach the desired width
+      FBufferData[I*2].Position.x:= FBufferData[I*2].Position.x - FSegmentVec.x;
+      FBufferData[I*2].Position.y:= FBufferData[I*2].Position.y - FSegmentVec.y;
+      FBufferData[I*2].Position.z:= FBufferData[I*2].Position.z - FSegmentVec.z;
+      FBufferData[I*2+1].Position.x:= FBufferData[I*2].Position.x + FSegmentVec.x * 2;
+      FBufferData[I*2+1].Position.y:= FBufferData[I*2].Position.y + FSegmentVec.y * 2;
+      FBufferData[I*2+1].Position.z:= FBufferData[I*2].Position.z + FSegmentVec.z * 2;
+   end
+  finally
+    FController.RopeBuffer.Unlock;
+ end
+
+  // Draw the rope
+  z3DLightingController.Effect.Color['GMaterialDiffuseColor']:= FMaterial.ColorDiffuse;
+  z3DLightingController.Effect.Float3['GMaterialEmissiveColor']:= FMaterial.ColorEmissive;
+  z3DLightingController.Effect.Commit;
+  z3DGlobalEngine.CoreEffect.Commit;
+  FController.RopeBuffer.Render;
+//  z3DCore_GetD3DDevice.DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, (FController.Segments - 1) * 2);
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DRopeController */ 
+
+  
+Iz3DRope Tz3DRopeController::CreateRope ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DRope.Create(Self);
+  FRopes.Add(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRopeController::Tz3DRopeController ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+
+  // Link this object to the desired events generated by the z3D Engine
+  Notifications:= [z3dlnDevice, z3dlnFrameRender, z3dlnLightingRender,
+    z3dlnDirectLightRender];
+
+  FSegments:= 32;
+  FRopeBuffer:= z3DCreateVertexBuffer;
+  FRopeBuffer.Format.AddElement(0, z3dvefFloat3, z3dvemDefault, z3dveuPosition, 0);
+  FRopeBuffer.Format.AddElement(0, z3dvefFloat2, z3dvemDefault, z3dveuTexCoord, 0);
+  FRopeBuffer.SetParams(FSegments * 2, D3DUSAGE_ or D3DUSAGE_WRITEONLY, D3DPOOL_DEFAULT);
+  FRopes:= TInterfaceList.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DVertexBuffer Tz3DRopeController::GetRopeBuffer ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRopeBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRopeController::GetRopeCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRopes.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DRope Tz3DRopeController::GetRopes (const Integer I 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRopes[I] as Iz3DRope;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRopeController::GetSegments ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSegments;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRopeController::RemoveRope (const Iz3DRope ARope 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRopes.Remove(ARope);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRopeController::SetSegments (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FSegments <> Value thenbegin    FSegments:= Value;
+    FRopeBuffer.SetParams(FSegments * 2, D3DUSAGE_ or D3DUSAGE_WRITEONLY, D3DPOOL_DEFAULT);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRopeController::z3DFrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if not z3DGlobalEngine.Scenario.Enabled or
+  (z3DGlobalEngine.Renderer.RenderStage <> z3drsDepth) then Exit;
+  RenderRopes(z3DGlobalEngine.ViewPosition);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRopeController::z3DLightingRender ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  RenderRopes(z3DGlobalEngine.ViewPosition);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRopeController::z3DDirectLightRender ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  if z3DLightingController.CurrentLight.Stage = z3ddlrsShadows then
+  RenderRopes(z3DLightingController.CurrentLight.Position, True);
+#endif /* DOXYGEN_SKIP */
+};
+
+         
+Tz3DRopeController::RenderRopes (const Iz3DFloat3 AViewOrigin ,
+const Boolean AUniform = False 
+)
+
+/*
+var
+ I: Integer;
+    FPreviousWidth: Single;
+    FPreviousCullMode: Cardinal;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+
+  if z3DGlobalEngine.Renderer.RenderStage = z3drsDepth thenbegin    // Set up the params for rendering
+    z3DGlobalEngine.CoreEffect.Matrix['GWorldViewMatrix']:= z3DGlobalEngine.ViewMatrix;
+    z3DGlobalEngine.CoreEffect.Matrix['GWorldViewProjectionMatrix']:= z3DMatrix.From(z3DGlobalEngine.ViewMatrix).Multiply(z3DGlobalEngine.ProjectionMatrix);
+ endelsebegin    // Set up the params for rendering
+    z3DLightingController.Effect.Matrix['GWorldMatrix']:= z3DMatrix.Identity 
+    z3DLightingController.Effect.Matrix['GWorldViewMatrix']:= z3DGlobalEngine.ViewMatrix;
+    z3DLightingController.Effect.Matrix['GWorldViewProjectionMatrix']:= z3DMatrix.From(z3DGlobalEngine.ViewMatrix).Multiply(z3DGlobalEngine.ProjectionMatrix);
+ end
+
+  // Turn off culling
+  z3DCore_GetD3DDevice.GetRenderState(D3DRS_CULLMODE, FPreviousCullMode);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+  try
+
+    // Render the ropes
+    FRopeBuffer.Prepare;
+    for I:= 0 to FRopes.Count-1 dobegin
+      // Ignore ropes behind the camera (except on shadows)
+      if not AUniform and (z3DFloat3.From(Ropes[I].PointA).TransformC(z3DGlobalEngine.ViewMatrix).Z < 0) and
+      (z3DFloat3.From(Ropes[I].PointB).TransformC(z3DGlobalEngine.ViewMatrix).Z < 0) then Continue;
+      
+      if AUniform thenbegin        if z3DLightingController.CurrentLight.Style = z3dlsDirectional thenbegin          FPreviousWidth:= Ropes[I].Width;
+          Ropes[I].Width:= 0.1;
+       end
+        Ropes[I].Render(AViewOrigin);
+        if z3DLightingController.CurrentLight.Style = z3dlsDirectional then
+        Ropes[I].Width:= FPreviousWidth;
+     endelse Ropes[I].Render(AViewOrigin) 
+    end
+
+  // Restore previous values
+  finally
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_CULLMODE, FPreviousCullMode);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+// finished
+

@@ -1,0 +1,621 @@
+{==============================================================================}
+{== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==}
+{==============================================================================}
+{== Unit: z3DEngine. z3D Engine interfaces and access functions              ==}
+{==============================================================================}
+
+unit z3DEngine_Intf;
+
+interface
+
+uses Windows, Direct3D9, D3DX9, z3DClasses_Intf, z3DCore_Intf,
+  z3DComponents_Intf, z3DMath_Intf, z3DAudio_Intf, z3DGUI_Intf,
+  z3DScenario_Intf;
+
+type
+
+  Iz3DPostProcessEffects = interface;
+
+{==============================================================================}
+{== Debug helper interface                                                   ==}
+{==============================================================================}
+{== Helper class for the developer. It allow to view the position of every   ==}
+{== light source, create a grid for position metrics and so on               ==}
+{==============================================================================}
+
+  Iz3DDebugHelper = interface(Iz3DBase)['{70052626-D9B7-4B7C-BA24-5C332F9F2F73}']
+    function GetEnableGrid: Boolean; stdcall;
+    function GetEnableLightMesh: Boolean; stdcall;
+    function GetGridSize: Integer; stdcall;
+    function GetGridSpace: Single; stdcall;
+    procedure SetEnableGrid(const Value: Boolean); stdcall;
+    procedure SetEnableLightMesh(const Value: Boolean); stdcall;
+    procedure SetGridSize(const Value: Integer); stdcall;
+    procedure SetGridSpace(const Value: Single); stdcall;
+    procedure FrameRender; stdcall;
+    procedure RenderGridMesh; stdcall;  /// Renders a grid with an nxnxn size
+    procedure CreateGridMesh; stdcall;
+    procedure CreateLightMesh; stdcall;
+    
+    property EnableGrid: Boolean read GetEnableGrid write SetEnableGrid;
+    property GridSize: Integer read GetGridSize write SetGridSize;
+    property GridSpace: Single read GetGridSpace write SetGridSpace;
+    property EnableLightMesh: Boolean read GetEnableLightMesh write SetEnableLightMesh;
+  end;
+
+{==============================================================================}
+{== Device interface                                                         ==}
+{==============================================================================}
+{== Handles the additional properties and events of the device that are      ==}
+{== related to the engine                                                    ==}
+{==============================================================================}
+
+  Iz3DDevice = interface;
+
+  Tz3DShaderModel = (z3dsm1x, z3dsm2x, z3dsm3x, z3dsmHigher);
+
+  Tz3DDirectXLevel = (z3ddx70, z3ddx80, z3ddx81, z3ddx90, z3ddx91, z3ddxhigher);
+
+  Iz3DDeviceEngineCaps = interface(Iz3DBase)['{9005EBA5-CE8A-4C9A-B4F0-D4E5F61B061C}']
+    function GetFPFormat: TD3DFormat; stdcall;
+    function GetDirectXLevel: Tz3DDirectXLevel; stdcall;
+    function GetCubeShadowMapFormat: TD3DFormat; stdcall;
+    function GetShadowMapFormat: TD3DFormat; stdcall;
+    function GetShadowMapSupport: Boolean; stdcall;
+    function GetHDRSupport: Boolean; stdcall;
+    function GetShaderModel: Tz3DShaderModel; stdcall;
+    function GetShaderModelMinor: Integer; stdcall;
+    function GetShadowMapHWSupport: Boolean; stdcall;
+
+    function ShaderModel3Supported: Boolean; stdcall;
+
+    // General caps
+    property DirectXLevel: Tz3DDirectXLevel read GetDirectXLevel; 
+    property ShaderModel: Tz3DShaderModel read GetShaderModel;
+    property ShaderModelMinor: Integer read GetShaderModelMinor;
+    property HDRSupport: Boolean read GetHDRSupport;
+    // Depth map caps
+    property FPFormat: TD3DFormat read GetFPFormat;
+    // Shadow map caps
+    property ShadowMapSupport: Boolean read GetShadowMapSupport;
+    property ShadowMapFormat: TD3DFormat read GetShadowMapFormat;
+    property CubeShadowMapFormat: TD3DFormat read GetCubeShadowMapFormat;
+    // Support for hardware accelerated shadow map
+    property ShadowMapHWSupport: Boolean read GetShadowMapHWSupport;
+  end;
+
+  Iz3DDevice = interface(Iz3DBase)['{8AFC6BD9-7CC2-4054-9250-1BB19123F239}']
+    function GetEngineCaps: Iz3DDeviceEngineCaps; stdcall;
+    function GetDisplayREFWarning: Boolean; stdcall;
+    function GetFullScreen: Boolean; stdcall;
+    procedure SetDisplayREFWarning(const Value: Boolean); stdcall;
+    procedure SetFullScreen(const Value: Boolean); stdcall;
+    procedure CreateDevice; stdcall;
+    procedure ToggleFullScreen; stdcall;
+    procedure ToggleREF; stdcall;
+    function Created: Boolean; stdcall;
+
+    property EngineCaps: Iz3DDeviceEngineCaps read GetEngineCaps;
+    property FullScreen: Boolean read GetFullScreen write SetFullScreen;
+    property DisplayREFWarning: Boolean read GetDisplayREFWarning write SetDisplayREFWarning;
+  end;
+
+{==============================================================================}
+{== Stats interface                                                          ==}
+{==============================================================================}
+{== This interface allows to display the rendering stats on the screen       ==}
+{==============================================================================}
+
+  Iz3DStats = interface(Iz3DBase)['{E2840E4C-C405-4820-A003-A88F5C3DE598}']
+    function GetShowRenderer: Boolean; stdcall;
+    procedure SetShowRenderer(const Value: Boolean); stdcall;
+    function GetShowView: Boolean; stdcall;
+    procedure SetShowView(const Value: Boolean); stdcall;
+    function GetShowDevice: Boolean; stdcall;
+    function GetShowFPS: Boolean; stdcall;
+    function GetShowDisplay: Boolean; stdcall;
+    procedure SetShowDevice(const Value: Boolean); stdcall;
+    procedure SetShowFPS(const Value: Boolean); stdcall;
+    procedure SetShowDisplay(const Value: Boolean); stdcall;
+    procedure FrameRender; stdcall;
+
+    property ShowFPS: Boolean read GetShowFPS write SetShowFPS;
+    property ShowDisplay: Boolean read GetShowDisplay write SetShowDisplay;
+    property ShowDevice: Boolean read GetShowDevice write SetShowDevice;
+    property ShowView: Boolean read GetShowView write SetShowView;
+    property ShowRenderer: Boolean read GetShowRenderer write SetShowRenderer;
+  end;
+
+{==============================================================================}
+{== Options interface                                                        ==}
+{==============================================================================}
+{== Allows the developer to configure certain aspects and behaviors of the   ==}
+{== engine                                                                   ==}
+{==============================================================================}
+
+  Iz3DEngineOptions = interface(Iz3DBase)['{020A4EFE-4DE4-4B97-9AB9-A089D6168A81}']
+    function GetPlayIntro: Boolean; stdcall;
+    function GetPlayMusic: Boolean; stdcall;
+    procedure SetPlayIntro(const Value: Boolean); stdcall;
+    procedure SetPlayMusic(const Value: Boolean); stdcall;
+    function GetStretchToWindow: Boolean; stdcall;
+    procedure SetStretchToWindow(const Value: Boolean); stdcall;
+    function GetClipCursorOnFullScreen: Boolean; stdcall;
+    function GetExtendedEvents: Boolean; stdcall;
+    function GetHandleAltEnter: Boolean; stdcall;
+    function GetHandleDefaultHotkeys: Boolean; stdcall;
+    function GetHandleWindowMessages: Boolean; stdcall;
+    function GetLockAspectRatio: Boolean; stdcall;
+    function GetParseCommandLine: Boolean; stdcall;
+    function GetShadowStencil: Boolean; stdcall;
+    function GetShowCursorOnFullScreen: Boolean; stdcall;
+    function GetShowFatalMessages: Boolean; stdcall;
+    procedure SetShowFatalMessages(const Value: Boolean); stdcall;
+    procedure SetExtendedEvents(const Value: Boolean); stdcall;
+    procedure SetHandleAltEnter(const Value: Boolean); stdcall;
+    procedure SetHandleDefaultHotkeys(const Value: Boolean); stdcall;
+    procedure SetHandleWindowMessages(const Value: Boolean); stdcall;
+    procedure SetLockAspectRatio(const Value: Boolean); stdcall;
+    procedure SetParseCommandLine(const Value: Boolean); stdcall;
+    procedure SetShadowStencil(const Value: Boolean); stdcall;
+    procedure SetClipCursorOnFullScreen(const Value: Boolean); stdcall;
+    procedure SetShowCursorOnFullScreen(const Value: Boolean); stdcall;
+
+    property ExtendedEvents: Boolean read GetExtendedEvents write SetExtendedEvents;
+    property ShadowStencil: Boolean read GetShadowStencil write SetShadowStencil;
+    property ParseCommandLine: Boolean read GetParseCommandLine write SetParseCommandLine;
+    property HandleDefaultHotkeys: Boolean read GetHandleDefaultHotkeys write SetHandleDefaultHotkeys;
+    property ShowFatalMessages: Boolean read GetShowFatalMessages write SetShowFatalMessages;
+    property HandleAltEnter: Boolean read GetHandleAltEnter write SetHandleAltEnter;
+    property HandleWindowMessages: Boolean read GetHandleWindowMessages write SetHandleWindowMessages;
+    property ShowCursorOnFullScreen: Boolean read GetShowCursorOnFullScreen write SetShowCursorOnFullScreen;
+    property PlayIntro: Boolean read GetPlayIntro write SetPlayIntro;
+    property PlayMusic: Boolean read GetPlayMusic write SetPlayMusic;
+    property ClipCursorOnFullScreen: Boolean read GetClipCursorOnFullScreen write SetClipCursorOnFullScreen;
+    property LockAspectRatio: Boolean read GetLockAspectRatio write SetLockAspectRatio;
+    property StretchToWindow: Boolean read GetStretchToWindow write SetStretchToWindow;
+  end;
+
+{==============================================================================}
+{== Effects interface                                                        ==}
+{==============================================================================}
+{== These are handlers for the post process effects included in the engine:  ==}
+{==                                                                          ==}
+{==   - Bloom: Enhances strong-lighted areas                                 ==}
+{==   - Tone mapping: Simulates the eye adjustment                           ==}
+{==   - Color correction: Applies color effects to the scene                 ==}
+{==   - Motion blur: Blurs the screen when the eye moves at fast speeds      ==}
+{==   - Depth of field: Centers the view into a certain distance             ==}
+{==                                                                          ==}
+{==============================================================================}
+
+  Iz3DBloomEffect = interface(Iz3DBase)['{D005E8D7-B337-4A8B-98B7-661B2E006977}']
+    function GetFoggyFactor: Single; stdcall;
+    procedure SetFoggyFactor(const Value: Single); stdcall;
+    function GetEnabled: Boolean; stdcall;
+    function GetIntensity: Single; stdcall;
+    function GetThreshold: Single; stdcall;
+    procedure SetEnabled(const Value: Boolean); stdcall;
+    procedure SetIntensity(const Value: Single); stdcall;
+    procedure SetThreshold(const Value: Single); stdcall;
+    procedure FrameRender; stdcall;
+    procedure RenderBloom; stdcall;
+    procedure RenderBrightPass; stdcall;
+    procedure CreateScenarioObjects; stdcall;
+    procedure EnableResources; stdcall;
+
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property Intensity: Single read GetIntensity write SetIntensity;
+    property Threshold: Single read GetThreshold write SetThreshold;
+    property FoggyFactor: Single read GetFoggyFactor write SetFoggyFactor;
+  end;
+
+  Iz3DToneMappingEffect = interface(Iz3DBase)['{A3CB1DFD-87FC-4A69-9A2A-A0B37303ECD2}']
+    function GetAdjustmentFactor: Single; stdcall;
+    function GetAdjustmentSpeed: Single; stdcall;
+    function GetMiddleTone: Single; stdcall;
+    function GetToneRangeMax: Single; stdcall;
+    function GetToneRangeMin: Single; stdcall;
+    procedure SetAdjustmentFactor(const Value: Single); stdcall;
+    procedure SetAdjustmentSpeed(const Value: Single); stdcall;
+    procedure SetMiddleTone(const Value: Single); stdcall;
+    procedure SetToneRangeMax(const Value: Single); stdcall;
+    procedure SetToneRangeMin(const Value: Single); stdcall;
+    procedure SetEnabled(const Value: Boolean); stdcall;
+    function GetEnabled: Boolean; stdcall;
+    procedure FrameMove; stdcall;
+    procedure FrameRender; stdcall;
+    procedure CreateScenarioObjects; stdcall;
+    procedure EnableResources; stdcall;
+    
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property AdjustmentSpeed: Single read GetAdjustmentSpeed write SetAdjustmentSpeed;
+    property AdjustmentFactor: Single read GetAdjustmentFactor write SetAdjustmentFactor;
+    property MiddleTone: Single read GetMiddleTone write SetMiddleTone;
+    property ToneRangeMin: Single read GetToneRangeMin write SetToneRangeMin;
+    property ToneRangeMax: Single read GetToneRangeMax write SetToneRangeMax;
+  end;
+
+  Tz3DColorCorrectionMode = (z3dccmMonochromatic, z3dccmNegative, z3dccmSepia, z3dccmTonalize);
+
+  Iz3DColorCorrectionEffect = interface(Iz3DBase)['{34A1FFAF-CBC8-4705-AEFA-44460220B773}']
+    procedure SetEnabled(const Value: Boolean); stdcall;
+    function GetEnabled: Boolean; stdcall;
+    function GetMode: Tz3DColorCorrectionMode; stdcall;
+    function GetToneFactor: Iz3DFloat3; stdcall;
+    procedure SetMode(const Value: Tz3DColorCorrectionMode); stdcall;
+    procedure FrameRender; stdcall;
+    procedure CreateScenarioObjects; stdcall;
+    procedure EnableResources; stdcall;
+    
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property ToneFactor: Iz3DFloat3 read GetToneFactor;
+    property Mode: Tz3DColorCorrectionMode read GetMode write SetMode;
+  end;
+
+  Iz3DMotionBlurEffect = interface(Iz3DBase)['{CA37BC3D-DA3A-4171-A5DC-E7650FB83D3D}']
+    procedure SetAmount(const Value: Single); stdcall;
+    procedure SetEnabled(const Value: Boolean); stdcall;
+    function GetAmount: Single; stdcall;
+    function GetEnabled: Boolean; stdcall;
+    procedure FrameMove; stdcall;
+    procedure FrameRender; stdcall;
+    procedure CreateScenarioObjects; stdcall;
+    procedure EnableResources; stdcall;
+    
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property Amount: Single read GetAmount write SetAmount;
+  end;
+
+  Tz3DDepthOfFieldQuality = (z3ddofqLow, z3ddofqMid, z3ddofqHigh);
+
+  Iz3DDepthOfFieldEffect = interface(Iz3DBase)['{523667B0-970B-4D74-B08F-301E32C0FC71}']
+    function GetQuality: Tz3DDepthOfFieldQuality; stdcall;
+    procedure SetQuality(const Value: Tz3DDepthOfFieldQuality); stdcall;
+    function GetAdjustmentSpeed: Single; stdcall;
+    procedure SetAdjustmentSpeed(const Value: Single); stdcall;
+    function GetFocusSpread: Single; stdcall;
+    procedure SetFocusSpread(const Value: Single); stdcall;
+    function GetAmount: Single; stdcall;
+    procedure SetAmount(const Value: Single); stdcall;
+    function GetAutoFocusDepth: Boolean; stdcall;
+    procedure SetAutoFocusDepth(const Value: Boolean); stdcall;
+    procedure SetEnabled(const Value: Boolean); stdcall;
+    function GetEnabled: Boolean; stdcall;
+    function GetFocusDepth: Single; stdcall;
+    procedure SetFocusDepth(const Value: Single); stdcall;
+    procedure FrameMove; stdcall;
+    procedure FrameRender; stdcall;
+    procedure CreateScenarioObjects; stdcall;
+    procedure EnableResources; stdcall;
+
+    property Amount: Single read GetAmount write SetAmount;
+    property AdjustmentSpeed: Single read GetAdjustmentSpeed write SetAdjustmentSpeed;
+    property FocusSpread: Single read GetFocusSpread write SetFocusSpread;
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property FocusDepth: Single read GetFocusDepth write SetFocusDepth;
+    property AutoFocusDepth: Boolean read GetAutoFocusDepth write SetAutoFocusDepth;
+    property Quality: Tz3DDepthOfFieldQuality read GetQuality write SetQuality;
+  end;
+
+{==============================================================================}
+{== Effects handler interface                                                ==}
+{==============================================================================}
+{== Holds every post process effect and manages its shared properties and    ==}
+{== Objects                                                                  ==}
+{==============================================================================}
+
+  Iz3DPostProcessEffects = interface(Iz3DBase)['{942922FA-75E2-4FAD-9AF4-BE8973644FFE}']
+    function GetSceneScaledTexture: Iz3DRenderTexture; stdcall;
+    function GetBloom: Iz3DBloomEffect; stdcall;
+    function GetColorCorrection: Iz3DColorCorrectionEffect; stdcall;
+    function GetDepthOfField: Iz3DDepthOfFieldEffect; stdcall;
+    function GetMotionBlur: Iz3DMotionBlurEffect; stdcall;
+    function GetToneMapping: Iz3DToneMappingEffect; stdcall;
+    procedure FrameMove; stdcall;
+    procedure FrameRender; stdcall;
+    procedure CheckSharedResources; stdcall;
+
+    property SceneScaledTexture: Iz3DRenderTexture read GetSceneScaledTexture;
+    property Bloom: Iz3DBloomEffect read GetBloom;
+    property ToneMapping: Iz3DToneMappingEffect read GetToneMapping;
+    property ColorCorrection: Iz3DColorCorrectionEffect read GetColorCorrection;
+    property MotionBlur: Iz3DMotionBlurEffect read GetMotionBlur;
+    property DepthOfField: Iz3DDepthOfFieldEffect read GetDepthOfField;
+  end;
+
+{==============================================================================}
+{== Renderer interface                                                       ==}
+{==============================================================================}
+{== Manages the rendering of the scene and controls the different types of   ==}
+{== renderization                                                            ==}
+{==============================================================================}
+
+  Tz3DTargetMode = (z3dtmBackBuffer, z3dtmTexture, z3dtmRenderTarget);
+
+  Tz3DRenderMode = (z3drm2D, z3drm3D);
+
+  Tz3DRenderStage = (z3drsPrecomputation, z3drsBackBuffer, z3drsDepth, z3drsScene,
+    z3drsPostProcess, z3drsGUI);
+
+  // Post process quad vertex structure
+  Pz3DPostProcessVertex = ^Tz3DPostProcessVertex;
+  Tz3DPostProcessVertex = packed record
+    Position: TD3DXVector4;
+    TexCoord: TD3DXVector2;
+  end;
+
+  Pz3DPostProcessVertexArray = ^Tz3DPostProcessVertexArray;
+  Tz3DPostProcessVertexArray = array[0..MaxInt div SizeOf(Tz3DPostProcessVertex)-1] of Tz3DPostProcessVertex;
+
+  Iz3DRenderer = interface(Iz3DBase)['{A5186FB3-84BC-4085-BA83-6F134FBAA5E6}']
+    function GetAnisotropyLevel: Integer; stdcall;
+    procedure SetAnisotropyLevel(const Value: Integer); stdcall;
+    function GetTextureFilter: Tz3DSamplerFilter; stdcall;
+    procedure SetTextureFilter(const Value: Tz3DSamplerFilter); stdcall;
+    function GetDepthBuffer: Iz3DDepthBuffer; stdcall;
+    function GetRTHeight: Integer; stdcall;
+    function GetRTWidth: Integer; stdcall;
+    procedure SetRTHeight(const Value: Integer); stdcall;
+    procedure SetRTWidth(const Value: Integer); stdcall;
+    function GetAutoClearDepth: Boolean; stdcall;
+    function GetAutoClearTarget: Boolean; stdcall;
+    procedure SetAutoClearDepth(const Value: Boolean); stdcall;
+    procedure SetAutoClearTarget(const Value: Boolean); stdcall;
+    function GetDefaultClearColor: Iz3DFloat4; stdcall;
+    function GetDefaultClearDepth: Single; stdcall;
+    procedure SetDefaultClearDepth(const Value: Single); stdcall;
+    function GetEnableMSAA: Boolean; stdcall;
+    procedure SetEnableMSAA(const Value: Boolean); stdcall;
+    function GetMSAASamples: Integer; stdcall;
+    procedure SetMSAASamples(const Value: Integer); stdcall;
+    function GetRenderStage: Tz3DRenderStage; stdcall;
+    function GetFormat: TD3DFormat; stdcall;
+    function GetLastRenderTexture: Iz3DRenderTexture; stdcall;
+    function GetDeferredBuffer: Iz3DRenderTexture; stdcall;
+    function GetBackBuffer: Iz3DSurface; stdcall;
+    function GetRendering: Boolean; stdcall;
+    function GetRenderMode: Tz3DRenderMode; stdcall;
+    procedure SetRenderMode(const Value: Tz3DRenderMode); stdcall;
+    function GetHDRMode: Boolean; stdcall;
+    function GetTargetMode: Tz3DTargetMode; stdcall;
+    function GetRenderSurface: Iz3DSurface; stdcall;
+    function GetRenderTexture: Iz3DRenderTexture; stdcall;
+    procedure SetHDRMode(const Value: Boolean); stdcall;
+    procedure SetTargetMode(const Value: Tz3DTargetMode); stdcall;
+
+    procedure ClearDepthBuffer(const AValue: Single = 1); stdcall;
+    procedure ClearRenderTarget(const AValue: Iz3DFloat4 = nil); stdcall;
+    procedure Clear(const ARenderTarget: Iz3DFloat4 = nil; const ADepthBuffer: Single = 1); stdcall;
+    procedure AddBlendTexture(const ATexture: Iz3DTexture); stdcall;
+
+    // Frame render control functions
+    procedure RenderScene; stdcall;
+
+    procedure BeginScene(const ABackBuffer: Boolean = True); stdcall;
+    procedure EndScene; stdcall;
+
+    procedure BeginScenario; stdcall;
+    procedure RenderScenario; stdcall;
+    procedure EndScenario; stdcall;
+
+    procedure RenderPrecomputation; stdcall;
+    procedure RenderDeferredBuffers; stdcall;
+    procedure RenderPostProcess; stdcall;
+    procedure RenderGUI; stdcall;
+
+    procedure Render(const ARenderable: Iz3DRenderable);
+    procedure SwapRenderChain; stdcall;
+    procedure RenderFog; stdcall;
+
+    procedure FadeIn(const AFactor: Single); stdcall;
+    procedure FadeOut(const AFactor: Single); stdcall;
+
+    // Internal states functions
+    procedure BeginSettingsChange; stdcall;
+    procedure EndSettingsChange; stdcall;
+    procedure BeginMSAAMode(const ARewriteZ: Boolean = True); stdcall;
+    procedure EndMSAAMode(const AReuseZ: Boolean = True); stdcall;
+
+    procedure EnableAdditiveBlending; stdcall;
+    procedure EnableAlphaBlending; stdcall;
+    procedure DisableBlending; stdcall;
+    procedure BeginZWrite; stdcall;
+    procedure EndZWrite; stdcall;
+
+    procedure CreateRenderTarget; stdcall;
+    procedure CreateDeferredBuffer; stdcall;
+
+    // Post process and 2D functions
+    procedure PostProcess(const ATarget: Iz3DRenderTexture; const ATextures: array of Iz3Dtexture;
+      const AShader: Iz3DShader); stdcall;
+    procedure PostProcess_Blend(const ATextures: array of Iz3Dtexture;
+      const AShader: Iz3DShader); stdcall;
+    procedure Blend(const ATextures: array of Iz3DTexture; const AShader: Iz3DShader = nil;
+      const AAlpha: Single = 1); stdcall;
+    procedure AutoBlend(const ATexture: Iz3DTexture; const ALeft: Integer = 0; const ATop: Integer = 0;
+      const AShader: Iz3DShader = nil; const AAlpha: Single = 1); stdcall;
+    procedure DrawFullScreenQuad(const ACoords: Iz3DFloat4 = nil); stdcall;
+    procedure DownScale(const AOutTexture: Iz3DRenderTexture); stdcall;
+
+
+    procedure SetSamplerAddressMode(const ASampler: Integer; const AAddressingMode: Tz3DSamplerAddressMode;
+      const ABorderColor: Iz3DFloat3 = nil); stdcall;
+    procedure SetSamplerFilter(const ASampler: Integer; const AFilter: Tz3DSamplerFilter;
+      const AMaxAnisotropy: Integer = -1); stdcall;
+
+    property DepthBuffer: Iz3DDepthBuffer read GetDepthBuffer;
+    property Format: TD3DFormat read GetFormat;
+    property BackBuffer: Iz3DSurface read GetBackBuffer;
+    property RenderTexture: Iz3DRenderTexture read GetRenderTexture;
+    property LastRenderTexture: Iz3DRenderTexture read GetLastRenderTexture;
+    property RenderSurface: Iz3DSurface read GetRenderSurface;
+    property DeferredBuffer: Iz3DRenderTexture read GetDeferredBuffer;
+    property DefaultClearColor: Iz3DFloat4 read GetDefaultClearColor;
+    property DefaultClearDepth: Single read GetDefaultClearDepth write SetDefaultClearDepth;
+    property AutoClearTarget: Boolean read GetAutoClearTarget write SetAutoClearTarget;
+    property AutoClearDepth: Boolean read GetAutoClearDepth write SetAutoClearDepth;
+
+    property TargetMode: Tz3DTargetMode read GetTargetMode write SetTargetMode;
+    property RenderMode: Tz3DRenderMode read GetRenderMode write SetRenderMode;
+    property RTWidth: Integer read GetRTWidth write SetRTWidth;
+    property RTHeight: Integer read GetRTHeight write SetRTHeight;
+    property HDRMode: Boolean read GetHDRMode write SetHDRMode;
+    property EnableMSAA: Boolean read GetEnableMSAA write SetEnableMSAA;
+    property MSAASamples: Integer read GetMSAASamples write SetMSAASamples;
+    property TextureFilter: Tz3DSamplerFilter read GetTextureFilter write SetTextureFilter;
+    property AnisotropyLevel: Integer read GetAnisotropyLevel write SetAnisotropyLevel;
+
+    property Rendering: Boolean read GetRendering;
+    property RenderStage: Tz3DRenderStage read GetRenderStage;
+  end;
+
+{==============================================================================}
+{== Engine interface                                                         ==}
+{==============================================================================}
+{== The main interface of the engine. It creates and/or handles all the      ==}
+{== components of the z3D engine                                             ==}
+{==============================================================================}
+
+  Tz3DCallbackConfirmDeviceEvent = procedure(const ACaps: TD3DCaps9; const AAdapterFormat,
+    ABackBufferFormat: TD3DFormat; const AWindowed: Boolean; var AAccept: Boolean); stdcall;
+
+  Tz3DCallbackModifyDeviceEvent = procedure(var ADeviceSettings: Tz3DDeviceSettings;
+    const ACaps: TD3DCaps9) of object; stdcall;
+
+  Tz3DCallbackMessageEvent = procedure(const AWnd: HWnd; const AMsg: LongWord; const AwParam: wParam;
+    const AlParam: lParam; var ADefault: Boolean; var AResult: lResult); stdcall;
+
+  Tz3DCallbackKeyboardEvent = procedure(const AChar: LongWord; const AKeyDown, AAltDown: Boolean); stdcall;
+
+  Tz3DNotifyControllerEvent = (z3dnceCreate, z3dnceInit, z3dnceRun, z3dnceStop, z3dnceDestroy);
+
+  Iz3DEngine = interface(Iz3DBase)['{6DB4E93B-907E-492F-9DB3-F1AC5194C49C}']
+    function GetWindow: HWND; stdcall;
+    function GetRenderer: Iz3DRenderer; stdcall;
+    function GetAudioController: Iz3DAudioController; stdcall;
+    function GetDesktop: Iz3DDesktop; stdcall;
+    function GetActive: Boolean; stdcall;
+    function GetDebugHelper: Iz3DDebugHelper; stdcall;
+    function GetDevice: Iz3DDevice; stdcall;
+    function GetShader: Iz3DShader; stdcall;
+    function GetOnConfirmDevice: Tz3DCallbackConfirmDeviceEvent; stdcall;
+    function GetOnCreateDevice: Tz3DBaseCallbackEvent; stdcall;
+    function GetOnDestroyDevice: Tz3DBaseCallbackEvent; stdcall;
+    function GetOnFinalization: Tz3DBaseCallbackEvent; stdcall;
+    function GetOnFrameMove: Tz3DBaseCallbackEvent; stdcall;
+    function GetOnFrameRender: Tz3DBaseCallbackEvent; stdcall;
+    function GetOnInitialization: Tz3DBaseCallbackEvent; stdcall;
+    function GetOnKeyboardProc: Tz3DCallbackKeyboardEvent; stdcall;
+    function GetOnLostDevice: Tz3DBaseCallbackEvent; stdcall;
+    function GetOnModifyDevice: Tz3DCallbackModifyDeviceEvent; stdcall;
+    function GetOnMsgProc: Tz3DCallbackMessageEvent; stdcall;
+    function GetOnResetDevice: Tz3DBaseCallbackEvent; stdcall;
+    function GetOptions: Iz3DEngineOptions; stdcall;
+    function GetPostProcessEffects: Iz3DPostProcessEffects; stdcall;
+    function GetScenario: Iz3DScenario; stdcall;
+    function GetStats: Iz3DStats; stdcall;
+    procedure SetActive(const Value: Boolean); stdcall;
+    procedure SetOnConfirmDevice(const Value: Tz3DCallbackConfirmDeviceEvent); stdcall;
+    procedure SetOnCreateDevice(const Value: Tz3DBaseCallbackEvent); stdcall;
+    procedure SetOnDestroyDevice(const Value: Tz3DBaseCallbackEvent); stdcall;
+    procedure SetOnFinalization(const Value: Tz3DBaseCallbackEvent); stdcall;
+    procedure SetOnFrameMove(const Value: Tz3DBaseCallbackEvent); stdcall;
+    procedure SetOnFrameRender(const Value: Tz3DBaseCallbackEvent); stdcall;
+    procedure SetOnInitialization(const Value: Tz3DBaseCallbackEvent); stdcall;
+    procedure SetOnKeyboardProc(const Value: Tz3DCallbackKeyboardEvent); stdcall;
+    procedure SetWindow(const Value: HWND); stdcall;
+    procedure SetOnLostDevice(const Value: Tz3DBaseCallbackEvent); stdcall;
+    procedure SetOnModifyDevice(const Value: Tz3DCallbackModifyDeviceEvent); stdcall;
+    procedure SetOnMsgProc(const Value: Tz3DCallbackMessageEvent); stdcall;
+    procedure SetOnResetDevice(const Value: Tz3DBaseCallbackEvent); stdcall;
+    procedure CreateDevice(const ADevice: IDirect3DDevice9;
+      const ABackBufferSurfaceDesc: TD3DSurfaceDesc); stdcall;
+    procedure ConfirmDevice(const ACaps: TD3DCaps9; AAdapterFormat,
+    ABackBufferFormat: TD3DFormat; AWindowed: Boolean; var AAccept: Boolean); stdcall;
+    procedure DestroyDevice; stdcall;
+    procedure LostDevice; stdcall;
+    procedure ModifyDevice(var ADeviceSettings: Tz3DDeviceSettings; const ACaps: TD3DCaps9); stdcall;
+    procedure ResetDevice; stdcall;
+    procedure FrameMove; stdcall;
+    procedure FrameRender; stdcall;
+    procedure MsgProc(AWnd: HWnd; AMsg: LongWord; AwParam: wParam;
+    AlParam: lParam; var ADefault: Boolean; var AResult: lResult); stdcall;
+    procedure KeyboardProc(AChar: LongWord; AKeyDown, AAltDown: Boolean); stdcall;
+    function ComputeNormalMap(const ATexture: Iz3DTexture;
+      const ABump: Single = 0.5): Iz3DRenderTexture; stdcall;
+
+    procedure NotifyLinks_z3DCreateDevice; stdcall;
+    procedure NotifyLinks_z3DDestroyDevice; stdcall;
+    procedure NotifyLinks_z3DLostDevice; stdcall;
+    procedure NotifyLinks_z3DResetDevice; stdcall;
+
+    procedure NotifyLinks_z3DStartScenario(const AStage: Tz3DStartScenarioStage); stdcall;
+    procedure NotifyLinks_z3DEndScenario; stdcall;
+
+    procedure NotifyLinks_z3DFrameMove; stdcall;
+    procedure NotifyLinks_z3DFrameRender; stdcall;
+    procedure NotifyLinks_z3DLightingRender; stdcall;
+    procedure NotifyLinks_z3DDirectLightRender; stdcall;
+    procedure NotifyLinks_z3DGUIRender; stdcall;
+    procedure Initialize; stdcall;
+    procedure StartScenario(const AStage: Tz3DStartScenarioStage); stdcall;
+    procedure PlayIntro; stdcall;
+    procedure PlayMovie(const AFileName: string; const ACanSkip: Boolean = True; const AStretch: Boolean = True); stdcall;
+    procedure Run; stdcall;
+    procedure Stop; stdcall;
+    procedure AddLink(const AObject: Iz3DLinked); stdcall;
+    procedure RemoveLink(const AObject: Iz3DLinked); stdcall;
+    procedure ShowSettingsDialog; stdcall;
+
+    property AudioController: Iz3DAudioController read GetAudioController;
+    property CoreShader: Iz3DShader read GetShader;
+    property Device: Iz3DDevice read GetDevice;
+    property Scenario: Iz3DScenario read GetScenario;
+    property Desktop: Iz3DDesktop read GetDesktop;
+    property Stats: Iz3DStats read GetStats;
+    property Active: Boolean read GetActive write SetActive;
+    property Options: Iz3DEngineOptions read GetOptions;
+    property DebugHelper: Iz3DDebugHelper read GetDebugHelper;
+    property PostProcess: Iz3DPostProcessEffects read GetPostProcessEffects;
+    property Renderer: Iz3DRenderer read GetRenderer;
+    property Window: HWND read GetWindow write SetWindow;
+    property OnInitialization: Tz3DBaseCallbackEvent read GetOnInitialization write SetOnInitialization;
+    property OnFinalization: Tz3DBaseCallbackEvent read GetOnFinalization write SetOnFinalization;
+    property OnMessage: Tz3DCallbackMessageEvent read GetOnMsgProc write SetOnMsgProc;
+    property OnKeyboard: Tz3DCallbackKeyboardEvent read GetOnKeyboardProc write SetOnKeyboardProc;
+    property OnFrameRender: Tz3DBaseCallbackEvent read GetOnFrameRender write SetOnFrameRender;
+    property OnFrameMove: Tz3DBaseCallbackEvent read GetOnFrameMove write SetOnFrameMove;
+    property OnCreateDevice: Tz3DBaseCallbackEvent read GetOnCreateDevice write SetOnCreateDevice;
+    property OnConfirmDevice: Tz3DCallbackConfirmDeviceEvent read GetOnConfirmDevice write SetOnConfirmDevice;
+    property OnDestroyDevice: Tz3DBaseCallbackEvent read GetOnDestroyDevice write SetOnDestroyDevice;
+    property OnLostDevice: Tz3DBaseCallbackEvent read GetOnLostDevice write SetOnLostDevice;
+    property OnModifyDevice: Tz3DCallbackModifyDeviceEvent read GetOnModifyDevice write SetOnModifyDevice;
+    property OnResetDevice: Tz3DBaseCallbackEvent read GetOnResetDevice write SetOnResetDevice;
+  end;
+
+const
+
+  FMSAASamplesD3D: array[0..16] of TD3DMultiSampleType =
+    (D3DMULTISAMPLE_NONE,
+     D3DMULTISAMPLE_NONE,
+     D3DMULTISAMPLE_2_SAMPLES,
+     D3DMULTISAMPLE_3_SAMPLES,
+     D3DMULTISAMPLE_4_SAMPLES,
+     D3DMULTISAMPLE_5_SAMPLES,
+     D3DMULTISAMPLE_6_SAMPLES,
+     D3DMULTISAMPLE_7_SAMPLES,
+     D3DMULTISAMPLE_8_SAMPLES,
+     D3DMULTISAMPLE_9_SAMPLES,
+     D3DMULTISAMPLE_10_SAMPLES,
+     D3DMULTISAMPLE_11_SAMPLES,
+     D3DMULTISAMPLE_12_SAMPLES,
+     D3DMULTISAMPLE_13_SAMPLES,
+     D3DMULTISAMPLE_14_SAMPLES,
+     D3DMULTISAMPLE_15_SAMPLES,
+     D3DMULTISAMPLE_16_SAMPLES);
+
+implementation
+
+end.
+

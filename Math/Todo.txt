@@ -1,0 +1,2 @@
+Ver integridad de funciones (parámetros en NULL, etc.) enviando mensaje mediante z3DCore.z3DTrace
+Cambiar z3DPlaneIntersect y z3DPlaneIncluded por Iz3DPlane.Intersect e Iz3DPlane.Included

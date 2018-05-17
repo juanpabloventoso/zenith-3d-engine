@@ -1,0 +1,542 @@
+/*==============================================================================*/ 
+/*== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==*/ 
+/*==============================================================================*/ 
+/*== Unit: z3DClasses. Main classes for z3D objects                           ==*/ 
+/*==============================================================================*/ 
+
+
+
+
+
+
+     
+
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== z3D base interface                                                       ==*/ 
+/*==============================================================================*/ 
+/*== Implements methods for initialization and cleanup and holds a reference  ==*/ 
+/*== to its owner (if any) as a Pointer type to avoid mutual reference        ==*/ 
+/*== counting                                                                 ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DBase : public TInterfacedObject,Iz3DBase
+{
+public:
+
+  private:
+      Pointer FOwner; 
+
+  protected:
+      
+Iz3DBase GetOwner ();
+ ;
+         
+Init (const Iz3DBase AOwner = nil 
+);
+ ; ;
+     
+Cleanup ();
+ ; ;
+  public:
+         
+Tz3DBase (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DBase ();
+ ;
+  public:
+       /** \sa GetOwner For reading*/
+Iz3DBase Owner; 
+
+ };
+
+
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== z3D linked interface                                                     ==*/ 
+/*==============================================================================*/ 
+/*== This interface can access to the common z3D Engine events such as device ==*/ 
+/*== creation, frame move or scenario render                                  ==*/ 
+/*== The z3D Engine will call this events on any object registered as linked  ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DLinked : public Tz3DBase,Iz3DLinked
+{
+public:
+
+  private:
+      Tz3DLinkNotifications FNotifications; 
+
+      Tz3DStartScenarioStage FScenarioStage; 
+
+      Boolean FScenarioLevel; 
+
+  protected:
+      
+Boolean GetScenarioLevel ();
+ ; ;
+       
+SetScenarioLevel (const Boolean Value 
+);
+ ; ;
+      
+Tz3DStartScenarioStage GetScenarioStage ();
+ ; ;
+       
+SetScenarioStage (const Tz3DStartScenarioStage AStage 
+);
+ ; ;
+      
+Tz3DLinkNotifications GetNotifications ();
+ ; ;
+       
+SetNotifications (const Tz3DLinkNotifications ANotifications 
+);
+ ; ;
+  protected:
+     
+z3DCreateDevice ();
+ ; ;
+     
+z3DDestroyDevice ();
+ ; ;
+     
+z3DResetDevice ();
+ ; ;
+     
+z3DLostDevice ();
+ ; ;
+                   
+z3DConfirmDevice (const TD3DCaps9 ACaps ,
+const TD3DFormat AAdapterFormat ,
+const TD3DFormat ABackBufferFormat ,
+Boolean &AAccept 
+);
+ ; ;
+          
+z3DModifyDevice (Tz3DDeviceSettings &ADeviceSettings ,
+const TD3DCaps9 ACaps 
+);
+ ; ;
+       
+z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ; ;
+     
+z3DStopScenario ();
+ ; ;
+       
+z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+);
+ ; ;
+       
+z3DDestroyScenarioObjects (const Tz3DDestroyObjectCaller ACaller 
+);
+ ; ;
+     
+z3DFrameMove ();
+ ; ;
+     
+z3DGPUPrecomputation ();
+ ; ;
+     
+z3DFrameRender ();
+ ; ;
+     
+z3DLightingRender ();
+ ; ;
+     
+z3DDirectLightRender ();
+ ; ;
+     
+z3DGUIRender ();
+ ; ;
+                           
+z3DMessage (const HWnd AWnd ,
+const LongWord AMsg ,
+const wParam AwParam ,
+const lParam AlParam ,
+Boolean &ADefault ,
+lResult &AResult 
+);
+ ; ;
+           
+z3DKeyboard (const LongWord AChar ,
+const Boolean AKeyDown ,
+const Boolean AAltDown 
+);
+ ; ;
+     
+Cleanup ();
+ ; ;
+  public:
+     
+z3DLink ();
+ ;
+     
+z3DUnlink ();
+ ;
+         
+Tz3DLinked (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetScenarioStage For reading   \sa SetScenarioStage For writing */
+Tz3DStartScenarioStage ScenarioStage; 
+
+         /** \sa GetNotifications For reading   \sa SetNotifications For writing */
+Tz3DLinkNotifications Notifications; 
+
+         /** \sa GetScenarioLevel For reading   \sa SetScenarioLevel For writing */
+Boolean ScenarioLevel; 
+
+ };
+
+
+
+
+
+
+
+// Cleanups all references mantained by a z3D interface and frees it
+  
+z3DCleanupFree ( &AInterface 
+);
+ ;
+
+
+
+ 
+
+  
+z3DCleanupFree ( &AInterface 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if Iz3DBase(AInterface) = nil then Exit;
+  Iz3DBase(AInterface).Cleanup;
+  Pointer(AInterface):= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DBase */ 
+
+   
+Tz3DBase::Tz3DBase (const Iz3DBase &AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  Init(AOwner);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBase::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOwner:= Pointer(AOwner);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBase Tz3DBase::GetOwner ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Iz3DBase(FOwner);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBase::Cleanup ()
+{
+#ifndef DOXYGEN_SKIP
+  FOwner:= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DBase::~Tz3DBase ()
+{
+#ifndef DOXYGEN_SKIP
+  Cleanup;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DLinked */ 
+
+   
+Tz3DLinked::Tz3DLinked (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FNotifications:= [];
+  FScenarioStage:= z3dssCreatingScenarioObjects;
+  FScenarioLevel:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLinked::GetScenarioLevel ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FScenarioLevel;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLinked::SetScenarioLevel (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FScenarioLevel:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+            
+Tz3DLinked::z3DConfirmDevice (const TD3DCaps9 ACaps ,
+const TD3DFormat AAdapterFormat ,
+const TD3DFormat ABackBufferFormat ,
+Boolean &AAccept 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DCreateDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  if z3DGlobalEngine.Scenario.Enabled or not ScenarioLevel then
+  z3DCreateScenarioObjects(z3dcocCreateDevice);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLinked::z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DDestroyDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  if z3DGlobalEngine.Scenario.Enabled or not ScenarioLevel then
+  z3DDestroyScenarioObjects(z3ddocDestroyDevice);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLinked::z3DDestroyScenarioObjects (const Tz3DDestroyObjectCaller ACaller 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DDirectLightRender ()
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DFrameMove ()
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DFrameRender ()
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DLinkNotifications Tz3DLinked::GetNotifications ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FNotifications;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DStartScenarioStage Tz3DLinked::GetScenarioStage ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FScenarioStage;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DGPUPrecomputation ()
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DGUIRender ()
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+        
+Tz3DLinked::z3DKeyboard (const LongWord AChar ,
+const Boolean AKeyDown ,
+const Boolean AAltDown 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DLightingRender ()
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DLink ()
+{
+#ifndef DOXYGEN_SKIP
+  if FNotifications <> [] then
+  z3DGlobalEngine.AddLink(Self as Iz3DLinked);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DLostDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  if z3DGlobalEngine.Scenario.Enabled or not ScenarioLevel then
+  z3DDestroyScenarioObjects(z3ddocLostDevice);
+#endif /* DOXYGEN_SKIP */
+};
+
+                   
+Tz3DLinked::z3DMessage (const HWnd AWnd ,
+const LongWord AMsg ,
+const wParam AwParam ,
+const lParam AlParam ,
+Boolean &ADefault ,
+lResult &AResult 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DLinked::z3DModifyDevice (Tz3DDeviceSettings &ADeviceSettings ,
+const TD3DCaps9 ACaps 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Not implemented on this class //
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DResetDevice ()
+{
+#ifndef DOXYGEN_SKIP
+  if z3DGlobalEngine.Scenario.Enabled or not ScenarioLevel then
+  z3DCreateScenarioObjects(z3dcocResetDevice);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLinked::SetNotifications (const Tz3DLinkNotifications ANotifications 
+)
+{
+#ifndef DOXYGEN_SKIP
+  z3DUnlink;
+  FNotifications:= ANotifications;
+  z3DLink;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLinked::SetScenarioStage (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FScenarioStage:= AStage;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLinked::z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if (AStage = FScenarioStage) and FScenarioLevel then
+  z3DCreateScenarioObjects(z3dcocStartScenario);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DStopScenario ()
+{
+#ifndef DOXYGEN_SKIP
+  if FScenarioLevel then z3DDestroyScenarioObjects(z3ddocStopScenario);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::z3DUnlink ()
+{
+#ifndef DOXYGEN_SKIP
+  if FNotifications <> [] then
+  z3DGlobalEngine.RemoveLink(Self as Iz3DLinked);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLinked::Cleanup ()
+{
+#ifndef DOXYGEN_SKIP
+  z3DUnlink;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+// finished
+

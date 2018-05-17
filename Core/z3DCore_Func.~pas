@@ -1,0 +1,182 @@
+{==============================================================================}
+{== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==}
+{==============================================================================}
+{== Unit: z3DCore. 3D native controller for the Engine interface             ==}
+{==============================================================================}
+
+unit z3DCore_Func;
+
+interface
+
+uses z3DCore_Intf, z3DClasses_Intf, Windows, Direct3D9;
+
+const
+  z3DCoreDLL = 'z3DCore.dll';
+
+
+function DynArrayContains(const DynArray: Pointer; var Element; ElementSize: Integer): Boolean; stdcall; external z3DCoreDLL;
+
+{==============================================================================}
+{== Dynamic linking                                                          ==}
+{==============================================================================}
+
+function z3DCreateDynamicDirect3D9(SDKVersion: LongWord): IDirect3D9; stdcall; external z3DCoreDLL;
+
+function z3DD3DFormatToString(format: TD3DFormat; bWithPrefix: Boolean): PWideChar; stdcall; external z3DCoreDLL;
+function z3DTraceD3DDECLUSAGEtoString(u: TD3DDeclUsage): PWideChar; stdcall; external z3DCoreDLL;
+function z3DTraceD3DDECLMETHODtoString(m: TD3DDeclMethod): PWideChar; stdcall; external z3DCoreDLL;
+function z3DTraceD3DDECLTYPEtoString(t: TD3DDeclType): PWideChar; stdcall; external z3DCoreDLL;
+
+// Get info from monitors
+function z3DMonitorFromWindow(const AWnd: HWND; const AFlags: DWORD): HMONITOR; stdcall; external z3DCoreDLL;
+function z3DGetMonitorInfo(const AMonitor: HMONITOR; var AMonitorInfo: Tz3DMonitorInfo): Boolean; stdcall; external z3DCoreDLL;
+
+{$IFDEF FPC}
+  {$DEFINE D5_OR_FPC}
+{$ENDIF}
+{$IFDEF BORLAND}{$IFNDEF COMPILER6_UP}
+    {$DEFINE D5_OR_FPC}
+{$ENDIF}{$ENDIF}
+{$IFDEF D5_OR_FPC}
+function WideFormatBuf(var Buffer; BufLen: Cardinal; const FormatBuf; iFormatLength: Integer; const Args: array of const): Cardinal; stdcall; external z3DCoreDLL;
+{$ENDIF}
+
+// Wide char extended support
+
+//procedure z3DCreateWideChar(var AWideChar: PWideChar; const ASize: Integer = 255); stdcall; external z3DCoreDLL;
+function z3DWideBuffer: PWideChar; stdcall; external z3DCoreDLL;
+procedure z3DFreeWideChar(var AWideChar: PWideChar); stdcall; external z3DCoreDLL;
+
+
+{==============================================================================}
+{== Global access functions                                                  ==}
+{==============================================================================}
+{== These functions controls the core state and allows to communicate with   ==}
+{== the core controllers                                                     ==}
+{==============================================================================}
+
+function z3DInit(bParseCommandLine: Boolean = True; bHandleDefaultHotkeys: Boolean = True;
+  bShowMsgBoxOnError: Boolean = True; bHandleAltEnter: Boolean = True): HRESULT; stdcall; external z3DCoreDLL;
+procedure z3DCore_Shutdown(nExitCode: Integer = 0); stdcall; external z3DCoreDLL;
+
+function z3DCore_CreateWindow(const strWindowTitle: PWideChar = nil; hInstance: LongWord = 0; hIcon: HICON = 0;
+  hMenu: HMENU = 0; x: Integer = Integer(CW_USEDEFAULT); y: Integer = Integer(CW_USEDEFAULT)): HRESULT; stdcall; external z3DCoreDLL;
+function z3DCore_SetWindow(hWndFocus, hWndDeviceFullScreen, hWndDeviceWindowed: HWND; bHandleMessages: Boolean = True): HRESULT; stdcall; external z3DCoreDLL;
+function z3DCore_StaticWndProc(hWnd: Windows.HWND; uMsg: LongWord; wParam: WPARAM; lParam: LPARAM): LRESULT; stdcall; external z3DCoreDLL;
+
+procedure z3DDisplayErrorMessage(hr: HRESULT);  stdcall; external z3DCoreDLL;
+function z3DCore_CreateDevice(AdapterOrdinal: LongWord = D3DADAPTER_DEFAULT; bWindowed: Boolean = True; nSuggestedWidth: Integer = 0;
+  nSuggestedHeight: Integer = 0; pCallbackAcceptDevice: Tz3DCallback_AcceptDevice = nil; pCallbackModifyDeviceSettings: Tz3DCallback_ModifyDeviceSettings = nil;
+  pUserContext: Pointer = nil): HRESULT; stdcall; external z3DCoreDLL;
+function z3DCore_CreateDeviceFromSettings(pDeviceSettings: Pz3DDeviceSettings; bPreserveInput: Boolean = False;
+  bClipWindowToSingleAdapter: Boolean = True): HRESULT; stdcall; external z3DCoreDLL;
+function z3DCore_SetDevice(pd3dDevice: IDirect3DDevice9): HRESULT; stdcall; external z3DCoreDLL;
+function z3DCore_MainLoop(hAccel: HACCEL = 0): HRESULT; stdcall; external z3DCoreDLL;
+procedure z3DCore_ProcessMessages(hAccel: HACCEL = 0; const ARender: Boolean = True); stdcall; external z3DCoreDLL;
+procedure z3DCore_Render3DEnvironment; stdcall; external z3DCoreDLL;
+
+function z3DCore_GetDeviceList: Iz3DDeviceList; stdcall; external z3DCoreDLL;
+function z3DCore_GetStencilBits(fmt: TD3DFormat): LongWord; stdcall; external z3DCoreDLL;
+function z3DCore_GetDepthBits(fmt: TD3DFormat): LongWord; stdcall; external z3DCoreDLL;
+function z3DCore_GetAlphaChannelBits(fmt: TD3DFormat): LongWord; stdcall; external z3DCoreDLL;
+function z3DCore_GetColorChannelBits(fmt: TD3DFormat): Integer; stdcall; external z3DCoreDLL;
+
+function z3DCore_GetGlobalResourceCache: Iz3DResourceCache; stdcall; external z3DCoreDLL;
+function z3DCore_GetGlobalTimer: Iz3DTimer; stdcall; external z3DCoreDLL;
+function z3DCore_GetState: Iz3DState; stdcall; external z3DCoreDLL;
+procedure z3DCore_FreeState; stdcall; external z3DCoreDLL;
+function z3DCore_GetD3DObject: IDirect3D9; stdcall; external z3DCoreDLL;
+function z3DCore_GetD3DDevice: IDirect3DDevice9; stdcall; external z3DCoreDLL;
+function z3DCore_GetDeviceSettings: Tz3DDeviceSettings; stdcall; external z3DCoreDLL;
+function z3DCore_GetPresentParameters: TD3DPresentParameters; stdcall; external z3DCoreDLL;
+function z3DCore_GetBackBufferSurfaceDesc: PD3DSurfaceDesc; stdcall; external z3DCoreDLL;
+function z3DCore_GetDeviceCaps: PD3DCaps9; stdcall; external z3DCoreDLL;
+function z3DCore_GetHINSTANCE: HINST; stdcall; external z3DCoreDLL;
+function z3DCore_GetHWND: HWND; stdcall; external z3DCoreDLL;
+function z3DCore_GetHWNDFocus: HWND; stdcall; external z3DCoreDLL;
+function z3DCore_GetHWNDDeviceFullScreen: HWND; stdcall; external z3DCoreDLL;
+function z3DCore_GetHWNDDeviceWindowed: HWND; stdcall; external z3DCoreDLL;
+function z3DCore_GetWindowClientRect: TRect; stdcall; external z3DCoreDLL;
+function z3DCore_GetWindowClientRectAtModeChange: TRect; stdcall; external z3DCoreDLL;
+function z3DCore_GetFullsceenClientRectAtModeChange: TRect; stdcall; external z3DCoreDLL;
+function z3DCore_GetTime: Double; stdcall; external z3DCoreDLL;
+function z3DCore_GetElapsedTime: Single; stdcall; external z3DCoreDLL;
+function z3DCore_IsWindowed: Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_GetFPS: Single; stdcall; external z3DCoreDLL;
+function z3DCore_GetWindowTitle: PWideChar; stdcall; external z3DCoreDLL;
+function z3DCore_GetFrameStats(bIncludeFPS: Boolean = False): PWideChar; stdcall; external z3DCoreDLL;
+function z3DCore_GetDeviceStats: PWideChar; stdcall; external z3DCoreDLL;
+function z3DCore_IsRenderingPaused: Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_IsTimePaused: Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_IsActive: Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_GetExitCode: Integer; stdcall; external z3DCoreDLL;
+function z3DCore_GetShowMsgBoxOnError: Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_GetHandleDefaultHotkeys: Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_IsKeyDown(vKey: Byte): Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_IsMouseButtonDown(vButton: Byte): Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_GetAutomation: Boolean; stdcall; external z3DCoreDLL;
+function z3DCore_FindValidDeviceSettings(out pOut: Tz3DDeviceSettings; pIn: Pz3DDeviceSettings = nil;
+  pMatchOptions: Pz3DMatchOptions = nil): HRESULT; stdcall; external z3DCoreDLL;
+
+procedure z3DCore_SetCursorSettings(bShowCursorWhenFullScreen, bClipCursorWhenFullScreen: Boolean); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetMultimonSettings(bAutoChangeAdapter: Boolean); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetShortcutKeySettings(bAllowWhenFullscreen: Boolean = False; bAllowWhenWindowed: Boolean = True); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetWindowSettings(bCallDefWindowProc: Boolean = True); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetConstantFrameTime(bConstantFrameTime: Boolean; fTimePerFrame: Single = 0.0333); stdcall; external z3DCoreDLL;
+function z3DCore_SetTimer(pCallbackTimer: Tz3DCallback_Timer; fTimeoutInSecs: Single = 1;
+  pnIDEvent: PLongWord = nil; pCallbackUserContext: Pointer = nil): HRESULT; stdcall; external z3DCoreDLL;
+function z3DCore_KillTimer(nIDEvent: LongWord): HRESULT; stdcall; external z3DCoreDLL;
+function z3DCore_ToggleFullScreen: HRESULT; stdcall; external z3DCoreDLL;
+function z3DCore_ToggleREF: HRESULT; stdcall; external z3DCoreDLL;
+procedure z3DCore_Pause(bPauseTime, bPauseRendering: Boolean); stdcall; external z3DCoreDLL;
+procedure z3DCore_ResetEngineState; stdcall; external z3DCoreDLL;
+
+procedure z3DCore_GetDesktopResolution(AdapterOrdinal: LongWord; out pWidth, pHeight: LongWord); stdcall; external z3DCoreDLL;
+function z3DCore_CreateRefDevice(hWnd: HWND; bNullRef: Boolean = True): IDirect3DDevice9; stdcall; external z3DCoreDLL;
+
+// Callback functions
+procedure z3DCore_SetCallback_DeviceCreated(pCallbackDeviceCreated: Tz3DCallback_DeviceCreated; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_DeviceReset(pCallbackDeviceReset: Tz3DCallback_DeviceReset; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_DeviceLost(pCallbackDeviceLost: Tz3DCallback_DeviceLost; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_DeviceDestroyed(pCallbackDeviceDestroyed: Tz3DCallback_DeviceDestroyed; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_DeviceChanging(pCallbackModifyDeviceSettings: Tz3DCallback_ModifyDeviceSettings; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_FrameMove(pCallbackFrameMove: Tz3DCallback_FrameMove; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_FrameRender(pCallbackFrameRender: Tz3DCallback_FrameRender; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_Keyboard(pCallbackKeyboard: Tz3DCallback_Keyboard; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_Mouse(pCallbackMouse: Tz3DCallback_Mouse; bIncludeMouseMove: Boolean = False; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+procedure z3DCore_SetCallback_MsgProc(pCallbackMsgProc: Tz3DCallback_MsgProc; pUserContext: Pointer = nil); stdcall; external z3DCoreDLL;
+
+// App starter
+procedure z3DCore_LaunchAppStart; stdcall; external z3DCoreDLL;
+
+// Registry control
+function z3DCore_ReadRegIntValue(const ASection, AKey: PWideChar; const ADefault: Integer): Integer; stdcall; external z3DCoreDLL;
+function z3DCore_ReadRegStrValue(const ASection, AKey: PWideChar; const ADefault: PWideChar): PWideChar; stdcall; external z3DCoreDLL;
+procedure z3DCore_WriteRegIntValue(const ASection, AKey: PWideChar; const AValue: Integer); stdcall; external z3DCoreDLL;
+procedure z3DCore_WriteRegStrValue(const ASection, AKey: PWideChar; const AValue: PWideChar); stdcall; external z3DCoreDLL;
+
+
+// Debug mode and memory management
+function z3DSupports(const AInterface: IInterface; const AGUID: TGUID): Boolean; stdcall; external z3DCoreDLL;
+procedure FreeAndNil(var Obj);{$IFDEF SUPPORTS_INLINE} inline;{$ENDIF} stdcall; external z3DCoreDLL;
+procedure SafeRelease(var i);{$IFDEF SUPPORTS_INLINE} inline;{$ENDIF} stdcall; external z3DCoreDLL;
+procedure SafeDelete(var Obj);{$IFDEF SUPPORTS_INLINE} inline;{$ENDIF} stdcall; external z3DCoreDLL;
+procedure SafeFreeMem(var p);{$IFDEF SUPPORTS_INLINE} inline;{$ENDIF} stdcall; external z3DCoreDLL;
+
+procedure z3DCore_OutputDebugString(strMsg: PWideChar; const args: array of const); stdcall; external z3DCoreDLL;
+procedure z3DCore_OutputDebugStringA(strMsg: PAnsiChar; const args: array of const); stdcall; external z3DCoreDLL;
+
+var z3DCore_OutputDebugStringW: procedure(strMsg: PWideChar; const args: array of const); stdcall = z3DCore_OutputDebugString;
+
+procedure z3DTrace(const AMessage: PWideChar; const AKind: Tz3DTraceKind = z3DtkInformation); stdcall; external z3DCoreDLL;
+function z3DTraceCondition(const ACondition: Boolean; const AMessage: PWideChar;
+  const AKind: Tz3DTraceKind = z3DtkInformation): Boolean; stdcall; external z3DCoreDLL;
+function z3DTraceDX(const strFile: PChar; dwLine: DWORD; hr: HRESULT; const strMsg: PWideChar; bPopMsgBox: Boolean): HRESULT; stdcall; external z3DCoreDLL;
+function z3DError(str: PWideChar; hr: HRESULT; FileName: PChar = nil; Line: DWORD = $FFFFFFFF): HRESULT;{$IFDEF SUPPORTS_INLINE} inline;{$ENDIF} stdcall; external z3DCoreDLL;
+function z3DErrorMessage(str: PWideChar; hr: HRESULT; FileName: PChar = nil; Line: DWORD = $FFFFFFFF): HRESULT;{$IFDEF SUPPORTS_INLINE} inline;{$ENDIF} stdcall; external z3DCoreDLL;
+procedure z3DTraceDebug(strMsg: PWideChar; args: array of const); stdcall; external z3DCoreDLL;
+function z3DFailedTrace(Status: HRESULT): BOOL;{$IFDEF SUPPORTS_INLINE} inline;{$ENDIF} stdcall; external z3DCoreDLL;
+
+implementation
+
+end.

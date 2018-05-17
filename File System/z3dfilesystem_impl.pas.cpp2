@@ -1,0 +1,1660 @@
+/*==============================================================================*/ 
+/*== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==*/ 
+/*==============================================================================*/ 
+/*== Unit: z3DFileSystem. z3D file structure control and support              ==*/ 
+/*==============================================================================*/ 
+
+
+
+
+
+      
+       
+  
+
+
+
+
+
+/*==============================================================================*/ 
+/*== XML file                                                                 ==*/ 
+/*==============================================================================*/ 
+/*== Support for loading/saving XML files                                     ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DXMLFile : public Tz3DBase,Iz3DXMLFile
+{
+public:
+
+  private:
+      TXMLDocument XML; 
+
+  protected:
+             
+Variant Read (IXMLNode ANode ,
+const PAnsiChar AName ,
+const Variant ADefault 
+);
+ ;
+            
+Write (IXMLNode ANode ,
+const PAnsiChar AName ,
+const Variant AValue 
+);
+ ;
+  public:
+     
+Tz3DXMLFile ();
+ ;
+     
+~Tz3DXMLFile ();
+ ;
+       
+Load (const PWideChar AFileName 
+);
+ ; ;
+         
+Save (const PWideChar AFileName = nil 
+);
+ ; ;
+ };
+
+
+    class Tz3DXMLChild : public Tz3DBase,Iz3DXMLChild
+{
+public:
+
+  private:
+      Iz3DXMLFile FParent; 
+
+      IXMLNode FNode; 
+
+  protected:
+             
+Variant Read (IXMLNode ANode ,
+const PAnsiChar AName ,
+const Variant ADefault 
+);
+ ;
+            
+Write (IXMLNode ANode ,
+const PAnsiChar AName ,
+const Variant AValue 
+);
+ ;
+  public:
+          
+Tz3DXMLChild (const Iz3DXMLFile AParent ,
+const IXMLNode ANode 
+);
+ ;
+ };
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== App info XML file                                                        ==*/ 
+/*==============================================================================*/ 
+/*== XML files containing application information                             ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DXMLAppInfoFile : public Tz3DXMLFile,Iz3DXMLAppInfoFile
+{
+public:
+
+  private:
+      IInterfaceList FLinkedModules; 
+
+      PWideChar FBuffer; 
+
+  protected:
+      
+Integer GetLinkedModuleCount ();
+ ;
+        
+Iz3DXMLAppInfoLinkedModule GetLinkedModules (const Integer AIndex 
+);
+ ;
+      
+Tz3DApplicationSceneKind GetSceneKind ();
+ ;
+      
+PWideChar GetSubtitle ();
+ ;
+      
+PWideChar GetTitle ();
+ ;
+       
+SetSceneKind (const Tz3DApplicationSceneKind Value 
+);
+ ;
+       
+SetSubtitle (const PWideChar Value 
+);
+ ;
+       
+SetTitle (const PWideChar Value 
+);
+ ;
+  protected:
+     
+ReadLinkedModules ();
+ ;
+  public:
+     
+Tz3DXMLAppInfoFile ();
+ ;
+     
+~Tz3DXMLAppInfoFile ();
+ ;
+      
+Iz3DXMLAppInfoLinkedModule AddLinkedModule ();
+ ;
+       
+DeleteLinkedModule (const Integer AIndex 
+);
+ ;
+     
+DeleteLinkedModules ();
+ ;
+  public:
+         /** \sa GetTitle For reading   \sa SetTitle For writing */
+PWideChar Title; 
+
+         /** \sa GetSubtitle For reading   \sa SetSubtitle For writing */
+PWideChar Subtitle; 
+
+         /** \sa GetSceneKind For reading   \sa SetSceneKind For writing */
+Tz3DApplicationSceneKind SceneKind; 
+
+       /** \sa GetLinkedModuleCount For reading*/
+Integer LinkedModuleCount; 
+
+    /*[const AIndex: Integer]*/   /** \sa GetLinkedModules For reading*/
+Iz3DXMLAppInfoLinkedModule LinkedModules; 
+
+ };
+
+
+    class Tz3DXMLAppInfoLinkedModule : public Tz3DXMLChild,Iz3DXMLAppInfoLinkedModule
+{
+public:
+
+  private:
+      PWideChar FBuffer; 
+
+  protected:
+      
+PWideChar GetPath ();
+ ;
+       
+SetPath (const PWideChar Value 
+);
+ ;
+  public:
+          
+Tz3DXMLAppInfoLinkedModule (const Iz3DXMLFile AParent ,
+const IXMLNode ANode 
+);
+ ;
+     
+~Tz3DXMLAppInfoLinkedModule ();
+ ;
+  public:
+         /** \sa GetPath For reading   \sa SetPath For writing */
+PWideChar Path; 
+
+ };
+
+
+
+
+
+/*==============================================================================*/ 
+/*== z3D files                                                                ==*/ 
+/*==============================================================================*/ 
+/*== Interfaced version of TFileStream                                        ==*/ 
+/*==============================================================================*/ 
+
+    class TInterfacedFileStream : public TFileStream,IInterface
+{
+public:
+
+  protected:
+      Integer FRefCount; 
+
+          
+HResult QueryInterface (const TGUID IID ,
+/* out */  &Obj 
+);
+ ;
+      
+Integer _AddRef ();
+ ;
+      
+Integer _Release ();
+ ;
+      
+Iz3DBase GetOwner ();
+ ;
+  public:
+     
+AfterConstruction ();
+ ;
+     
+BeforeDestruction ();
+ ;
+         
+Init (const /* out */ Iz3DBase &AOwner = nil 
+);
+ ;
+     
+Cleanup ();
+ ;
+       
+TObject NewInstance ();
+ ;
+  public:
+       /** \sa FRefCount For reading*/
+Integer RefCount; 
+
+       /** \sa GetOwner For reading*/
+Iz3DBase Owner; 
+
+ };
+
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== z3D object file                                                          ==*/ 
+/*==============================================================================*/ 
+/*== Access to files that prepares a z3D object                               ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DBaseFile : public TInterfacedFileStream,Iz3DObjectFile
+{
+public:
+
+  protected:
+      
+Int64 GetPosition ();
+ ;
+       
+SetPosition (const Int64 Pos 
+);
+ ;
+      
+Int64 GetSize ();
+ ;
+       
+SetSize64 (const Int64 NewSize 
+);
+ ;
+  public:
+         
+Longint ReadUnknown ( &Buffer ,
+Longint &Count 
+);
+ ;
+       
+ReadFloat3 (const Iz3DFloat3 AValue 
+);
+ ;
+       
+ReadFloat4 (const Iz3DFloat4 AValue 
+);
+ ;
+      
+PWideChar ReadString ();
+ ;
+      
+Integer ReadInteger ();
+ ;
+      
+Single ReadFloat ();
+ ;
+      
+Boolean ReadBoolean ();
+ ;
+
+        
+WriteUnknown (const  Buffer ,
+const Longint Count 
+);
+ ;
+       
+WriteFloat3 (const Iz3DFloat3 AValue 
+);
+ ;
+       
+WriteFloat4 (const Iz3DFloat4 AValue 
+);
+ ;
+       
+WriteVariant (const Variant AValue 
+);
+ ;
+       
+WriteString (const PWideChar AValue 
+);
+ ;
+  public:
+     Position; 
+
+     Size; 
+
+ };
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== z3D file formats                                                         ==*/ 
+/*==============================================================================*/ 
+/*== Information for a specific z3D format (folder, extension, description)   ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DObjectFileFormat : public Tz3DBase,Iz3DObjectFileFormat
+{
+public:
+
+  private:
+      PWideChar FDescription; 
+
+      PWideChar FExtension; 
+
+      PWideChar FDefaultFolder; 
+
+      PWideChar FHeader; 
+
+  protected:
+      
+PWideChar GetDescription ();
+ ;
+      
+PWideChar GetExtension ();
+ ;
+      
+PWideChar GetDefaultFolder ();
+ ;
+       
+SetDescription (const PWideChar Value 
+);
+ ;
+       
+SetExtension (const PWideChar Value 
+);
+ ;
+       
+SetDefaultFolder (const PWideChar Value 
+);
+ ;
+      
+PWideChar GetHeader ();
+ ;
+       
+SetHeader (const PWideChar Value 
+);
+ ;
+  public:
+         
+Tz3DObjectFileFormat (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DObjectFileFormat ();
+ ;
+        
+Expand (const PWideChar ASource ,
+const PWideChar ADest 
+);
+ ;
+  public:
+         /** \sa GetDescription For reading   \sa SetDescription For writing */
+PWideChar Description; 
+
+         /** \sa GetExtension For reading   \sa SetExtension For writing */
+PWideChar Extension; 
+
+         /** \sa GetDefaultFolder For reading   \sa SetDefaultFolder For writing */
+PWideChar DefaultFolder; 
+
+         /** \sa GetHeader For reading   \sa SetHeader For writing */
+PWideChar Header; 
+
+ };
+
+
+
+
+
+
+/*==============================================================================*/ 
+/*== z3D typed object file                                                    ==*/ 
+/*==============================================================================*/ 
+/*== z3D files with a specific format                                         ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DTypedObjectFile : public Tz3DBaseFile,Iz3DTypedObjectFile
+{
+public:
+
+  private:
+      PWideChar FFileName; 
+
+      Iz3DObjectFileFormat FFormat; 
+
+  protected:
+      
+PWideChar GetFileName ();
+ ;
+      
+Iz3DObjectFileFormat GetFormat ();
+ ;
+  public:
+                  
+Tz3DTypedObjectFile (const PWideChar AFileName ,
+const Word AMode ,
+const Iz3DObjectFileFormat AFormat 
+);
+ ;
+  public:
+       /** \sa GetFormat For reading*/
+Iz3DObjectFileFormat Format; 
+
+       /** \sa GetFileName For reading*/
+PWideChar FileName; 
+
+ };
+
+
+
+
+
+/*==============================================================================*/ 
+/*== z3D files system controller                                              ==*/ 
+/*==============================================================================*/ 
+/*== Global controller for the z3D file system. Manages all files and folders ==*/ 
+/*== used by the z3D engine and its applications to run                       ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DFileSystemController : public Tz3DBase,Iz3DFileSystemController
+{
+public:
+
+  private:
+      PWideChar FRootPath; 
+
+      IInterfaceList FObjectFormats; 
+
+  protected:
+      
+PWideChar GetRootPath ();
+ ;
+       
+SetRootPath (const PWideChar Value 
+);
+ ;
+        
+Iz3DObjectFileFormat GetObjectFormats (const Integer AIndex 
+);
+ ;
+  public:
+         
+Tz3DFileSystemController (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DFileSystemController ();
+ ;
+
+        
+PWideChar GetFullPath (const PWideChar APath 
+);
+ ;
+        
+Decrypt (const PWideChar APack ,
+const PWideChar AFiles 
+);
+ ;
+        
+DecryptF (const PWideChar APack ,
+const PWideChar AFiles 
+);
+ ;
+        
+Crypt (const PWideChar APack ,
+const PWideChar AFiles 
+);
+ ;
+        
+CryptF (const PWideChar APack ,
+const PWideChar AFiles 
+);
+ ;
+       
+Delete (const PWideChar AFile 
+);
+ ;
+     
+FreeBuffer ();
+ ;
+
+      
+Iz3DXMLFile CreateXMLFile ();
+ ;
+      
+Iz3DXMLAppInfoFile CreateAppInfoFile ();
+ ;
+           
+Iz3DObjectFile CreateObjectFile (const PWideChar AFileName ,
+const Word AMode 
+);
+ ;
+                    
+Iz3DTypedObjectFile CreateTypedObjectFile (const PWideChar AFileName ,
+const Word AMode ,
+const Iz3DObjectFileFormat AFormat 
+);
+ ;
+      
+Iz3DObjectFileFormat CreateObjectFormat ();
+ ;
+  public:
+         /** \sa GetRootPath For reading   \sa SetRootPath For writing */
+PWideChar RootPath; 
+
+    /*[const AIndex: Integer]*/   /** \sa GetObjectFormats For reading*/
+Iz3DObjectFileFormat ObjectFormats; 
+
+ };
+
+
+
+
+
+  
+  
+Iz3DFileSystemController z3DFileSystemController ();
+ ;
+  
+Iz3DFileSystemController z3DCreateFileSystemController ();
+ ;
+   
+z3DSetCustomFileSystemController (const Iz3DFileSystemController AController 
+);
+ ;
+
+
+
+     
+/*
+var
+ GZip: TVCLZip;
+    GUnZip: TVCLUnZip;
+    GController: Iz3DFileSystemController;
+
+  
+Iz3DFileSystemController z3DFileSystemController ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= GController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFileSystemController z3DCreateFileSystemController ()
+{
+#ifndef DOXYGEN_SKIP
+  GController:= Tz3DFileSystemController.Create;
+  Result:= GController;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomFileSystemController (const Iz3DFileSystemController AController 
+)
+{
+#ifndef DOXYGEN_SKIP
+  GController:= AController;
+#endif /* DOXYGEN_SKIP */
+};
+
+{ Tz3DXMLFile }
+
+ 
+Tz3DXMLFile::Tz3DXMLFile ()
+{
+#ifndef DOXYGEN_SKIP
+  XML:= TXMLDocument.Create(Application);
+  XML.Options:= XML.Options + [doNodeAutoIndent];
+  CoInitialize(nil);
+  XML.Active:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DXMLFile::~Tz3DXMLFile ()
+{
+#ifndef DOXYGEN_SKIP
+  XML.Free;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DXMLFile::Load (const PWideChar AFileName 
+)
+{
+#ifndef DOXYGEN_SKIP
+  try
+    XML.Active:= False;
+    XML.FileName:= AFileName;
+    CoInitialize(nil);
+    XML.Active:= True;
+  except
+    z3DTrace(PWideChar(WideString('Iz3DXMLFile.Open: Could not open XML file '+XML.FileName)), z3DtkWarning);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+         
+Variant Tz3DXMLFile::Read (IXMLNode ANode ,
+const PAnsiChar AName ,
+const Variant ADefault 
+)
+{
+#ifndef DOXYGEN_SKIP
+  try
+    try
+      Result:= ANode.GetAttributeNS(AName, '');
+    except
+      z3DTrace(PWideChar(WideString('Iz3DXMLFile.Read: Could not read value from property '+AName+' (file: '+XML.FileName+')')), z3DtkWarning);
+   end
+  finally
+    if VarIsNull(Result) then Result:= ADefault;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Tz3DXMLFile::Save (const PWideChar AFileName = nil 
+)
+{
+#ifndef DOXYGEN_SKIP
+  try
+    if AFileName = nil then XML.SaveToFile(XML.FileName) else
+    XML.SaveToFile(AFileName);
+  except
+    z3DTrace(PWideChar(WideString('Iz3DXMLFile.Save: Could not save XML file '+XML.FileName)), z3DtkWarning);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+        
+Tz3DXMLFile::Write (IXMLNode ANode ,
+const PAnsiChar AName ,
+const Variant AValue 
+)
+{
+#ifndef DOXYGEN_SKIP
+  try
+    ANode.SetAttributeNS(AName, '', AValue);
+  except
+    z3DTrace(PWideChar(WideString('Iz3DXMLFile.Write: Could not write value to property '+AName+' (file: '+XML.FileName+')')), z3DtkWarning);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+{ Tz3DXMLChild }
+
+      
+Tz3DXMLChild::Tz3DXMLChild (const Iz3DXMLFile AParent ,
+const IXMLNode ANode 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Create;
+  FParent:= AParent;
+  FNode:= ANode;
+#endif /* DOXYGEN_SKIP */
+};
+
+          
+Variant Tz3DXMLChild::Read (IXMLNode ANode ,
+const PAnsiChar AName ,
+const Variant ADefault 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FParent.Read(ANode, AName, ADefault);
+#endif /* DOXYGEN_SKIP */
+};
+
+         
+Tz3DXMLChild::Write (IXMLNode ANode ,
+const PAnsiChar AName ,
+const Variant AValue 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FParent.Write(ANode, AName, AValue);
+#endif /* DOXYGEN_SKIP */
+};
+
+{ Tz3DXMLAppInfoFile }
+
+  
+Iz3DXMLAppInfoLinkedModule Tz3DXMLAppInfoFile::AddLinkedModule ()
+
+/*
+var
+ FNew: Iz3DXMLAppInfoLinkedModule;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FNew:= Tz3DXMLAppInfoLinkedModule.Create(Self,
+  XML.Node.ChildNodes[fsxmlAppInfo_Application].ChildNodes[fsxmlAppInfo_LinkedModules].
+  AddChild(fsxmlAppInfo_LinkedModule));
+  FLinkedModules.Add(FNew);
+  Result:= FNew;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DXMLAppInfoFile::Tz3DXMLAppInfoFile ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FLinkedModules:= TInterfaceList.Create;
+  GetMem(FBuffer, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DXMLAppInfoFile::DeleteLinkedModule (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLinkedModules.Delete(AIndex);
+  XML.Node.ChildNodes[fsxmlAppInfo_Application].ChildNodes[fsxmlAppInfo_LinkedModules].
+  ChildNodes.Delete(AIndex);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DXMLAppInfoFile::DeleteLinkedModules ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= FLinkedModules.Count-1 downto 0 do DeleteLinkedModule(I);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DXMLAppInfoFile::~Tz3DXMLAppInfoFile ()
+{
+#ifndef DOXYGEN_SKIP
+  FreeMem(FBuffer);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DXMLAppInfoFile::GetLinkedModuleCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLinkedModules.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DXMLAppInfoLinkedModule Tz3DXMLAppInfoFile::GetLinkedModules (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLinkedModules[AIndex] as Iz3DXMLAppInfoLinkedModule;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DApplicationSceneKind Tz3DXMLAppInfoFile::GetSceneKind ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DApplicationSceneKind(Read(XML.Node.ChildNodes[fsxmlAppInfo_Application],
+  fsxmlAppInfo_ApplicationSceneKind, z3dask3D));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DXMLAppInfoFile::GetSubtitle ()
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(Read(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationSubtitle, ''), FBuffer, 255);
+  Result:= FBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DXMLAppInfoFile::GetTitle ()
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(Read(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationTitle,
+  ExtractFileName(ExtractFilePath(XML.FileName))), FBuffer, 255);
+  Result:= FBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DXMLAppInfoFile::ReadLinkedModules ()
+
+/*
+var
+ FNew: Iz3DXMLAppInfoLinkedModule;
+    I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to XML.Node.ChildNodes[fsxmlAppInfo_Application].
+    ChildNodes[fsxmlAppInfo_LinkedModules].ChildNodes.Count-1 dobegin    FNew:= Tz3DXMLAppInfoLinkedModule.Create(Self,
+    XML.Node.ChildNodes[fsxmlAppInfo_Application].ChildNodes[fsxmlAppInfo_LinkedModules].ChildNodes[I]);
+    FLinkedModules.Add(FNew);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DXMLAppInfoFile::SetSceneKind (const Tz3DApplicationSceneKind Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Write(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationSceneKind, Integer(Value));
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DXMLAppInfoFile::SetSubtitle (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Write(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationSubtitle, WideCharToString(Value));
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DXMLAppInfoFile::SetTitle (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Write(XML.Node.ChildNodes[fsxmlAppInfo_Application], fsxmlAppInfo_ApplicationTitle, WideCharToString(Value));
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DXMLAppInfoLinkedModule */ 
+
+      
+Tz3DXMLAppInfoLinkedModule::Tz3DXMLAppInfoLinkedModule (const Iz3DXMLFile AParent ,
+const IXMLNode ANode 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  GetMem(FBuffer, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DXMLAppInfoLinkedModule::~Tz3DXMLAppInfoLinkedModule ()
+{
+#ifndef DOXYGEN_SKIP
+  FreeMem(FBuffer);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DXMLAppInfoLinkedModule::GetPath ()
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(Read(FNode, fsxmlAppInfo_LinkedModulePath, ''), FBuffer, 255);
+  Result:= FBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DXMLAppInfoLinkedModule::SetPath (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Write(FNode, fsxmlAppInfo_LinkedModulePath, WideCharToString(Value));
+#endif /* DOXYGEN_SKIP */
+};
+
+// Scene file format methods
+
+/* TInterfacedFileStream */ 
+
+ 
+TInterfacedFileStream::AfterConstruction ()
+{
+#ifndef DOXYGEN_SKIP
+  // Release the constructor's implicit refcount
+  InterlockedDecrement(FRefCount);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+TInterfacedFileStream::BeforeDestruction ()
+{
+#ifndef DOXYGEN_SKIP
+  if RefCount <> 0 then System.Error(reInvalidPtr);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+TInterfacedFileStream::Cleanup ()
+{
+#ifndef DOXYGEN_SKIP
+
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DBase TInterfacedFileStream::GetOwner ()
+{
+#ifndef DOXYGEN_SKIP
+
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+TInterfacedFileStream::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+
+#endif /* DOXYGEN_SKIP */
+};
+
+class   
+TObject TInterfacedFileStream::NewInstance ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= inherited NewInstance;
+  TInterfacedFileStream(Result).FRefCount:= 1;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+HResult TInterfacedFileStream::QueryInterface (const TGUID IID ,
+/* out */  &Obj 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if GetInterface(IID, Obj) then Result := 0
+  else Result:= E_NOINTERFACE;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer TInterfacedFileStream::_AddRef ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= InterlockedIncrement(FRefCount);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer TInterfacedFileStream::_Release ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= InterlockedDecrement(FRefCount);
+  if Result = 0 then Destroy;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DBaseFile */ 
+
+   
+Tz3DBaseFile::WriteVariant (const /* out */ Variant &AValue 
+)
+
+/*
+var
+ FInteger: Integer;
+    FSingle: Single;
+    FBoolean: Boolean;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  case VarType(AValue) of
+
+    varInteger, varWord, varByte, varLongWord:
+    begin      FInteger:= AValue;
+      Write(FInteger, SizeOf(Integer));
+   end
+    varSingle, varDouble, varCurrency:
+    begin      FSingle:= AValue;
+      Write(FSingle, SizeOf(Single));
+   end
+    varBoolean:
+    begin      FBoolean:= AValue;
+      Write(FBoolean, SizeOf(Boolean));
+   end
+    elsebegin      z3DTrace(PWideChar(WideString('Iz3DFile.WriteVariant failed (value '+AValue+' is of an unknown type)')), z3DtkWarning);
+      Exit;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseFile::WriteFloat3 (const Iz3DFloat3 AValue 
+)
+
+/*
+var
+ FValue: TD3DXVector3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FValue:= AValue.XYZ;
+  Write(FValue, SizeOf(TD3DXVector3));
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseFile::WriteFloat4 (const Iz3DFloat4 AValue 
+)
+
+/*
+var
+ FValue: TD3DXVector4;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FValue:= AValue.XYZW;
+  Write(FValue, SizeOf(TD3DXVector4));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DBaseFile::ReadBoolean ()
+
+/*
+var
+ FBoolean: Boolean;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Read(FBoolean, SizeOf(Boolean));
+  Result:= FBoolean;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseFile::ReadFloat3 (const Iz3DFloat3 AValue 
+)
+
+/*
+var
+ FValue: TD3DXVector3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Read(FValue, SizeOf(TD3DXVector3));
+  AValue.XYZ:= FValue;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseFile::ReadFloat4 (const Iz3DFloat4 AValue 
+)
+
+/*
+var
+ FValue: TD3DXVector4;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Read(FValue, SizeOf(TD3DXVector4));
+  AValue.XYZW:= FValue;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DBaseFile::ReadInteger ()
+
+/*
+var
+ FInteger: INteger;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Read(FInteger, SizeOf(Integer));
+  Result:= FInteger;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DBaseFile::ReadFloat ()
+
+/*
+var
+ FSingle: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Read(FSingle, SizeOf(Single));
+  Result:= FSingle;
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Longint Tz3DBaseFile::ReadUnknown ( &Buffer ,
+Integer &Count 
+)
+{
+#ifndef DOXYGEN_SKIP
+  ReadBuffer(Buffer, Count);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Tz3DBaseFile::WriteUnknown (const  Buffer ,
+const Integer Count 
+)
+{
+#ifndef DOXYGEN_SKIP
+  WriteBuffer(Buffer, Count);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DBaseFile::ReadString ()
+
+/*
+var
+ FLength: Integer;
+    FResult: array of Char;
+    SResult: string;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FLength:= ReadInteger;
+  SetLength(FResult, FLength);
+  ReadUnknown(Pointer(FResult)^, FLength);
+  SetString(SResult, PChar(FResult), FLength);
+  StringToWideChar(SResult, z3DWideBuffer, 255);
+  Result:= z3DWideBuffer;
+//  SetString(Result, PChar(FResult), FLength);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseFile::WriteString (const PWideChar AValue 
+)
+
+/*
+var
+ FValue: string;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FValue:= WideCharToString(AValue);
+  WriteVariant(Length(FValue));
+  WriteUnknown(Pointer(FValue)^, Length(FValue));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Int64 Tz3DBaseFile::GetPosition ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= inherited Position;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseFile::SetSize64 (const Int64 NewSize 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Size:= NewSize;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Int64 Tz3DBaseFile::GetSize ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= inherited GetSize;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DBaseFile::SetPosition (const Int64 Pos 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited Position:= Pos;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DFileSystemController */ 
+
+   
+Tz3DFileSystemController::Tz3DFileSystemController (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  GetMem(FRootPath, 255);
+  StringToWideChar(z3DCore_ReadRegStrValue('FileSystem', 'Root', ''), FRootPath, 255);
+  if WideCharToString(FRootPath) = '' thenbegin    StringToWideChar(ExtractFilePath(Application.ExeName), FRootPath, 255);
+    z3DCore_WriteRegStrValue('FileSystem', 'Root', FRootPath);
+ end
+  GUnZip.DestDir:= GetFullPath(fsBufferPath);
+  FObjectFormats:= TInterfaceList.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFileSystemController::~Tz3DFileSystemController ()
+{
+#ifndef DOXYGEN_SKIP
+  z3DFreeWideChar(FRootPath);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Tz3DFileSystemController::Crypt (const PWideChar APack ,
+const PWideChar AFiles 
+)
+{
+#ifndef DOXYGEN_SKIP
+  GZip.Password:= z3DDS(z3DSTRINGS_CRYPTEDTEXT);
+  GZip.Password:= '';
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Tz3DFileSystemController::CryptF (const PWideChar APack ,
+const PWideChar AFiles 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Crypt(GetFullPath(APack), AFiles);
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Tz3DFileSystemController::Decrypt (const PWideChar APack ,
+const PWideChar AFiles 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if not FileExists(APack) thenbegin    z3DTrace(PWideChar(WideString('z3DFileSystem: Unable to find system file: '+ExtractFileName(APack))), z3DtkWarning);
+    Exit;
+ end
+  GUnZip.Password:= z3DDS(z3DSTRINGS_CRYPTEDTEXT);
+  GUnZip.ZipName:= APack;
+  try
+    try
+      GUnZip.FilesList.Text:= AFiles;
+      GUnZip.ReadZip;
+    except
+      on E: Exception do
+      z3DTrace(PWideChar(WideString('z3DFileSystem: Unknown error while opening system file: '+ExtractFileName(APack)+'. Message: '+E.Message)), z3DtkWarning);
+   end
+    if GUnZip.UnZip = 0 then
+      z3DTrace(PWideChar(WideString('z3DFileSystem: Could not get required files from system file: '+ExtractFileName(APack))), z3DtkWarning);
+  finally
+    GUnZip.Password:= '';
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Tz3DFileSystemController::DecryptF (const PWideChar APack ,
+const PWideChar AFiles 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Decrypt(GetFullPath(APack), AFiles);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFileSystemController::Delete (const PWideChar AFile 
+)
+{
+#ifndef DOXYGEN_SKIP
+  DeleteFile(WideCharToString(GetFullPath(fsBufferPath)) + fsPathDiv + WideCharToString(AFile));
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DFileSystemController::FreeBuffer ()
+
+/*
+var
+ SR: TSearchRec;
+    FFiles: TStringList;
+    I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FFiles:= TStringList.Create;
+  try
+    if FindFirst(WideCharToString(GetFullPath(fsBufferPath)) + fsPathDiv + '*.*', faAnyFile, SR) = 0 thenbegin      repeat
+        if Pos('.', SR.Name[1]) = 0 then FFiles.Add(SR.Name);
+      until FindNext(SR) <> 0;
+      FindClose(SR);
+   end
+    for I:= 0 to FFiles.Count-1 dobegin      if FileExists(WideCharToString(GetFullPath(fsBufferPath)) + fsPathDiv + FFiles[I]) then
+      SysUtils.DeleteFile(WideCharToString(GetFullPath(fsBufferPath)) + fsPathDiv + FFiles[I]);
+   end
+  finally
+    FFiles.Free;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+PWideChar Tz3DFileSystemController::GetFullPath (const PWideChar APath 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if Pos(':', WideCharToString(APath)) > 0 thenbegin    Result:= APath;
+    Exit;
+ end
+  GetMem(Result, 255);
+  StringToWideChar(RootPath + WideCharToString(APath), Result, 255);
+  if not DirectoryExists(ExtractFilePath(Result)) then
+    z3DTrace(PWideChar(WideString('z3DFileSystem: Requested path does not exist: '+ExtractFilePath(Result))));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DFileSystemController::GetRootPath ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRootPath;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DFileSystemController::SetRootPath (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRootPath:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DObjectFileFormat Tz3DFileSystemController::GetObjectFormats (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FObjectFormats[AIndex] as Iz3DObjectFileFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DObjectFileFormat Tz3DFileSystemController::CreateObjectFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DObjectFileFormat.Create;
+  FObjectFormats.Add(Result);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DXMLAppInfoFile Tz3DFileSystemController::CreateAppInfoFile ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DXMLAppInfoFile.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Iz3DObjectFile Tz3DFileSystemController::CreateObjectFile (const PWideChar AFileName ,
+const Word AMode 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DBaseFile.Create(AFileName, AMode);
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+Iz3DTypedObjectFile Tz3DFileSystemController::CreateTypedObjectFile (const PWideChar AFileName ,
+const Word AMode ,
+const Iz3DObjectFileFormat AFormat 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DTypedObjectFile.Create(AFileName, AMode, AFormat);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DXMLFile Tz3DFileSystemController::CreateXMLFile ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DXMLFile.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DObjectFileFormat */ 
+
+   
+Tz3DObjectFileFormat::Tz3DObjectFileFormat (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  GetMem(FDescription, 255);
+  ZeroMemory(FDescription, 255);
+  GetMem(FExtension, 255);
+  ZeroMemory(FExtension, 255);
+  GetMem(FDefaultFolder, 255);
+  ZeroMemory(FDefaultFolder, 255);
+  GetMem(FHeader, 255);
+  ZeroMemory(FHeader, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DObjectFileFormat::~Tz3DObjectFileFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  FreeMem(FDescription);
+  FreeMem(FExtension);
+  FreeMem(FDefaultFolder);
+  FreeMem(FHeader);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Tz3DObjectFileFormat::Expand (const PWideChar ASource ,
+const PWideChar ADest 
+)
+ ;{
+#ifndef DOXYGEN_SKIP
+  if (Pos(':', ASource) <> 0) or (ASource[0] = '\') or FileExists(ASource) then
+  StringToWideChar(ASource, ADest, 255) else
+  StringToWideChar(fsCommonResPath+fsPathDiv+DefaultFolder+fsPathDiv+ASource, ADest, 255);
+  StringToWideChar(z3DFileSystemController.GetFullPath(ADest), ADest, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DObjectFileFormat::GetDescription ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDescription;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DObjectFileFormat::GetExtension ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FExtension;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DObjectFileFormat::GetDefaultFolder ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDefaultFolder;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectFileFormat::SetDescription (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(WideCharToString(Value), FDescription, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectFileFormat::SetExtension (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(WideCharToString(Value), FExtension, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectFileFormat::SetDefaultFolder (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(WideCharToString(Value), FDefaultFolder, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DObjectFileFormat::GetHeader ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FHeader;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DObjectFileFormat::SetHeader (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(WideCharToString(Value), FHeader, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DTypedObjectFile */ 
+
+          
+Tz3DTypedObjectFile::Tz3DTypedObjectFile (const PWideChar AFileName ,
+const Word AMode ,
+const Iz3DObjectFileFormat AFormat 
+)
+
+/*
+var
+ FExpFileName: PWideChar;
+    FHeader: array of Char;
+    FHeaderString: string;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  GetMem(FExpFileName, 255);
+  AFormat.Expand(AFileName, FExpFileName);
+  inherited Create(WideCharToString(FExpFileName), AMode);
+  FreeMem(FExpFileName);
+  GetMem(FFileName, 255);
+  StringToWideChar(AFileName, FFileName, 255);
+  FFormat:= AFormat;
+  SetLength(FHeader, Length(AFormat.Header));
+
+  // File header
+  if AMode and fmOpenWrite = 0 thenbegin    ReadUnknown(Pointer(FHeader)^, Length(AFormat.Header));
+    SetString(FHeaderString, PChar(FHeader), Length(AFormat.Header));
+    if FHeaderString <> WideCharToString(AFormat.Header) then
+    z3DTrace(PWideChar(WideString('Iz3DTypedObjectFile.Create failed: File format is invalid ('+WideCharToString(AFileName))), z3DtkWarning);
+ endelsebegin    FHeaderString:= WideCharToString(AFormat.Header) 
+    WriteUnknown(Pointer(FHeaderString)^, Length(AFormat.Header));
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DTypedObjectFile::GetFileName ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFileName;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DObjectFileFormat Tz3DTypedObjectFile::GetFormat ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFormat;
+#endif /* DOXYGEN_SKIP */
+};
+
+// initialization
+
+#ifndef DOXYGEN_SKIP
+
+  GZip:= TVCLZip.Create(nil);
+  GZip.EncryptBeforeCompress:= True;
+  GUnZip:= TVCLUnZip.Create(nil);
+  GUnZip.EncryptBeforeCompress:= True;
+  GUnZip.OverwriteMode:= Always;
+
+finalization
+  GZip.Free;
+  GUnZip.Free;
+
+// finished
+#endif
+

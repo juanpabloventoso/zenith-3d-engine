@@ -1,0 +1,357 @@
+{==============================================================================}
+{== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==}
+{==============================================================================}
+{== Unit: z3DModels. Model interface support and instance management         ==}
+{==============================================================================}
+
+unit z3DModels_Intf;
+
+interface
+
+uses
+  Windows, SysUtils, Direct3D9, D3DX9, z3DComponents_Intf, z3DClasses_Intf,
+  z3DScenario_Intf, z3DLighting_Intf, z3DMath_Intf, z3DFileSystem_Intf;
+
+
+
+const
+  z3dmfExtension                = 'zModel';
+
+type
+
+  // Static model vertex struct
+  Pz3DStaticModelVertex = ^Tz3DStaticModelVertex;
+  Tz3DStaticModelVertex = packed record
+    Position: TD3DXVector3;
+    Normal: TD3DXVector3;
+    Tangent: TD3DXVector3;
+    TexCoord: TD3DXVector2;
+    LightCoord: TD3DXVector2;
+  end;
+  Pz3DStaticModelVertexArray = ^Tz3DStaticModelVertexArray;
+  Tz3DStaticModelVertexArray = array[0..MaxInt div SizeOf(Tz3DStaticModelVertex)-1] of Tz3DStaticModelVertex;
+
+  // Dynamic model vertex struct
+  Pz3DDynamicModelVertex = ^Tz3DDynamicModelVertex;
+  Tz3DDynamicModelVertex = packed record
+    Position: TD3DXVector3;
+    Normal: TD3DXVector3;
+    Tangent: TD3DXVector3;
+    TexCoord: TD3DXVector2;
+  end;
+  Pz3DDynamicModelVertexArray = ^Tz3DDynamicModelVertexArray;
+  Tz3DDynamicModelVertexArray = array[0..MaxInt div SizeOf(Tz3DDynamicModelVertex)-1] of Tz3DDynamicModelVertex;
+
+
+  Iz3DModel = interface;
+  Iz3DModelInstance = interface;
+  Iz3DStaticModel = interface;
+  Iz3DHeightMappedModel = interface;
+  Iz3DDynamicModel = interface;
+
+  Tz3DModelLightMapProcessStage = (z3dlmpsBeginGeneration, z3dlmpsBeginRadiosity,
+    z3dlmpsBeginRadiosityBounce, z3dlmpsEndRadiosityBounce, z3dlmpsEndRadiosity,
+    z3dlmpsEndGeneration);
+
+  Tz3DLODMeshes = array[Tz3DScenarioObjectLOD] of ID3DXPMesh;
+
+  Tz3DModelRenderOrder = array of array of Integer;
+
+
+
+
+  
+{==============================================================================}
+{== Model controller interface                                               ==}
+{==============================================================================}
+{== Global controller and manager for models                                 ==}
+{==============================================================================}
+
+  Iz3DModelController = interface(Iz3DBase)['{F85B9727-E291-41D4-A1F6-B32EB4E2D025}']
+    function GetModelFormat: Iz3DObjectFileFormat; stdcall;
+    function GetDynamicVertexFormat: Iz3DVertexFormat; stdcall;
+    function GetStaticVertexFormat: Iz3DVertexFormat; stdcall;
+    function GetStaticRenderOrder: Tz3DModelRenderOrder; stdcall;
+    function GetDynamicRenderOrder: Tz3DModelRenderOrder; stdcall;
+    function GetStaticModelCount: Integer; stdcall;
+    function GetDynamicModelCount: Integer; stdcall;
+    function GetStaticModel(const AIndex: Integer): Iz3DStaticModel; stdcall;
+    procedure SetStaticModel(const AIndex: Integer; const Value: Iz3DStaticModel); stdcall;
+    function GetDynamicModel(const AIndex: Integer): Iz3DDynamicModel; stdcall;
+    procedure SetDynamicModel(const AIndex: Integer; const Value: Iz3DDynamicModel); stdcall;
+
+    function CreateStaticModel: Iz3DStaticModel; stdcall;
+    function CreateHeightMappedModel: Iz3DHeightMappedModel; stdcall;
+    function CreateDynamicModel: Iz3DDynamicModel; stdcall;
+    function CreateWaterModel: Iz3DWaterModel; stdcall;
+    procedure AddModel(const AModel: Iz3DModel); stdcall;
+    procedure RemoveModel(const AModel: Iz3DModel); stdcall;
+
+    procedure BuildRenderOrders; stdcall;
+    procedure ProcessStaticLighting; stdcall;
+
+    property ModelFormat: Iz3DObjectFileFormat read GetModelFormat;
+    property StaticModelCount: Integer read GetStaticModelCount;
+    property DynamicModelCount: Integer read GetDynamicModelCount;
+    property StaticModels[const AIndex: Integer]: Iz3DStaticModel read GetStaticModel write SetStaticModel;
+    property DynamicModels[const AIndex: Integer]: Iz3DDynamicModel read GetDynamicModel write SetDynamicModel;
+    property StaticVertexFormat: Iz3DVertexFormat read GetStaticVertexFormat;
+    property DynamicVertexFormat: Iz3DVertexFormat read GetDynamicVertexFormat;
+    property StaticRenderOrder: Tz3DModelRenderOrder read GetStaticRenderOrder;
+    property DynamicRenderOrder: Tz3DModelRenderOrder read GetDynamicRenderOrder;
+  end;
+
+
+
+
+{==============================================================================}
+{== Model subset interface                                                   ==}
+{==============================================================================}
+{== Extension of world subset with exclusive methods for models              ==}
+{==============================================================================}
+
+  Iz3DModelSubset = interface(Iz3DScenarioObjectSubset)['{4E9A6ECE-59A6-46FF-BB68-C59B7822BBAC}']
+  end;
+
+
+
+
+
+
+{==============================================================================}
+{== Model interface                                                          ==}
+{==============================================================================}
+{== Manages a mesh and prepares it for renderization                         ==}
+{==============================================================================}
+
+  Tz3DModelInstancingMethod = (z3dimReplicate, z3dimTransform, z3dimHardware);
+
+  Iz3DModel = interface(Iz3DPersistent)['{9AA6324A-6531-4773-AF76-E1C1350965E0}']
+    function GetGenerateLODMeshes: Boolean; stdcall;
+    procedure SetGenerateLODMeshes(const Value: Boolean); stdcall;
+    function GetLODFaceCount(const ALOD: Tz3DScenarioObjectLOD): Integer; stdcall;
+    function GetLODVertexCount(const ALOD: Tz3DScenarioObjectLOD): Integer; stdcall;
+    function GetName: PWideChar; stdcall;
+    procedure SetName(const Value: PWideChar); stdcall;
+    function GetComputeLightCoords: Boolean; stdcall;
+    procedure SetComputeLightCoords(const Value: Boolean); stdcall;
+    function GetLODMeshes: Tz3DLODMeshes; stdcall;
+    function GetMesh: ID3DXMesh; stdcall;
+    procedure SetFileName(const Value: PWideChar); stdcall;
+    function GetInstanceCount: Integer; stdcall;
+    function GetOSBoundingBox: Iz3DBoundingBox; stdcall;
+    function GetOSBoundingSphere: Iz3DBoundingSphere; stdcall;
+    function GetScale: Iz3DFloat3; stdcall;
+    function GetBytesPerVertex: Integer; stdcall;
+    function GetInstance(const AIndex: Integer): Iz3DModelInstance; stdcall;
+    function GetBoundingBox: Iz3DBoundingBox; stdcall;
+    function GetAutoGenerateTexCoords: Boolean; stdcall;
+    function GetBoundingSphere: Iz3DBoundingSphere; stdcall;
+    function GetFaceCount: Integer; stdcall;
+    function GetFileName: PWideChar; stdcall;
+    function GetInstancingMethod: Tz3DModelInstancingMethod; stdcall;
+    function GetLockAspectRatio: Boolean; stdcall;
+    function GetLockTexCoordsAspectRatio: Boolean; stdcall;
+    function GetShape: Tz3DScenarioObjectShape; stdcall;
+    function GetSubsetCount: Integer; stdcall;
+    function GetSubsets(const I: Integer): Iz3DModelSubset; stdcall;
+    function GetTexCoordsScale: Single; stdcall;
+    function GetVertexCount: Integer; stdcall;
+    procedure SetAutoGenerateTexCoords(const Value: Boolean); stdcall;
+    procedure SetInstancingMethod(const Value: Tz3DModelInstancingMethod); stdcall;
+    procedure SetLockAspectRatio(const Value: Boolean); stdcall;
+    procedure SetLockTexCoordsAspectRatio(const Value: Boolean); stdcall;
+    procedure SetShape(const Value: Tz3DScenarioObjectShape); stdcall;
+    procedure SetTexCoordsScale(const Value: Single); stdcall;
+
+    function LockVertices(const AFlags: DWORD = 0): Pointer; stdcall;
+    procedure UnlockVertices; stdcall;
+    function LockLODVertices(const ALOD: Tz3DScenarioObjectLOD; const AFlags: DWORD = 0): Pointer; stdcall;
+    procedure UnlockLODVertices; stdcall;
+    function LockIndices(const AFlags: DWORD = 0): PWordArray; stdcall;
+    procedure UnlockIndices; stdcall;
+    function LockLODIndices(const ALOD: Tz3DScenarioObjectLOD; const AFlags: DWORD = 0): PWordArray; stdcall;
+    procedure UnlockLODIndices; stdcall;
+    procedure CreateModel; stdcall;
+    procedure CreateSubsets(const AD3DXMtrls: PD3DXMaterial; const ACount: Integer); stdcall;
+
+    function AddSubset: Iz3DModelSubset; stdcall;
+    procedure RemoveSubset(const ASubset: Iz3DModelSubset); stdcall;
+    procedure RemoveInstance(const AInstance: Iz3DModelInstance); stdcall;
+    function IndexOf(const AInstance: Iz3DModelInstance): Integer; stdcall;
+
+    procedure CreateLODMeshes; stdcall;
+    procedure GenerateTexCoords; stdcall;
+    procedure SetDeclaration(const ADeclaration: PD3DVertexElement9); stdcall;
+    procedure CreateScenarioObjects; stdcall;
+    procedure DestroyScenarioObjects; stdcall;
+    procedure FrameMove; stdcall;
+    procedure FrameRender; stdcall;
+    procedure FrameRenderAmbient; stdcall;
+    procedure FrameRenderDirectLighting; stdcall;
+    procedure RenderMesh(const AShader: Iz3DShader; const ALOD: Tz3DScenarioObjectLOD = z3dsolHigh;
+      const ASetMaterial: Boolean = True; const ADirectLighting: Boolean = True;
+      const ALightMap: Boolean = False); stdcall;
+    procedure PrepareMesh(const AShader: Iz3DShader; const ASetMaterial: Boolean = True;
+      const ADirectLighting: Boolean = True); stdcall;
+    procedure LoadFromFile(const AFileName: PWideChar); stdcall;
+    procedure SaveToFile(const AFileName: PWideChar); stdcall;
+
+    property Name: PWideChar read GetName write SetName;
+    property FileName: PWideChar read GetFileName write SetFileName;
+    property VertexCount: Integer read GetVertexCount;
+    property BytesPerVertex: Integer read GetBytesPerVertex;
+    property FaceCount: Integer read GetFaceCount;
+    property LODFaceCount[const ALOD: Tz3DScenarioObjectLOD]: Integer read GetLODFaceCount;
+    property LODVertexCount[const ALOD: Tz3DScenarioObjectLOD]: Integer read GetLODVertexCount;
+    property Shape: Tz3DScenarioObjectShape read GetShape write SetShape;
+    property Mesh: ID3DXMesh read GetMesh;
+    property LODMeshes: Tz3DLODMeshes read GetLODMeshes;
+    property ComputeLightCoords: Boolean read GetComputeLightCoords write SetComputeLightCoords;
+    property BoundingSphere: Iz3DBoundingSphere read GetBoundingSphere;
+    property BoundingBox: Iz3DBoundingBox read GetBoundingBox;
+    property Scale: Iz3DFloat3 read GetScale;
+    property OSBoundingSphere: Iz3DBoundingSphere read GetOSBoundingSphere;
+    property OSBoundingBox: Iz3DBoundingBox read GetOSBoundingBox;
+    property LockAspectRatio: Boolean read GetLockAspectRatio write SetLockAspectRatio;
+    property InstancingMethod: Tz3DModelInstancingMethod read GetInstancingMethod write SetInstancingMethod;
+    property Subsets[const I: Integer]: Iz3DModelSubset read GetSubsets;
+    property SubsetCount: Integer read GetSubsetCount;
+    property AutoGenerateTexCoords: Boolean read GetAutoGenerateTexCoords write SetAutoGenerateTexCoords;
+    property LockTexCoordsAspectRatio: Boolean read GetLockTexCoordsAspectRatio write SetLockTexCoordsAspectRatio;
+    property GenerateLODMeshes: Boolean read GetGenerateLODMeshes write SetGenerateLODMeshes;
+    property TexCoordsScale: Single read GetTexCoordsScale write SetTexCoordsScale;
+    property Instances[const AIndex: Integer]: Iz3DModelInstance read GetInstance;
+    property InstanceCount: Integer read GetInstanceCount;
+  end;
+
+
+{==============================================================================}
+{== Static model interface                                                   ==}
+{==============================================================================}
+{== Adds lightmap support for a model                                        ==}
+{==============================================================================}
+
+  Iz3DModelStaticInstance = interface;
+
+  Iz3DStaticModel = interface(Iz3DModel)['{CC3C2119-D831-4633-AAB9-1A4BA20B11C8}']
+    function CreateInstance: Iz3DModelStaticInstance; stdcall;
+    function ProcessStaticLighting(const AStage: Tz3DModelLightMapProcessStage): Boolean; stdcall;
+  end;
+
+
+
+
+
+
+
+  Iz3DHeightMappedModel = interface(Iz3DStaticModel)['{6DD6FCB3-B3AE-4103-970C-F830FED5960C}']
+    function GetHorizontal: Boolean; stdcall;
+    function GetResolution: Single; stdcall;
+    function GetSmoothFactor: Single; stdcall;
+    procedure SetHorizontal(const Value: Boolean); stdcall;
+    procedure SetResolution(const Value: Single); stdcall;
+    procedure SetSmoothFactor(const Value: Single); stdcall;
+
+    property Horizontal: Boolean read GetHorizontal write SetHorizontal;
+    property Resolution: Single read GetResolution write SetResolution;
+    property SmoothFactor: Single read GetSmoothFactor write SetSmoothFactor;
+  end;
+
+  Iz3DWaterModel = interface(Iz3DStaticModel)['{76E7FF49-AB76-4BF6-AD85-B64F99A5F276}']
+  end;
+
+
+
+
+{==============================================================================}
+{== Dynamic model interface                                                  ==}
+{==============================================================================}
+{== Prepares the model for interacting with world phyiscs                    ==}
+{==============================================================================}
+
+  Iz3DModelDynamicInstance = interface;
+
+  Iz3DDynamicModel = interface(Iz3DModel)['{9E6B9217-B550-4592-83C5-946A31F0EAA1}']
+    function CreateInstance: Iz3DModelDynamicInstance; stdcall;
+  end;
+
+
+
+
+
+
+{==============================================================================}
+{== Model isntance nterface                                                  ==}
+{==============================================================================}
+{== Implements a world object and represents a version of the model on       ==}
+{== the world                                                                ==}
+{==============================================================================}
+
+  Iz3DModelInstance = interface(Iz3DScenarioObject)['{3CD3FCD0-B296-4FD6-A336-0AD47CF3FC00}']
+    function GetCustomScale: Iz3DFloat3; stdcall;
+    function GetCustomBoundingBox: Iz3DBoundingBox; stdcall;
+    function GetCustomBoundingSphere: Iz3DBoundingSphere; stdcall;
+    function GetWorldMatrix: Iz3DMatrix; stdcall;
+    function GetModel: Iz3DModel; stdcall;
+    function GetEnableShadows: Boolean; stdcall;
+    function GetLookAt: Iz3DFloat3; stdcall;
+    procedure SetEnableShadows(const Value: Boolean); stdcall;
+    function GetVisible: Boolean; stdcall;
+    procedure SetVisible(const Value: Boolean); stdcall;
+
+    procedure ComputeTransforms; stdcall;
+    procedure ComputeBounds; stdcall;
+    procedure FrameMove; stdcall;
+    procedure FrameRender; stdcall;
+    procedure FrameRenderAmbient; stdcall;
+    procedure FrameRenderDirectLighting; stdcall;
+
+    property CustomBoundingBox: Iz3DBoundingBox read GetCustomBoundingBox;
+    property CustomBoundingSphere: Iz3DBoundingSphere read GetCustomBoundingSphere;
+    property CustomScale: Iz3DFloat3 read GetCustomScale;
+
+    property LookAt: Iz3DFloat3 read GetLookAt;
+    property EnableShadows: Boolean read GetEnableShadows write SetEnableShadows;
+    property Model: Iz3DModel read GetModel;
+    property Visible: Boolean read GetVisible write SetVisible;
+    property WorldMatrix: Iz3DMatrix read GetWorldMatrix;
+  end;
+
+
+
+
+
+{==============================================================================}
+{== Model static instance interface                                          ==}
+{==============================================================================}
+{== Prepares the model for rendering with static lighting using lightmaps    ==}
+{== and radiosity                                                            ==}
+{==============================================================================}
+
+  Iz3DModelStaticInstance = interface(Iz3DModelInstance)['{C7AD1B6C-DFCB-4DFB-A308-258AD09FDC89}']
+    function GetLightMap: Iz3DLightMap; stdcall;
+    function ProcessStaticLighting(const AStage: Tz3DModelLightMapProcessStage): Boolean; stdcall;
+
+    property LightMap: Iz3DLightMap read GetLightMap;
+  end;
+
+
+
+
+
+
+{==============================================================================}
+{== Model dynamic instance interface                                         ==}
+{==============================================================================}
+{== Implements a world dynamic objects that interacts with world physics     ==}
+{==============================================================================}
+
+  Iz3DModelDynamicInstance = interface(Iz3DModelInstance)['{4B03F4BD-637C-4F2A-AC04-ECCAB691379A}']
+  end;
+
+
+
+implementation
+
+end.

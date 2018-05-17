@@ -1,0 +1,21 @@
+library z3DFileSystem;
+
+uses
+  SysUtils,
+  z3DFileSystem_Intf,
+  z3DFileSystem_Impl,
+  z3DInterface in '..\Common\z3DInterface.pas',
+  z3DStrings in '..\Common\z3DStrings.pas',
+  z3DMath_Intf in '..\Math\z3DMath_Intf.pas',
+  z3DCore_Intf in '..\Core\z3DCore_Intf.pas',
+  z3DCore_Func in '..\Core\z3DCore_Func.pas';
+
+exports
+  z3DFileSystemController,
+  z3DCreateFileSystemController,
+  z3DSetCustomFileSystemController;
+
+{$R *.res}
+
+begin
+end.

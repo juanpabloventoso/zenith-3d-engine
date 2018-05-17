@@ -1,0 +1,5945 @@
+/*==============================================================================*/ 
+/*== Zenith 3D Engine - Developed by Juan Pablo Ventoso                       ==*/ 
+/*==============================================================================*/ 
+/*== Unit: z3DLighting. z3D lighting and shadowing system core                ==*/ 
+/*==============================================================================*/ 
+
+
+
+
+
+
+      
+      
+  
+
+
+/*==============================================================================*/ 
+/*== Light effects interface                                                  ==*/ 
+/*==============================================================================*/ 
+/*== Provides a way to configure the effects of a light source on the         ==*/ 
+/*== surrounding world like shadows, specular reflections and glow            ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DLightEffects : public Tz3DBase,Iz3DLightEffects
+{
+public:
+
+  private:
+      Pointer FLight; 
+
+      Boolean FNormalMapping; 
+
+      Boolean FSpecular; 
+
+      Boolean FStaticShadows; 
+
+      Boolean FDynamicShadows; 
+
+      Boolean FStaticPenumbra; 
+
+      Boolean FGlow; 
+
+      Single FGlowFactor; 
+
+      Boolean FMultiSampleGlow; 
+
+  protected:
+      
+Iz3DLight GetLight ();
+ ;
+      
+Boolean GetMultiSampleGlow ();
+ ;
+       
+SetMultiSampleGlow (const Boolean Value 
+);
+ ;
+      
+Single GetGlowFactor ();
+ ;
+       
+SetGlowFactor (const Single Value 
+);
+ ;
+      
+Boolean GetGlow ();
+ ;
+       
+SetGlow (const Boolean Value 
+);
+ ;
+      
+Boolean GetDynamicShadows ();
+ ;
+      
+Boolean GetNormalMapping ();
+ ;
+      
+Boolean GetSpecular ();
+ ;
+      
+Boolean GetStaticPenumbra ();
+ ;
+      
+Boolean GetStaticShadows ();
+ ;
+       
+SetDynamicShadows (const Boolean Value 
+);
+ ;
+       
+SetNormalMapping (const Boolean Value 
+);
+ ;
+       
+SetSpecular (const Boolean Value 
+);
+ ;
+       
+SetStaticShadows (const Boolean Value 
+);
+ ;
+       
+SetStaticPenumbra (const Boolean Value 
+);
+ ;
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+     
+Cleanup ();
+ ; ;
+  public:
+       /** \sa GetLight For reading*/
+Iz3DLight Light; 
+
+         /** \sa GetSpecular For reading   \sa SetSpecular For writing */
+Boolean Specular; 
+
+         /** \sa GetStaticShadows For reading   \sa SetStaticShadows For writing */
+Boolean StaticShadows; 
+
+         /** \sa GetStaticPenumbra For reading   \sa SetStaticPenumbra For writing */
+Boolean StaticPenumbra; 
+
+         /** \sa GetDynamicShadows For reading   \sa SetDynamicShadows For writing */
+Boolean DynamicShadows; 
+
+         /** \sa GetNormalMapping For reading   \sa SetNormalMapping For writing */
+Boolean NormalMapping; 
+
+         /** \sa GetGlow For reading   \sa SetGlow For writing */
+Boolean Glow; 
+
+         /** \sa GetGlowFactor For reading   \sa SetGlowFactor For writing */
+Single GlowFactor; 
+
+         /** \sa GetMultiSampleGlow For reading   \sa SetMultiSampleGlow For writing */
+Boolean MultiSampleGlow; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Light interface                                                          ==*/ 
+/*==============================================================================*/ 
+/*== Represents a light source into the world and controls its properties     ==*/ 
+/*== like intensity, spot angle and position                                  ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DLight : public Tz3DBase,Iz3DLight
+{
+public:
+
+  private:
+      Iz3DMatrix FViewMatrix; 
+
+      Iz3DMatrix FProjMatrix; 
+
+      Iz3DMatrix FTexMatrix; 
+
+      Iz3DMatrix FViewProjMatrix; 
+
+      Iz3DMatrix FTexViewProjMatrix; 
+
+     Iz3DMatrix FCubeViewMatrix[5]; /*!< [0..5] */
+
+      Iz3DRenderTexture FStaticDepthMap; 
+
+      Iz3DCubeRenderTexture FStaticCubeDepthMap; 
+
+      Tz3DLightStyle FStyle; 
+
+      Single FSharpness; 
+
+      Single FAngle; 
+
+      Single FRange; 
+
+      Boolean FEnabled; 
+
+      Iz3DFloat3 FColor; 
+
+      Iz3DFloat3 FPosition; 
+
+      Iz3DFloat3 FDirection; 
+
+      Single FSize; 
+
+      Tz3DDirectLightRenderEvent FOnRender; 
+
+      Single FIntensity; 
+
+      Boolean FStatic; 
+
+      Iz3DLightEffects FEffects; 
+
+      Boolean FDynamicMode; 
+
+      PWideChar FName; 
+
+      Tz3DDirectLightRenderStage FStage; 
+
+  protected:
+      
+Tz3DDirectLightRenderStage GetStage ();
+ ;
+      
+PWideChar GetName ();
+ ;
+       
+SetName (const PWideChar Value 
+);
+ ;
+      
+Boolean GetDynamicMode ();
+ ;
+       
+SetDynamicMode (const Boolean Value 
+);
+ ;
+      
+Integer GetIndex ();
+ ;
+      
+Single GetAngle ();
+ ;
+      
+Iz3DFloat3 GetColor ();
+ ;
+      
+Iz3DFloat3 GetDirection ();
+ ;
+      
+Iz3DLightEffects GetEffects ();
+ ;
+      
+Boolean GetEnabled ();
+ ;
+      
+Single GetIntensity ();
+ ;
+      
+Tz3DDirectLightRenderEvent GetOnRender ();
+ ;
+      
+Iz3DFloat3 GetPosition ();
+ ;
+      
+Single GetRange ();
+ ;
+      
+Single GetSharpness ();
+ ;
+      
+Single GetSize ();
+ ;
+      
+Boolean GetStatic ();
+ ;
+      
+Tz3DLightStyle GetStyle ();
+ ;
+       
+SetOnRender (const Tz3DDirectLightRenderEvent Value 
+);
+ ;
+       
+SetSize (const Single Value 
+);
+ ;
+       
+SetStyle (const Tz3DLightStyle Value 
+);
+ ;
+       
+SetRange (const Single Value 
+);
+ ;
+       
+SetAngle (const Single Value 
+);
+ ;
+       
+SetSharpness (const Single Value 
+);
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+       
+SetIntensity (const Single Value 
+);
+ ;
+       
+SetStatic (const Boolean Value 
+);
+ ;
+     
+MeasureLightEffectParams ();
+ ;
+     
+UpdateLightingParams ();
+ ;
+     
+UpdateSourceParams ();
+ ;
+     
+ResetDevice ();
+ ;
+     
+CreateTextures ();
+ ;
+     
+CreateStaticCubeDepthTexture ();
+ ;
+     
+CreateStaticDepthTexture ();
+ ;
+     
+BuildStaticShadowMap ();
+ ;
+     
+BuildDynamicShadowMap ();
+ ;
+                    
+BuildShadowMap (const Iz3DBaseTexture ATarget ,
+const Iz3DSurface ADepth ,
+const Boolean AStatic = False 
+);
+ ;
+     
+RenderPrecomputation ();
+ ;
+     
+RenderWorld ();
+ ;
+     
+RenderSource ();
+ ;
+     
+SetLightingTechnique ();
+ ;
+       
+PropertyChanged (const Iz3DBase ASender 
+);
+ ;
+     
+StartScenario ();
+ ;
+       
+Init (const Iz3DBase AOwner 
+);
+ ; ;
+     
+Cleanup ();
+ ; ;
+  public:
+     
+TurnOn ();
+ ;
+     
+TurnOff ();
+ ;
+  public:
+       /** \sa GetIndex For reading*/
+Integer Index; 
+
+         /** \sa GetOnRender For reading   \sa SetOnRender For writing */
+Tz3DDirectLightRenderEvent OnRender; 
+
+         /** \sa GetName For reading   \sa SetName For writing */
+PWideChar Name; 
+
+       /** \sa GetColor For reading*/
+Iz3DFloat3 Color; 
+
+         /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+       /** \sa GetEffects For reading*/
+Iz3DLightEffects Effects; 
+
+         /** \sa GetStatic For reading   \sa SetStatic For writing */
+Boolean Static; 
+
+         /** \sa GetDynamicMode For reading   \sa SetDynamicMode For writing */
+Boolean DynamicMode; 
+
+         /** \sa GetStyle For reading   \sa SetStyle For writing */
+Tz3DLightStyle Style; 
+
+         /** \sa GetIntensity For reading   \sa SetIntensity For writing */
+Single Intensity; 
+
+         /** \sa GetRange For reading   \sa SetRange For writing */
+Single Range; 
+
+         /** \sa GetSharpness For reading   \sa SetSharpness For writing */
+Single Sharpness; 
+
+         /** \sa GetAngle For reading   \sa SetAngle For writing */
+Single Angle; 
+
+       /** \sa GetPosition For reading*/
+Iz3DFloat3 Position; 
+
+         /** \sa GetSize For reading   \sa SetSize For writing */
+Single Size; 
+
+       /** \sa GetDirection For reading*/
+Iz3DFloat3 Direction; 
+
+       /** \sa GetStage For reading*/
+Tz3DDirectLightRenderStage Stage; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Screen Space Ambient Occlusion interface                                 ==*/ 
+/*==============================================================================*/ 
+/*== Controller for the SSAO effect                                           ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DSSAO : public Tz3DLinked,Iz3DSSAO
+{
+public:
+
+  private:
+      Boolean FEnabled; 
+
+      Single FAmount; 
+
+      Tz3DSSAOQuality FQuality; 
+
+      Single FSampleFactor; 
+
+  protected:
+      
+Single GetSampleFactor ();
+ ;
+       
+SetSampleFactor (const Single Value 
+);
+ ;
+      
+Tz3DSSAOQuality GetQuality ();
+ ;
+       
+SetQuality (const Tz3DSSAOQuality Value 
+);
+ ;
+      
+Single GetAmount ();
+ ;
+       
+SetAmount (const Single Value 
+);
+ ;
+      
+Boolean GetEnabled ();
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+       
+z3DStartScenario (const Tz3DStartScenarioStage AStage 
+);
+ ; ;
+     
+CreateScenarioObjects ();
+ ;
+  public:
+         
+Tz3DSSAO (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetAmount For reading   \sa SetAmount For writing */
+Single Amount; 
+
+         /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+         /** \sa GetQuality For reading   \sa SetQuality For writing */
+Tz3DSSAOQuality Quality; 
+
+         /** \sa GetSampleFactor For reading   \sa SetSampleFactor For writing */
+Single SampleFactor; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Lights interface                                                         ==*/ 
+/*==============================================================================*/ 
+/*== Holds every light source and manages its shared properties and objects.  ==*/ 
+/*== It also allows to add, access and remove light sources                   ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DLightingController : public Tz3DLinked,Iz3DLightingController
+{
+public:
+
+  private:
+      Iz3DSSAO FSSAO; 
+
+      Iz3DTexture FNoise; 
+
+      IInterfaceList FLights; 
+
+      Iz3DRenderTexture FDepthMap; 
+
+      Iz3DRenderTexture FDirDepthMap; 
+
+      Iz3DCubeRenderTexture FCubeDepthMap; 
+
+      Iz3DRenderTexture FTempDepthMap; 
+
+      Iz3DRenderTexture FTempDirDepthMap; 
+
+      Iz3DEffect FEffect; 
+
+      Iz3DDepthBuffer FDepthBuffer; 
+
+      Boolean FUseStaticHWShadow; 
+
+      Boolean FUseDynamicHWShadow; 
+
+      Tz3DShadowQuality FShadowQuality; 
+
+      Iz3DTexture FGlowTexture; 
+
+      Single FShadowMapOffset; 
+
+      Single FDirShadowMapOffset; 
+
+      Single FDirShadowMapAreaSize; 
+
+      Tz3DLightingRenderStage FStage; 
+
+      Integer FCurrentLight; 
+
+  protected:
+      
+Iz3DLight GetCurrentLight ();
+ ;
+      
+Tz3DLightingRenderStage GetStage ();
+ ;
+      
+Single GetDirShadowMapAreaSize ();
+ ;
+       
+SetDirShadowMapAreaSize (const Single Value 
+);
+ ;
+      
+Single GetDirShadowMapOffset ();
+ ;
+      
+Single GetShadowMapOffset ();
+ ;
+       
+SetDirShadowMapOffset (const Single Value 
+);
+ ;
+       
+SetShadowMapOffset (const Single Value 
+);
+ ;
+      
+Iz3DSSAO GetSSAO ();
+ ;
+      
+Iz3DTexture GetGlowTexture ();
+ ;
+      
+Iz3DRenderTexture GetTempDirDepthMap ();
+ ;
+      
+Tz3DShadowQuality GetShadowQuality ();
+ ;
+      
+Boolean GetUseDynamicHWShadow ();
+ ;
+      
+Boolean GetUseStaticHWShadow ();
+ ;
+       
+SetShadowQuality (const Tz3DShadowQuality Value 
+);
+ ;
+       
+SetUseDynamicHWShadow (const Boolean Value 
+);
+ ;
+       
+SetUseStaticHWShadow (const Boolean Value 
+);
+ ;
+      
+Iz3DRenderTexture GetTempDepthMap ();
+ ;
+      
+Iz3DRenderTexture GetDirDepthMap ();
+ ;
+      
+Iz3DCubeRenderTexture GetCubeDepthMap ();
+ ;
+      
+Iz3DRenderTexture GetDepthMap ();
+ ;
+      
+Iz3DDepthBuffer GetDepthBuffer ();
+ ;
+      
+Integer GetLightCount ();
+ ;
+      
+Iz3DEffect GetEffect ();
+ ;
+        
+Iz3DLight GetLights (const Integer AIndex 
+);
+ ;
+          
+SetLights (const Integer AIndex ,
+const Iz3DLight Value 
+);
+ ;
+     
+RenderPrecomputation ();
+ ;
+     
+RenderAmbient ();
+ ;
+     
+RenderLighting ();
+ ;
+     
+RenderLightSources ();
+ ;
+     
+CreateScenarioObjects ();
+ ;
+     
+CreateDepthTexture ();
+ ;
+     
+CreateDirDepthTexture ();
+ ;
+     
+CreateCubeDepthTexture ();
+ ;
+     
+SetEffectParams ();
+ ;
+       
+z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+);
+ ; ;
+  public:
+         
+Tz3DLightingController (const Iz3DBase AOwner = nil 
+);
+ ;
+      
+Integer DepthMapSize ();
+ ;
+      
+Integer DirectionalDepthMapSize ();
+ ;
+
+      
+Iz3DLight CreateLight ();
+ ;
+       
+RemoveLight (const Iz3DLight ALight 
+);
+ ;
+        
+Integer IndexOfLight (const Iz3DLight ALight 
+);
+ ;
+  public:
+    /*[const AIndex: Integer]*/     /** \sa GetLights For reading   \sa SetLights For writing */
+Iz3DLight Lights; 
+ 
+       /** \sa GetCurrentLight For reading*/
+Iz3DLight CurrentLight; 
+
+       /** \sa GetDepthBuffer For reading*/
+Iz3DDepthBuffer DepthBuffer; 
+
+       /** \sa GetDepthMap For reading*/
+Iz3DRenderTexture DepthMap; 
+
+       /** \sa GetDirDepthMap For reading*/
+Iz3DRenderTexture DirDepthMap; 
+
+       /** \sa GetCubeDepthMap For reading*/
+Iz3DCubeRenderTexture CubeDepthMap; 
+
+       /** \sa GetLightCount For reading*/
+Integer LightCount; 
+
+       /** \sa GetEffect For reading*/
+Iz3DEffect Effect; 
+
+         /** \sa GetShadowMapOffset For reading   \sa SetShadowMapOffset For writing */
+Single ShadowMapOffset; 
+
+         /** \sa GetDirShadowMapAreaSize For reading   \sa SetDirShadowMapAreaSize For writing */
+Single DirShadowMapAreaSize; 
+
+         /** \sa GetDirShadowMapOffset For reading   \sa SetDirShadowMapOffset For writing */
+Single DirShadowMapOffset; 
+
+       /** \sa GetTempDirDepthMap For reading*/
+Iz3DRenderTexture TempDirDepthMap; 
+
+       /** \sa GetTempDepthMap For reading*/
+Iz3DRenderTexture TempDepthMap; 
+
+       /** \sa GetGlowTexture For reading*/
+Iz3DTexture GlowTexture; 
+
+       /** \sa GetSSAO For reading*/
+Iz3DSSAO SSAO; 
+
+       /** \sa GetStage For reading*/
+Tz3DLightingRenderStage Stage; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Lightmap packing node interface                                          ==*/ 
+/*==============================================================================*/ 
+/*== Represents an individual lightmap into the packing tree and holds the    ==*/ 
+/*== child lightmap nodes                                                     ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DLightMapPackNode : public Tz3DBase,Iz3DLightMapPackNode
+{
+public:
+
+  private:
+     Iz3DLightMapPackNode FChilds[1]; /*!< [0..1] */
+
+      TRect FRect; 
+
+      Integer FID; 
+
+  protected:
+        
+Iz3DLightMapPackNode GetChilds (const Integer I 
+);
+ ;
+      
+Integer GetID ();
+ ;
+      
+TRect GetRect ();
+ ;
+          
+SetChilds (const Integer I ,
+const Iz3DLightMapPackNode Value 
+);
+ ;
+       
+SetID (const Integer Value 
+);
+ ;
+       
+SetRect (const TRect Value 
+);
+ ;
+  public:
+         
+Tz3DLightMapPackNode (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetRect For reading   \sa SetRect For writing */
+TRect Rect; 
+
+         /** \sa GetID For reading   \sa SetID For writing */
+Integer ID; 
+
+    /*[const I: Integer]*/     /** \sa GetChilds For reading   \sa SetChilds For writing */
+Iz3DLightMapPackNode Childs; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Ray tracer interface                                                     ==*/ 
+/*==============================================================================*/ 
+/*== Allows to perform ray tracing operations on the world for any purposes.  ==*/ 
+/*== The main features are reflections, refractions, penumbra and bouncing    ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DRayTracer : public Tz3DBase,Iz3DRayTracer
+{
+public:
+
+  private:
+      Boolean FNormalLerp; 
+
+      Single FNormalLerpExponent; 
+
+      Integer FAOSamples; 
+
+      Integer FRadiositySamples; 
+
+      Integer FPenumbraDetailFactor; 
+
+      Boolean FShadows; 
+
+      Boolean FPenumbra; 
+
+      Iz3DSurface FGPUTarget; 
+
+     Iz3DTexture FGPURadiosityBuffer[1]; /*!< [0..1] */
+
+  protected:
+      
+Iz3DTexture GetRadiosityBuffer0 ();
+ ;
+      
+Iz3DTexture GetRadiosityBuffer1 ();
+ ;
+      
+Integer GetPenumbraDetailFactor ();
+ ;
+       
+SetPenumbraDetailFactor (const Integer Value 
+);
+ ;
+      
+Integer GetRadiositySamples ();
+ ;
+       
+SetRadiositySamples (const Integer Value 
+);
+ ;
+      
+Boolean GetNormalLerp ();
+ ;
+      
+Single GetNormalLerpExponent ();
+ ;
+       
+SetNormalLerp (const Boolean Value 
+);
+ ;
+       
+SetNormalLerpExponent (const Single Value 
+);
+ ;
+      
+Integer GetAOSamples ();
+ ;
+       
+SetAOSamples (const Integer Value 
+);
+ ;
+      
+Boolean GetPenumbra ();
+ ;
+      
+Boolean GetShadows ();
+ ;
+       
+SetPenumbra (const Boolean Value 
+);
+ ;
+       
+SetShadows (const Boolean Value 
+);
+ ;
+  public:
+         
+Tz3DRayTracer (const Iz3DBase AOwner = nil 
+);
+ ;
+
+    // Ray tracing functions
+       
+RayTraceLightMap (const Iz3DLightMap ALightMap 
+);
+ ;
+          
+RayTraceLightMapRadiosity (const Iz3DLightMap ALightMap ,
+const Integer ALevel 
+);
+ ;
+          
+RayTraceLightMapRadiosity_GPU (const Iz3DLightMap ALightMap ,
+const Integer ALevel 
+);
+ ;
+               
+NormalizeLightMapRadiosity (const Iz3DLightMap ALightMap ,
+const Integer ALevel 
+);
+ ;
+
+         
+BeginGPUTracing (const Boolean ASetCull = False 
+);
+ ;
+         
+EndGPUTracing (const Boolean ASetCull = False 
+);
+ ;
+     
+BeginAOTracing ();
+ ;
+     
+EndAOTracing ();
+ ;
+       
+BeginRadiosityTracing (const Iz3DLightMap ALightMap 
+);
+ ;
+     
+EndRadiosityTracing ();
+ ;
+
+                    
+Iz3DFloat3 RayTraceLight (const Iz3DScenarioObject AObject ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Integer ALight 
+);
+ ;
+                       
+Iz3DFloat3 RayTraceAO (const Iz3DScenarioObject AObject ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 AEdge1 ,
+const Iz3DFloat3 AEdge2 ,
+/* out */ Boolean &ACollision 
+);
+ ;
+                       
+Iz3DFloat3 RayTraceAO_GPU (const Iz3DScenarioObject AObject ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 AEdge1 ,
+const Iz3DFloat3 AEdge2 ,
+/* out */ Boolean &ACollision 
+);
+ ;
+                                 
+Iz3DFloat3 RayTraceRadiosity (const Iz3DScenarioObject AObject ,
+Tz3DLightMapLuxel &ALumel ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 AEdge1 ,
+const Iz3DFloat3 AEdge2 ,
+const Iz3DFloat3 AColor ,
+const Integer ALight ,
+const Integer ALevel 
+);
+ ;
+                                 
+Iz3DFloat3 RayTraceRadiosity_GPU (const Iz3DScenarioObject AObject ,
+Tz3DLightMapLuxel &ALumel ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 AEdge1 ,
+const Iz3DFloat3 AEdge2 ,
+const Iz3DFloat3 AColor ,
+const Integer ALight ,
+const Integer ALevel 
+);
+ ;
+
+    // Ray collision functions
+              
+Boolean RayIntersectTriangle (const Tz3DRay ARay ,
+const Tz3DTriangle ATriangle ,
+Single &ADistance 
+);
+ ;
+                    
+Boolean RayIntersectVertex (const Iz3DScenarioObject AObject1 ,
+const Iz3DScenarioObject AObject2 ,
+const Tz3DRay ARay ,
+Single &ADistance 
+);
+ ;
+              
+Boolean RayIntersectPlane (const Tz3DRay ARay ,
+const Tz3DTriangle APlane ,
+Single &ADistance 
+);
+ ;
+                   
+Boolean RayIntersectBoundingSphere (const Tz3DRay ARay ,
+const Iz3DBoundingSphere ASphere ,
+Single &ADistance 
+);
+ ;
+                        
+Boolean RayIntersectBoundingBox (const Tz3DRay ARay ,
+const Iz3DBoundingBox ABox ,
+Single &ADistance ,
+const Boolean ATEvaluation = True 
+);
+ ;
+          
+               
+Boolean RayIntersectBound (const Iz3DScenarioObject AObject1 ,
+const Iz3DScenarioObject AObject2 ,
+const Tz3DRay ARay ,
+Single &ADistance ,
+const Boolean ATEvaluation = True 
+);
+ ;
+
+                                                  
+Boolean RayCollision (const Iz3DScenarioObject ARayObject ,
+const Tz3DRay ARay ,
+Single &AResult ,
+/* out */ Iz3DScenarioObject &ACollisionObject ,
+/* out */ Single &ACollisionT ,
+const Boolean AVertexEvaluation = True ,
+const Boolean ATEvaluation = True ,
+const Integer ATotalSamples = 1 
+);
+ ;
+
+  public:
+       /** \sa GetRadiosityBuffer0 For reading*/
+Iz3DTexture RadiosityBuffer0; 
+
+       /** \sa GetRadiosityBuffer1 For reading*/
+Iz3DTexture RadiosityBuffer1; 
+
+         /** \sa GetNormalLerp For reading   \sa SetNormalLerp For writing */
+Boolean NormalLerp; 
+
+         /** \sa GetNormalLerpExponent For reading   \sa SetNormalLerpExponent For writing */
+Single NormalLerpExponent; 
+
+         /** \sa GetAOSamples For reading   \sa SetAOSamples For writing */
+Integer AOSamples; 
+
+         /** \sa GetRadiositySamples For reading   \sa SetRadiositySamples For writing */
+Integer RadiositySamples; 
+
+         /** \sa GetPenumbraDetailFactor For reading   \sa SetPenumbraDetailFactor For writing */
+Integer PenumbraDetailFactor; 
+
+         /** \sa GetShadows For reading   \sa SetShadows For writing */
+Boolean Shadows; 
+
+         /** \sa GetPenumbra For reading   \sa SetPenumbra For writing */
+Boolean Penumbra; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Lightmap options interface                                               ==*/ 
+/*==============================================================================*/ 
+/*== Holds the options available for the lightmap generation                  ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DLightMapOptions : public Tz3DBase,Iz3DLightMapOptions
+{
+public:
+
+  private:
+      Integer FBlurSteps; 
+
+      Boolean FEnableAmbient; 
+
+      Boolean FEnableRadiosity; 
+
+      Integer FRadiosityBounces; 
+
+      Integer FDetailFactor; 
+
+  protected:
+      
+Boolean GetEnableAmbient ();
+ ;
+      
+Boolean GetEnableRadiosity ();
+ ;
+      
+Integer GetRadiosityBounces ();
+ ;
+       
+SetEnableAmbient (const Boolean Value 
+);
+ ;
+       
+SetEnableRadiosity (const Boolean Value 
+);
+ ;
+       
+SetRadiosityBounces (const Integer Value 
+);
+ ;
+      
+Integer GetBlurSteps ();
+ ;
+       
+SetBlurSteps (const Integer Value 
+);
+ ;
+      
+Integer GetDetailFactor ();
+ ;
+       
+SetDetailFactor (const Integer Value 
+);
+ ;
+  public:
+         
+Tz3DLightMapOptions (const Iz3DBase AOwner = nil 
+);
+ ;
+  public:
+         /** \sa GetDetailFactor For reading   \sa SetDetailFactor For writing */
+Integer DetailFactor; 
+
+         /** \sa GetBlurSteps For reading   \sa SetBlurSteps For writing */
+Integer BlurSteps; 
+
+         /** \sa GetEnableAmbient For reading   \sa SetEnableAmbient For writing */
+Boolean EnableAmbient; 
+
+         /** \sa GetEnableRadiosity For reading   \sa SetEnableRadiosity For writing */
+Boolean EnableRadiosity; 
+
+         /** \sa GetRadiosityBounces For reading   \sa SetRadiosityBounces For writing */
+Integer RadiosityBounces; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Global lightmap controller interface                                     ==*/ 
+/*==============================================================================*/ 
+/*== Configures the global settings of the lightmap generation algorithm such ==*/ 
+/*== as the texture format or the loading and saving path                     ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DLightMapController : public Tz3DBase,Iz3DLightMapController
+{
+public:
+
+  private:
+      PWideChar FFolderName; 
+
+      Integer FMaxTextureSize; 
+
+      PWideChar FLightFileMask; 
+
+      PWideChar FAOFileMask; 
+
+  protected:
+      
+PWideChar GetLightFileMask ();
+ ;
+       
+SetLightFileMask (const PWideChar Value 
+);
+ ;
+      
+PWideChar GetAOFileMask ();
+ ;
+       
+SetAOFileMask (const PWideChar Value 
+);
+ ;
+      
+PWideChar GetFolderName ();
+ ;
+      
+Integer GetMaxTextureSize ();
+ ;
+       
+SetFolderName (const PWideChar Value 
+);
+ ;
+       
+SetMaxTextureSize (const Integer Value 
+);
+ ;
+  public:
+         
+Tz3DLightMapController (const Iz3DBase AOwner = nil 
+);
+ ;
+        
+PWideChar GetTextureFileName (const PWideChar ATextureName 
+);
+ ;
+      
+Iz3DLightMap CreateLightMap ();
+ ;
+  public:
+         /** \sa GetFolderName For reading   \sa SetFolderName For writing */
+PWideChar FolderName; 
+
+         /** \sa GetLightFileMask For reading   \sa SetLightFileMask For writing */
+PWideChar LightFileMask; 
+
+         /** \sa GetAOFileMask For reading   \sa SetAOFileMask For writing */
+PWideChar AOFileMask; 
+
+         /** \sa GetMaxTextureSize For reading   \sa SetMaxTextureSize For writing */
+Integer MaxTextureSize; 
+
+ };
+
+
+/*==============================================================================*/ 
+/*== Lightmap interface                                                       ==*/ 
+/*==============================================================================*/ 
+/*== Controls the lightmap creation and linking to an specific world static   ==*/ 
+/*== object. It uses the ray tracer interface to generate the lighting        ==*/ 
+/*==============================================================================*/ 
+
+    class Tz3DLightMap : public Tz3DBase,Iz3DLightMap
+{
+public:
+
+  private:
+      Iz3DScenarioStaticObject FObject; 
+
+      Iz3DFloat3 FObjectSize; 
+
+      Integer FRadiosityLevel; 
+
+      Single FAreaFactor; 
+
+      Iz3DLightMapOptions FOptions; 
+
+      Iz3DRayTracer FRayTracer; 
+
+      Tz3DLightMapDistribution FDistribution; 
+
+      Tz3DDistributionIndices FDistributionIndices; 
+
+      Tz3DLightMapTextures FLightTextures; 
+
+      Tz3DLightMapTextures FRadiosityTextures; 
+
+      Tz3DLightMapTexture FAmbientTexture; 
+
+      PWideChar FUniqueName; 
+
+      Boolean FEnabled; 
+
+      Boolean FGenerated; 
+
+  protected:
+      
+Iz3DScenarioStaticObject GetCurrentObject ();
+
+      
+Boolean GetGenerated ();
+ ;
+        
+Pz3DLightMapPlane GetFacePlane (const Integer AFace 
+);
+ ;
+      
+Tz3DDistributionIndices GetDistributionIndices ();
+ ;
+      
+Boolean GetEnabled ();
+ ;
+       
+SetEnabled (const Boolean Value 
+);
+ ;
+      
+PWideChar GetUniqueName ();
+ ;
+       
+SetUniqueName (const PWideChar Value 
+);
+ ;
+      
+Integer GetOffset ();
+ ;
+      
+Tz3DLightMapTexture GetAmbientTexture ();
+ ;
+      
+Tz3DLightMapTextures GetLightTextures ();
+ ;
+      
+Tz3DLightMapTextures GetRadiosityTextures ();
+ ;
+      
+Iz3DLightMapOptions GetOptions ();
+ ;
+      
+Iz3DRayTracer GetRayTracer ();
+ ;
+      
+Tz3DLightMapDistribution GetDistribution ();
+ ;
+      
+Iz3DFloat3 GetWorldScale ();
+ ;
+      
+Integer GetSize ();
+ ;
+                         
+GetCoords (const Iz3DFloat2 AV1 ,
+const Iz3DFloat2 AV2 ,
+const Iz3DFloat2 AV3 ,
+const Tz3DFloat2Array AAditional ,
+Single &AMinU ,
+Single &AMaxU ,
+Single &AMinV ,
+Single &AMaxV ,
+Single &ADeltaU ,
+Single &ADeltaV 
+);
+ ;
+                      
+GetWorldPlane (const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 APointOnPlane ,
+const Single AMinU ,
+const Single AMaxU ,
+const Single AMinV ,
+const Single AMaxV ,
+Tz3DTriangle &APlane 
+);
+ ;
+             
+Blur (const TD3DLockedRect ARect ,
+const Integer AOffsetU ,
+const Integer AOffsetV ,
+const Integer AWidth ,
+const Integer AHeight 
+);
+ ;
+     
+BlurTextures ();
+ ;
+       
+BlurAndSave (Tz3DLightMapTexture &ATexture 
+);
+ ;
+     
+CopyRadiosityToTextures ();
+ ;
+
+           
+Iz3DLightMapPackNode AddPackNode (const Iz3DLightMapPackNode ANode ,
+const Tz3DLightMapPlane APlane 
+);
+ ;
+            
+GenerateLightCoords (const Iz3DBase AObject ,
+const Pz3DDWordArray AAdjacency = nil 
+);
+ ;
+                        
+GeneratePlanarMapping (const Pointer AVB ,
+const PWordArray AIB ,
+const Integer AFaceCount ,
+const Pz3DDWordArray AAdjacency ,
+const Boolean AComputeCoords 
+);
+ ;
+     
+CreateTextures ();
+ ;
+     
+SaveTextures ();
+ ;
+                     
+Distribute (const Pointer AVB ,
+const PWordArray AIB ,
+const Integer AFaceCount ,
+const Boolean AComputeCoords 
+);
+ ;
+
+     
+BeginDraw ();
+ ;
+     
+EndDraw ();
+ ;
+  public:
+         
+Tz3DLightMap (const Iz3DBase AOwner = nil 
+);
+ ;
+     
+~Tz3DLightMap ();
+ ;
+
+                       
+Boolean BeginGeneration (const Iz3DScenarioStaticObject AObject ,
+const Pz3DDWordArray AAdjacency = nil ,
+const Boolean AComputeCoords = False 
+);
+ ;
+
+     
+BeginRadiosity ();
+ ;
+      
+Boolean PerformRadiosityBounce ();
+ ;
+     
+EndRadiosityBounce ();
+ ;
+     
+EndRadiosity ();
+ ;
+
+      
+Boolean EndGeneration ();
+ ;
+      
+Boolean GenerationNeeded ();
+ ;
+  public:
+       /** \sa GetAmbientTexture For reading*/
+Tz3DLightMapTexture AmbientTexture; 
+
+       /** \sa GetLightTextures For reading*/
+Tz3DLightMapTextures LightTextures; 
+
+       /** \sa GetRadiosityTextures For reading*/
+Tz3DLightMapTextures RadiosityTextures; 
+
+       /** \sa GetDistributionIndices For reading*/
+Tz3DDistributionIndices DistributionIndices; 
+
+    /*[const AFace: Integer]*/   /** \sa GetFacePlane For reading*/
+Pz3DLightMapPlane FacePlane; 
+
+       /** \sa GetGenerated For reading*/
+Boolean Generated; 
+
+       /** \sa GetDistribution For reading*/
+Tz3DLightMapDistribution Distribution; 
+
+         /** \sa GetEnabled For reading   \sa SetEnabled For writing */
+Boolean Enabled; 
+
+       /** \sa GetCurrentObject For reading*/
+Iz3DScenarioStaticObject CurrentObject; 
+
+       /** \sa GetOptions For reading*/
+Iz3DLightMapOptions Options; 
+
+       /** \sa GetRayTracer For reading*/
+Iz3DRayTracer RayTracer; 
+
+       /** \sa GetWorldScale For reading*/
+Iz3DFloat3 WorldScale; 
+
+         /** \sa GetUniqueName For reading   \sa SetUniqueName For writing */
+PWideChar UniqueName; 
+
+       /** \sa GetSize For reading*/
+Integer Size; 
+
+       /** \sa GetOffset For reading*/
+Integer Offset; 
+
+ };
+
+
+  
+Tz3DTriangle z3DTriangle ();
+ ;
+
+// Lighting calculations
+     
+Single z3DLightingDiffuseDirectional (const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 ALight 
+);
+ ;
+         
+Single z3DLightingDiffuse (const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 ALight ,
+const Single ADistance ,
+const Single ARange 
+);
+ ;
+         
+Single z3DLightingSpot (const Iz3DFloat3 ALight ,
+const Iz3DFloat3 ADirection ,
+const Single AAngle ,
+const Single ASharpness 
+);
+ ;
+
+// Common lighting functions
+          
+Tz3DRay z3DRay (const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 ADirection ,
+const Single ALength = 1 
+);
+ ;
+
+// Controller management
+  
+Iz3DLightMapController z3DLightMapController ();
+ ;
+  
+Iz3DLightingController z3DLightingController ();
+ ;
+  
+Iz3DLightingController z3DCreateLightingController ();
+ ;
+  
+Iz3DLightMapController z3DCreateLightMapController ();
+ ;
+   
+z3DSetCustomLightingController (const Iz3DLightingController AController 
+);
+ ;
+   
+z3DSetCustomLightMapController (const Iz3DLightMapController AController 
+);
+ ;
+
+
+
+     
+      
+    
+
+/*uses Forms, Math, z3DEngine, z3DModels, z3DStrings, z3DFileSystem;*/ 
+
+          
+Tz3DRay z3DRay (const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 ADirection ,
+const Single ALength = 1 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result.Origin:= AOrigin;
+  Result.Direction:= ADirection;
+  Result.Length:= ALength;
+#endif /* DOXYGEN_SKIP */
+};
+/*
+var
+ GLightMapController: Iz3DLightMapController;
+    GLightingController: Iz3DLightingController;
+
+  
+Iz3DLightMapController z3DLightMapController ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= GLightMapController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLightingController z3DLightingController ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= GLightingController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLightingController z3DCreateLightingController ()
+{
+#ifndef DOXYGEN_SKIP
+  GLightingController:= Tz3DLightingController.Create;
+  Result:= GLightingController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLightMapController z3DCreateLightMapController ()
+{
+#ifndef DOXYGEN_SKIP
+  GLightMapController:= Tz3DLightMapController.Create;
+  Result:= GLightMapController;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomLightingController (const Iz3DLightingController AController 
+)
+{
+#ifndef DOXYGEN_SKIP
+  GLightingController:= AController;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+z3DSetCustomLightMapController (const Iz3DLightMapController AController 
+)
+{
+#ifndef DOXYGEN_SKIP
+  GLightMapController:= AController;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DTriangle z3DTriangle ()
+{
+#ifndef DOXYGEN_SKIP
+  Result[0]:= z3DFloat3;
+  Result[1]:= z3DFloat3;
+  Result[2]:= z3DFloat3;
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Single z3DLightingDiffuseDirectional (const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 ALight 
+)
+
+/*
+var
+ FNormal, FLight: Iz3DFloat3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // N dot L
+  FNormal:= z3DFloat3.From(ANormal).Normalize;
+  FLight:= z3DFloat3.From(ALight).Normalize;
+  Result:= Saturate(FNormal.Dot(FLight));
+#endif /* DOXYGEN_SKIP */
+};
+
+         
+Single z3DLightingDiffuse (const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 ALight ,
+const Single ADistance ,
+const Single ARange 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // N dot L with falloff
+  Result:= (z3DLightingDiffuseDirectional(ANormal, ALight) / ADistance) * Saturate(1 - ADistance / ARange);
+#endif /* DOXYGEN_SKIP */
+};
+
+         
+Single z3DLightingSpot (const Iz3DFloat3 ALight ,
+const Iz3DFloat3 ADirection ,
+const Single AAngle ,
+const Single ASharpness 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Spotlight cone: D dot L - sin(radians(Angle))
+  Result:= Saturate(ASharpness * (Saturate(ALight.Dot(ADirection)) - Sin(DegToRad(AAngle / 2))));
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DLightEffects */ 
+
+   
+Tz3DLightEffects::Init (const Iz3DBase AOwner 
+)
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FGlow:= True;
+  FGlowFactor:= 0.5;
+  FMultiSampleGlow:= True;
+  FLight:= Pointer(AOwner);
+  FNormalMapping:= True;
+  FStaticPenumbra:= False;
+  FSpecular:= True;
+  FStaticShadows:= True;
+  FShadows:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightEffects::Cleanup ()
+{
+#ifndef DOXYGEN_SKIP
+  FLight:= nil;
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightEffects::GetDynamicShadows ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDynamicShadows;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightEffects::GetGlow ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGlow;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DLightEffects::GetGlowFactor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGlowFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightEffects::GetMultiSampleGlow ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMultiSampleGlow;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightEffects::GetNormalMapping ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FNormalMapping;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightEffects::GetSpecular ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSpecular;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightEffects::GetStaticPenumbra ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStaticPenumbra;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightEffects::GetStaticShadows ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStaticShadows;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightEffects::SetDynamicShadows (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FShadows <> Value thenbegin    FShadows:= Value;
+    if z3DGlobalEngine.Scenario.Enabled thenbegin      Light.CreateTextures;
+      Light.SetLightingTechnique;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightEffects::SetGlow (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FGlow:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightEffects::SetGlowFactor (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FGlowFactor:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightEffects::SetMultiSampleGlow (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMultiSampleGlow:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightEffects::SetNormalMapping (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FNormalMapping <> Value thenbegin    FNormalMapping:= Value;
+    if z3DGlobalEngine.Scenario.Enabled then
+    Light.SetLightingTechnique;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightEffects::SetSpecular (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FSpecular <> Value thenbegin    FSpecular:= Value;
+    if z3DGlobalEngine.Scenario.Enabled then
+    Light.SetLightingTechnique;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightEffects::SetStaticPenumbra (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FStaticPenumbra:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightEffects::SetStaticShadows (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FStaticShadows <> Value thenbegin    FStaticShadows:= Value;
+    if z3DGlobalEngine.Scenario.Enabled then
+    Light.SetLightingTechnique;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLight Tz3DLightEffects::GetLight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Iz3DBase(FLight) as Iz3DLight;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DLight */ 
+
+   
+Tz3DLight::Init (const Iz3DBase AOwner 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  inherited;
+  FMode:= False;
+  FStatic:= False;
+  FColor:= z3DFloat3;
+  FEffects:= Tz3DLightEffects.Create(Self);
+  FViewMatrix:= z3DMatrix;
+  FProjMatrix:= z3DMatrix;
+  FTexMatrix:= z3DMatrix;
+  FViewProjMatrix:= z3DMatrix;
+  FTexViewProjMatrix:= z3DMatrix;
+  for I:= 0 to 5 do FCubeViewMatrix[I]:= z3DMatrix;
+  FStaticDepthMap:= z3DCreateRenderTexture;
+  FStaticDepthMap.AutoParams:= False;
+  FStaticCubeDepthMap:= z3DCreateCubeRenderTexture;
+  GetMem(FName, 255);
+  FRange:= 20;
+  FEnabled:= True;
+  FAngle:= 90;
+  FSharpness:= 10;
+  FIntensity:= 1;
+  FPosition:= z3DFloat3;
+  FDirection:= z3DFloat3;
+  FPosition.OnChange:= PropertyChanged;
+  FDirection.OnChange:= PropertyChanged;
+  FSize:= 0.25;
+  FStyle:= z3dlsPoint;
+  if z3DGlobalEngine.Scenario.Enabled then CreateTextures;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::Cleanup ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  z3DCleanupFree(FColor);
+  z3DCleanupFree(FEffects);
+  z3DCleanupFree(FViewMatrix);
+  z3DCleanupFree(FProjMatrix);
+  z3DCleanupFree(FTexMatrix);
+  z3DCleanupFree(FViewProjMatrix);
+  z3DCleanupFree(FTexViewProjMatrix);
+  for I:= 0 to 5 do z3DCleanupFree(FCubeViewMatrix[I]);
+  z3DCleanupFree(FStaticDepthMap);
+  z3DCleanupFree(FStaticCubeDepthMap);
+  z3DFreeWideChar(FName);
+  z3DCleanupFree(FPosition);
+  z3DCleanupFree(FDirection);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::MeasureLightEffectParams ()
+
+/*
+var
+ FPos, FPosDir: Iz3DFloat3;
+    FDepthSize: Single;
+    FPrevX, FPrevY, FPrevZ: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Effects.DynamicShadows or not z3DGlobalEngine.Device.Created then Exit;
+
+  case Style of
+
+
+    // Build the cube view matrix
+    z3dlsPoint:
+    begin      FProjMatrix.PerspectiveFOV(z3DPI / 2, 1, 0.01, FRange+1);
+      FCubeViewMatrix[0].LookAt(Position, z3DFloat3(Position.X+1, Position.Y, Position.Z), z3DFloat3(0, 1, 0)).Multiply(FProjMatrix);
+      FCubeViewMatrix[1].LookAt(Position, z3DFloat3(Position.X-1, Position.Y, Position.Z), z3DFloat3(0, 1, 0)).Multiply(FProjMatrix);
+      FCubeViewMatrix[2].LookAt(Position, z3DFloat3(Position.X, Position.Y+1, Position.Z), z3DFloat3(0, 0,-1)).Multiply(FProjMatrix);
+      FCubeViewMatrix[3].LookAt(Position, z3DFloat3(Position.X, Position.Y-1, Position.Z), z3DFloat3(0, 0, 1)).Multiply(FProjMatrix);
+      FCubeViewMatrix[4].LookAt(Position, z3DFloat3(Position.X, Position.Y, Position.Z+1), z3DFloat3(0, 1, 0)).Multiply(FProjMatrix);
+      FCubeViewMatrix[5].LookAt(Position, z3DFloat3(Position.X, Position.Y, Position.Z-1), z3DFloat3(0, 1, 0)).Multiply(FProjMatrix);
+   end
+
+    z3dlsSpot:
+    begin      // Build the light view matrix
+      FPosDir:= z3DFloat3.From(Direction).Normalize.Add(Position);
+      FViewMatrix.LookAt(Position, FPosDir);
+      FProjMatrix.PerspectiveFOV(DegToRad(180-FAngle), 1, 0.01, FRange+1);
+      FViewProjMatrix:= z3DMatrix.From(FViewMatrix).Multiply(FProjMatrix);
+
+      // Build the texture projection matrix
+      FTexMatrix.e11:= 0.5;
+      FTexMatrix.e22:= -0.5;
+      FTexMatrix.e33:= 1;
+      FDepthSize:= z3DLightingController.DepthMapSize;
+      FTexMatrix.e41:= 0.5 / FDepthSize + 0.5;
+      FTexMatrix.e42:= 0.5 / FDepthSize + 0.5;
+      FTexMatrix.e43:= 0;
+      FTexMatrix.e44:= 1;
+      FTexViewProjMatrix:= z3DMatrix.From(FViewProjMatrix).Multiply(FTexMatrix);
+      FTexViewProjMatrix.e44:= FTexViewProjMatrix.e44+z3DLightingController.ShadowMapOffset;
+   end
+
+    z3dlsDirectional:
+    begin      // Build the view and orthogonal projection matrix
+      FPosDir:= z3DFloat3.From(Direction).Normalize;
+      Position.BeginInternalChange;
+      FPrevX:= Position.X;
+      FPrevY:= Position.Y;
+      FPrevZ:= Position.Z;
+      Position.From(z3DGlobalEngine.ViewPosition).Add(z3DFloat3.From(FPosDir).Scale(-20));
+      Position.X:= Trunc(Position.X * 0.5) * 2;
+      Position.Y:= Trunc(Position.Y * 0.5) * 2;
+      Position.Z:= Trunc(Position.Z * 0.5) * 2;
+      Position.EndInternalChange;
+      FViewMatrix.LookAt(Position, FPosDir.Add(Position));
+      FProjMatrix.Ortho(z3DLightingController.DirShadowMapAreaSize,
+      z3DLightingController.DirShadowMapAreaSize, 0.01,
+      z3DLightingController.DirShadowMapAreaSize);
+      FViewProjMatrix:= z3DMatrix.From(FViewMatrix).Multiply(FProjMatrix);
+
+      // Build the texture projection matrix
+      FTexMatrix.e11:= 0.5;
+      FTexMatrix.e22:= -0.5;
+      FTexMatrix.e33:= 1;
+      FDepthSize:= z3DLightingController.DirectionalDepthMapSize;
+      FTexMatrix.e41:= 0.5 / FDepthSize + 0.5;
+      FTexMatrix.e42:= 0.5 / FDepthSize + 0.5;
+      FTexMatrix.e43:= 0;
+      FTexMatrix.e44:= 1;
+      FTexViewProjMatrix:= z3DMatrix.From(FViewProjMatrix).Multiply(FTexMatrix);
+      FTexViewProjMatrix.e43:= FTexViewProjMatrix.e43-z3DLightingController.DirShadowMapOffset;
+
+      if z3DGlobalEngine.Renderer.Rendering and ((Position.X <> FPrevX) or (Position.Y <> FPrevY) or
+      (Position.Z <> FPrevZ)) thenbegin        UpdateLightingParams;
+        BuildStaticShadowMap;
+     end
+   end
+
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::UpdateLightingParams ()
+
+/*
+var
+ FPos4: Iz3DFloat4;
+    FDepthSize: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Set shadow parameters
+  if z3DGlobalEngine.Device.EngineCaps.ShadowMapSupport and Effects.DynamicShadows thenbegin    if Style = z3dlsDirectional then
+    FDepthSize:= z3DLightingController.DirectionalDepthMapSize else
+    FDepthSize:= z3DLightingController.DepthMapSize;
+    z3DLightingController.Effect.Param['GDepthMapSize']:= FDepthSize;
+    z3DLightingController.Effect.Param['GInvDepthMapSize']:= 1 / FDepthSize;
+    z3DLightingController.Effect.Matrix['GTextureProjectionMatrix']:= FTexViewProjMatrix;
+    if Style <> z3dlsPoint thenbegin      z3DLightingController.Effect.Matrix['GLightViewMatrix']:= FViewMatrix;
+      z3DLightingController.Effect.Matrix['GLightViewProjectionMatrix']:= FViewProjMatrix;
+   end
+ end
+
+  // Set lighting parameters
+  FPos4:= z3DFloat4(Position.X, Position.Y, Position.Z, 1);
+  z3DLightingController.Effect.Float4['GLightPos']:= FPos4;
+  FPos4.Transform(z3DGlobalEngine.ViewMatrix);
+  z3DLightingController.Effect.Float4['GLightPosView']:= FPos4;
+  FPos4:= z3DFloat4(Direction.X, Direction.Y, Direction.Z, 1).Normalize;
+  z3DLightingController.Effect.Float4['GLightDir']:= FPos4;
+  FPos4.X:= -Direction.X;
+  FPos4.Y:= -Direction.Y;
+  FPos4.Z:= -Direction.Z;
+  FPos4.W:= 0;
+  FPos4.Transform(z3DGlobalEngine.ViewMatrix).Normalize;
+  z3DLightingController.Effect.Float4['GLightDirView']:= FPos4;
+  if Style = z3dlsDirectional then z3DLightingController.Effect.Param['GLightSize']:= Size / 25000 else
+  z3DLightingController.Effect.Param['GLightSize']:= Size / 50;
+  z3DLightingController.Effect.Param['GLightRange']:= Range;
+  if Style = z3dlsDirectional then z3DLightingController.Effect.Param['GDepthMapRange']:= 100 else
+  z3DLightingController.Effect.Param['GDepthMapRange']:= Range + 10;
+  if Style = z3dlsSpot thenbegin    z3DLightingController.Effect.Param['GLightSharpness']:= Sharpness;
+    z3DLightingController.Effect.Param['GLightAngle']:= Sin(DegToRad(Angle / 2));
+ end
+  z3DLightingController.Effect.Color3['GLightColor']:= Color;
+  z3DLightingController.Effect.Param['GLightIntensity']:= FIntensity;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::UpdateSourceParams ()
+{
+#ifndef DOXYGEN_SKIP
+  z3DLightingController.Effect.Color3['GLightColor']:= Color;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FEnabled <> Value thenbegin    FEnabled:= Value;
+    if z3DGlobalEngine.Device.Created then
+      MeasureLightEffectParams;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetRange (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FRange <> Value thenbegin    FRange:= Value;
+    if z3DGlobalEngine.Device.Created then MeasureLightEffectParams;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetStyle (const Tz3DLightStyle Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FStyle <> Value thenbegin    FStyle:= Value;
+    if z3DGlobalEngine.Device.Created thenbegin      CreateTextures;
+      MeasureLightEffectParams;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetAngle (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FAngle <> Value thenbegin    FAngle:= Value;
+    if z3DGlobalEngine.Device.Created then MeasureLightEffectParams;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetSharpness (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FSharpness:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::TurnOff ()
+{
+#ifndef DOXYGEN_SKIP
+  Enabled:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::TurnOn ()
+{
+#ifndef DOXYGEN_SKIP
+  Enabled:= True;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::ResetDevice ()
+
+/*
+var
+ FDepthSize: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if z3DGlobalEngine.Scenario.Enabled thenbegin    CreateTextures;
+    MeasureLightEffectParams;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::BuildDynamicShadowMap ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Effects.DynamicShadows then Exit;
+  if z3DModelController = nil then Exit;
+
+  // HW shadow mapping
+  if z3DLightingController.UseDynamicHWShadow and (Style <> z3dlsPoint) thenbegin    if Style = z3dlsDirectional then
+    BuildShadowMap(z3DLightingController.TempDirDepthMap, z3DLightingController.DirDepthMap.GetSurface) else
+    BuildShadowMap(z3DLightingController.TempDepthMap, z3DLightingController.DepthMap.GetSurface);
+ endelse
+
+  // Standard shadow mappingbegin    case Style of
+
+      z3dlsDirectional: BuildShadowMap(z3DLightingController.DirDepthMap, z3DLightingController.DepthBuffer) 
+      z3dlsSpot: BuildShadowMap(z3DLightingController.DepthMap, z3DLightingController.DepthBuffer);
+      z3dlsPoint: BuildShadowMap(z3DLightingController.CubeDepthMap, z3DLightingController.DepthBuffer);
+   end
+ end
+
+  // Set the shadow map texture
+  case Style of
+
+    z3dlsDirectional: z3DLightingController.Effect.Texture['GDepthMapTexture']:= z3DLightingController.DirDepthMap;
+    z3dlsSpot: z3DLightingController.Effect.Texture['GDepthMapTexture']:= z3DLightingController.DepthMap;
+    z3dlsPoint: z3DLightingController.Effect.Texture['GCubeDepthMapTexture']:= z3DLightingController.CubeDepthMap;
+ end
+
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::BuildStaticShadowMap ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Effects.StaticShadows or not Static then Exit;
+  if z3DModelController = nil then Exit;
+
+  // HW shadow mapping
+  if z3DLightingController.UseStaticHWShadow and (Style <> z3dlsPoint) thenbegin    if Style = z3dlsDirectional then
+    BuildShadowMap(z3DLightingController.TempDirDepthMap, FStaticDepthMap.GetSurface, True) else
+    BuildShadowMap(z3DLightingController.TempDepthMap, FStaticDepthMap.GetSurface, True);
+ endelse
+
+  // Standard shadow mapping
+  if Style <> z3dlsPoint then
+  BuildShadowMap(FStaticDepthMap, z3DLightingController.DepthBuffer, True) else
+  BuildShadowMap(FStaticCubeDepthMap, z3DLightingController.DepthBuffer, True) 
+#endif /* DOXYGEN_SKIP */
+};
+
+            
+Tz3DLight::BuildShadowMap (const Iz3DBaseTexture ATarget ,
+const Iz3DSurface ADepth ,
+const Boolean AStatic = False 
+)
+
+/*
+var
+ FOldDepthBuffer: IDirect3DSurface9;
+    FOldCullMode: Cardinal;
+    FUseHWShadow: Boolean;
+    I, J: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Effects.DynamicShadows or not z3DGlobalEngine.Device.EngineCaps.ShadowMapSupport then Exit;
+  if AStatic then FUseHWShadow:= z3DLightingController.UseStaticHWShadow else
+  FUseHWShadow:= z3DLightingController.UseDynamicHWShadow;
+
+  // Save previous render target
+  z3DCore_GetD3DDevice.GetDepthStencilSurface(FOldDepthBuffer);
+  z3DCore_GetD3DDevice.GetRenderState(D3DRS_CULLMODE, FOldCullMode);
+
+  // Prepare device for rendering
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+  z3DCore_GetD3DDevice.SetDepthStencilSurface(ADepth.D3DSurface);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iTrue);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ALPHABLENDENABLE, iFalse);
+  if FUseHWShadow and (Style <> z3dlsPoint) then
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_COLORWRITEENABLE, 0) else
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED);
+  if AStatic then FStage:= z3ddlrsStaticShadows else FStage:= z3ddlrsDynamicShadows;
+
+  try
+    if Style = z3dlsPoint thenbegin      z3DLightingController.Effect.Technique:= 'z3DLighting_CubeDepthMap';
+      for I:= 0 to 5 dobegin        (ATarget as Iz3DCubeRenderTexture).SetRenderTarget(TD3DCubeMapFaces(I), True);
+        try
+          z3DCore_GetD3DDevice.Clear(0, nil, D3DCLEAR_ZBUFFER or D3DCLEAR_TARGET, MaxInt, 1, 0);
+          z3DLightingController.Effect.Matrix['GLightViewProjectionMatrix']:= FCubeViewMatrix[I];
+          for J:= 0 to z3DLightingController.Effect.Run-1 dobegin            z3DLightingController.Effect.BeginPass(J);
+            z3DGlobalEngine.NotifyLinks_z3DDirectLightRender;
+            z3DLightingController.Effect.EndPass;
+         end
+        finally
+          (ATarget as Iz3DCubeRenderTexture).RestoreRenderTarget;
+       end
+     end
+   endelsebegin      if FUseHWShadow then z3DLightingController.Effect.Technique:= 'z3DLighting_DepthMapHW' else
+      z3DLightingController.Effect.Technique:= 'z3DLighting_DepthMap' 
+      (ATarget as Iz3DRenderTexture).SetRenderTarget(0, True);
+      try
+        if FUseHWShadow then z3DCore_GetD3DDevice.Clear(0, nil, D3DCLEAR_ZBUFFER, 0, 1, 0) else
+        z3DCore_GetD3DDevice.Clear(0, nil, D3DCLEAR_ZBUFFER or D3DCLEAR_TARGET, MaxInt, 1, 0);
+        for J:= 0 to z3DLightingController.Effect.Run-1 dobegin          z3DLightingController.Effect.BeginPass(J);
+          z3DGlobalEngine.NotifyLinks_z3DDirectLightRender;
+          z3DLightingController.Effect.EndPass;
+       end
+      finally
+        (ATarget as Iz3DRenderTexture).RestoreRenderTarget;
+     end
+   end
+  finally
+
+    // Restore previous device state
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_CULLMODE, FOldCullMode);
+    z3DCore_GetD3DDevice.SetDepthStencilSurface(FOldDepthBuffer);
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iFalse);
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ALPHABLENDENABLE, iTrue);
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED or D3DCOLORWRITEENABLE_GREEN or
+      D3DCOLORWRITEENABLE_BLUE or D3DCOLORWRITEENABLE_ALPHA);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::RenderWorld ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Enabled then Exit;
+//  if Assigned(FOnFrameRender) then FOnFrameRender(Self, z3d);
+  if Style = z3dlsDirectional then MeasureLightEffectParams;
+
+  UpdateLightingParams;
+
+  // Render dynamic shadows
+  if Effects.DynamicShadows then BuildDynamicShadowMap;
+
+  // Render light
+  SetLightingTechnique;
+
+  // Static lighting
+  if Static thenbegin    FStage:= z3ddlrsStaticLighting;
+    for I:= 0 to z3DLightingController.Effect.Run-1 dobegin      z3DLightingController.Effect.BeginPass(I);
+      z3DGlobalEngine.NotifyLinks_z3DDirectLightRender;
+      z3DLightingController.Effect.EndPass;
+   end
+ end
+
+  // Dynamic lighting or dynamic mode for static lighting
+  try
+    if Static thenbegin      FMode:= True;
+      SetLightingTechnique;
+      if Effects.StaticShadows thenbegin        if Style = z3dlsPoint then
+        z3DLightingController.Effect.Texture['GStaticCubeDepthMapTexture']:= FStaticCubeDepthMap else
+        z3DLightingController.Effect.Texture['GStaticDepthMapTexture']:= FStaticDepthMap;
+     end
+   end
+    FStage:= z3ddlrsDynamicLighting;
+    for I:= 0 to z3DLightingController.Effect.Run-1 dobegin      z3DLightingController.Effect.BeginPass(I);
+      z3DGlobalEngine.NotifyLinks_z3DDirectLightRender;
+      z3DLightingController.Effect.EndPass;
+   end
+  finally
+    FMode:= False;
+    if Static then SetLightingTechnique;
+ end
+//  if Assigned(FOnFrameRender) then FOnFrameRender(z3dfsAfterEnd);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::RenderSource ()
+
+/*
+var
+ FLightView: Iz3DFloat4;
+    FScreenPos: Iz3DFloat2;
+    FHZ: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Enabled then Exit;
+
+  // Render glow effect when enabled
+  if Effects.Glow thenbegin
+    // Set the glow technique
+    if Effects.MultiSampleGlow then
+    z3DLightingController.Effect.Technique:= 'z3DLighting_GlowMS' else
+    z3DLightingController.Effect.Technique:= 'z3DLighting_Glow';
+
+    UpdateSourceParams;
+
+    // If the light is behind the camera, skip rendering
+    if Style = z3dlsDirectional then
+    FLightView:= z3DFloat4(Direction.X, Direction.Y, Direction.Z, 0).
+    Normalize.Scale(-500).Transform(z3DGlobalEngine.ViewMatrix) else
+    FLightView:= z3DFloat4(Position.X, Position.Y, Position.Z, 1).Transform(z3DGlobalEngine.ViewMatrix);
+
+    FHZ:= FLightView.z;
+    if FHZ < 0.0001 then Exit;
+    FLightView.Transform(z3DGlobalEngine.ProjectionMatrix);
+    if (Style <> z3dlsDirectional) and (FLightView.z > Range + 0.001) then Exit;
+
+    // Light screen position
+    FScreenPos:= z3DFloat2(FLightView.x / FLightView.z * 0.5 + 0.5, -FLightView.y / FLightView.z * 0.5 + 0.5);
+    if (FScreenPos.X < 0) or (FScreenPos.Y < 0) or (FScreenPos.X > 1) or (FScreenPos.Y > 1) then Exit;
+    z3DLightingController.Effect.Float2['GScreenPos']:= FScreenPos;
+
+    // Distance from light to camera
+    if Style = z3dlsDirectional then
+    z3DLightingController.Effect.Param['GLightDistance']:= 0.98 else
+    z3DLightingController.Effect.Param['GLightDistance']:= FHZ / (z3DGlobalEngine.Scenario.Bounds.Radius * 2);
+
+    // Glow factor, determined by GlowFactor property and screen position
+    z3DLightingController.Effect.Param['GGlowFactor']:= Effects.GlowFactor *
+      Saturate(0.75 - FScreenPos.Subtract(z3DFloat2(0.5, 0.5)).Length) * Intensity;
+
+    // Glow scale, determined by light size and light distance scaled to range
+    if Style = z3dlsDirectional then
+    z3DLightingController.Effect.Float2['GGlowScale']:= z3DFloat2((Size / 30) *
+    z3DCore_GetBackBufferSurfaceDesc.Height/z3DCore_GetBackBufferSurfaceDesc.Width, Size / 30) else
+
+    z3DLightingController.Effect.Float2['GGlowScale']:= z3DFloat2(Max(0, Range / FHZ - 1) * Size *
+    z3DCore_GetBackBufferSurfaceDesc.Height/z3DCore_GetBackBufferSurfaceDesc.Width,
+    Max(0, Range / FHZ - 1) * Size);
+
+    // Render the glow effect
+    z3DGlobalEngine.Renderer.Blend([], z3DLightingController.Effect);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::SetLightingTechnique ()
+
+/*
+//const
+ FStyles: array[Tz3DLightStyle] of string = ('Diffuse', 'Point', 'Spot', 'Directional');
+const FSpecular: array[Boolean] of string = ('', 'Spec');
+const FShadowMap: array[Boolean] of string = ('', 'SM');
+const FStaticShadowMap: array[Boolean] of string = ('', 'SSM');
+const FNormalMap: array[Boolean] of string = ('', 'NM');
+const FShaders: array[Boolean] of string = ('20', '');
+const FStatics: array[Boolean] of string = ('', '_Static');
+var FTechnique: Tz3DHandle;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not z3DGlobalEngine.Device.Created then Exit;
+  FTechnique:= Tz3DHandle(Format('z3DLighting_%sLight%s%s%s%s%s%s', [FStyles[Style],
+  FShaders[z3DGlobalEngine.Device.EngineCaps.ShaderModel3Supported], FSpecular[Effects.Specular], FShadowMap[Effects.DynamicShadows and
+  z3DGlobalEngine.Device.EngineCaps.ShadowMapSupport], FNormalMap[Effects.NormalMapping and (z3DGlobalEngine.Device.EngineCaps.ShaderModel3Supported)],
+  FStatics[Static and not FMode], FStaticShadowMap[Static and FMode and Effects.StaticShadows]]));
+  z3DLightingController.Effect.Technique:= FTechnique;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::CreateTextures ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Effects.DynamicShadows and not Effects.StaticShadows then Exit;
+  if Style = z3dlsPoint thenbegin    if z3DGlobalEngine.Device.EngineCaps.ShadowMapSupport thenbegin      if Effects.DynamicShadows /*and (z3DLightingController.CubeDepthMap.D3DCubeTexture = nil)*/  then
+      z3DLightingController.CreateCubeDepthTexture;
+      if Effects.StaticShadows /*and (FStaticCubeDepthMap.D3DCubeTexture = nil)*/  then
+      CreateStaticCubeDepthTexture;
+   end
+ endelsebegin    if z3DGlobalEngine.Device.EngineCaps.ShadowMapSupport thenbegin      if Effects.DynamicShadows thenbegin        if Style = z3dlsDirectional then z3DLightingController.CreateDirDepthTexture else
+        z3DLightingController.CreateDepthTexture 
+     end
+      if Effects.StaticShadows /*and (FStaticDepthMap.D3DTexture = nil)*/  then
+      CreateStaticDepthTexture;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetIntensity (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FIntensity:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetStatic (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FStatic <> Value thenbegin    FStatic:= Value;
+    SetLightingTechnique;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::CreateStaticCubeDepthTexture ()
+{
+#ifndef DOXYGEN_SKIP
+// TODO JP  if FStaticCubeDepthMap.D3DCubeTexture <> nil then Exit;
+  FStaticCubeDepthMap.SetCubeParams(z3DLightingController.DepthMapSize, 1,
+  z3DGlobalEngine.Device.EngineCaps.CubeShadowMapFormat);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::CreateStaticDepthTexture ()
+
+/*
+var
+ FSize: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+// TODO JP  if FStaticDepthMap.D3DTexture <> nil then Exit;
+
+  if Style = z3dlsDirectional then FSize:= z3DLightingController.DirectionalDepthMapSize else
+  FSize:= z3DLightingController.DepthMapSize;
+
+  // Hardware Shadow Mapping support
+  if z3DLightingController.UseStaticHWShadow thenbegin    FStaticDepthMap.Usage:= D3DUSAGE_DEPTHSTENCIL;
+    FStaticDepthMap.SetParams(FSize, FSize, 1, z3DCore_GetDeviceSettings.PresentParams.AutoDepthStencilFormat);
+    if Style = z3dlsDirectional thenbegin//      if z3DLightingController.TempDirDepthMap.D3DTexture = nil then
+      z3DLightingController.TempDirDepthMap.SetParams(FSize, FSize, 1, D3DFMT_A8R8G8B8);
+   endelsebegin//      if z3DLightingController.TempDepthMap.D3DTexture = nil then
+      z3DLightingController.TempDepthMap.SetParams(FSize, FSize, 1, D3DFMT_A8R8G8B8) 
+   end
+ endelse
+  FStaticDepthMap.SetParams(FSize, FSize, 1, z3DGlobalEngine.Device.EngineCaps.ShadowMapFormat) 
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DLight::GetAngle ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAngle;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DLight::GetColor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FColor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DLight::GetDirection ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDirection;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLightEffects Tz3DLight::GetEffects ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEffects;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLight::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DLight::GetIntensity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FIntensity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DDirectLightRenderEvent Tz3DLight::GetOnRender ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOnRender;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DLight::GetPosition ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPosition;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DLight::GetRange ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRange;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DLight::GetSharpness ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSharpness;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DLight::GetSize ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSize;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLight::GetStatic ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStatic;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DLightStyle Tz3DLight::GetStyle ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStyle;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetOnRender (const Tz3DDirectLightRenderEvent Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FOnRender:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetSize (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FSize:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLight::GetIndex ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DLightingController.IndexOfLight(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::PropertyChanged (const Iz3DBase ASender 
+)
+{
+#ifndef DOXYGEN_SKIP
+  MeasureLightEffectParams;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::StartScenario ()
+
+/*
+var
+ FDepthSize: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  CreateTextures;
+  MeasureLightEffectParams;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLight::RenderPrecomputation ()
+{
+#ifndef DOXYGEN_SKIP
+  UpdateLightingParams;
+  if Effects.StaticShadows then BuildStaticShadowMap;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLight::GetDynamicMode ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDynamicMode;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetDynamicMode (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMode:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DLight::GetName ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FName;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLight::SetName (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FName:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DDirectLightRenderStage Tz3DLight::GetStage ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStage;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DSSAO */ 
+
+ 
+Tz3DSSAO::Tz3DSSAO ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+
+  // Link this object to all the events generated by the z3D Engine
+  Notifications:= [z3dlnDevice];
+
+  FEnabled:= True;
+  FQuality:= z3dssaoqMedium;
+  FAmount:= 1;
+  FSampleFactor:= 1;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DSSAO::CreateScenarioObjects ()
+
+/*
+var
+ FKernel: array[0..15] of TD3DXVector3;
+    I, FElement, FInternalFactor: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not z3DGlobalEngine.Device.Created then Exit;
+  
+  z3DLightingController.Effect.Param['GSSAOSampleFactor']:= FSampleFactor;
+  if Quality = z3dssaoqHigh then
+  z3DLightingController.Effect.Param['GSSAOScale']:= Power(z3DGlobalEngine.Scenario.Bounds.Radius * 2, 2) else
+  z3DLightingController.Effect.Param['GSSAOScale']:= z3DGlobalEngine.Scenario.Bounds.Radius * 2 * 100;
+  z3DLightingController.Effect.Param['GSSAOAmount']:= FAmount;
+
+  case Quality of
+
+    z3dssaoqLow: FInternalFactor:= 8;
+    z3dssaoqMedium: FInternalFactor:= 2;
+    z3dssaoqHigh: FInternalFactor:= 4;
+ end
+
+  // Set the SSAO kernel
+  for I:= 0 to 15 dobegin    case Ceil((I + 1) 
+* 0.25) of
+      1: FElement:= 1;
+      2: FElement:= 2;
+      3: FElement:= 4;
+      4: FElement:= 8;
+   end
+
+    if Ceil((I + 1) * 0.25) in [1, 4] thenbegin      FKernel[I].x:= Floor(FElement - (Integer(I mod 2 = 0) * FElement) * 0.5);
+      FKernel[I].y:= Floor(FElement - (Integer(I mod 2 <> 0) * FElement) * 0.5);
+   endelsebegin      FKernel[I].x:= (2 * FElement) - FElement 
+      FKernel[I].y:= (2 * FElement) - FElement;
+   end
+
+    if Ceil((I + 1) * 0.5) mod 2 = 0 then FKernel[I].x:= -FKernel[I].x;
+    if Ceil(I * 0.5) mod 2 = 0 then FKernel[I].y:= -FKernel[I].y;
+    FKernel[I].z:= Ceil((I + 1) * 0.25);
+
+    FKernel[I].x:= FKernel[I].x * (1 / z3DCore_GetBackBufferSurfaceDesc.Width) * SampleFactor * FInternalFactor;
+    FKernel[I].y:= FKernel[I].y * (1 / z3DCore_GetBackBufferSurfaceDesc.Height) * SampleFactor * FInternalFactor;
+ end
+  z3DLightingController.Effect.SetPointer('GSSAOKernel', @FKernel, SizeOf(FKernel));
+  z3DLightingController.Effect.SetPointer('GSSAOHQKernel', @FKernel, SizeOf(FKernel));
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DSSAO::GetAmount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAmount;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DSSAO::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DSSAOQuality Tz3DSSAO::GetQuality ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FQuality;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DSSAO::GetSampleFactor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSamplefactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSSAO::SetAmount (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAmount:= Value;
+  if z3DGlobalEngine.Scenario.Enabled then
+  z3DLightingController.Effect.Param['GSSAOAmount']:= FAmount;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSSAO::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnabled:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSSAO::SetQuality (const Tz3DSSAOQuality Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FQuality <> Value thenbegin    FQuality:= Value;
+    z3DGlobalEngine.Renderer.CreateDeferredBuffer;
+    CreateScenarioObjects;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSSAO::SetSampleFactor (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if FSamplefactor <> Value thenbegin    FSamplefactor:= Value;
+    z3DLightingController.Effect.Param['GSSAOSampleFactor']:= FSampleFactor;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DSSAO::z3DStartScenario (const Tz3DStartScenarioStage AStage 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if AStage = z3dssCreatingLightingSystem then CreateScenarioObjects;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DLightingController */ 
+
+ 
+Tz3DLightingController::Tz3DLightingController ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  Notifications:= [z3dlnDevice, z3dlnGPUPrecomputation];
+  ScenarioStage:= z3dssCreatingLightingSystem;
+
+  FNoise:= z3DCreateTexture;
+  FNoise.FileName:= 'C:\JP\Direct3D\z3D\Noise.dds';
+  FNoise.Source:= z3dtsFileName;
+
+  FSSAO:= Tz3DSSAO.Create;
+  FLights:= TInterfaceList.Create;
+  FDepthMap:= z3DCreateRenderTexture;
+  FDepthMap.AutoParams:= False;
+  FTempDepthMap:= z3DCreateRenderTexture;
+  FTempDepthMap.AutoParams:= False;
+  FTempDirDepthMap:= z3DCreateRenderTexture;
+  FTempDirDepthMap.AutoParams:= False;
+  FDirDepthMap:= z3DCreateRenderTexture;
+  FDirDepthMap.AutoParams:= False;
+  FCubeDepthMap:= z3DCreateCubeRenderTexture;
+  FShadowQuality:= z3dsqHigh;
+  FUseStaticHWShadow:= True;
+  FUseHWShadow:= True;
+  FEffect:= z3DCreateEffect;
+  FEffect.FileName:= PWideChar(WideString(Z3DRES_LIGHTING_EFFECT));
+  FDepthBuffer:= z3DCreateDepthBuffer;
+
+  // Load the glow texture
+  FGlowTexture:= z3DCreateTexture;
+  FGlowTexture.Source:= z3dtsFileName;
+  z3DFileSystemController.DecryptF(fsEngineCoreResFile, fsCoreResFile_LightGlow1);
+  StringToWideChar(WideCharToString(z3DFileSystemController.GetFullPath(fsBufferPath)) + fsPathDiv +
+  fsCoreResFile_LightGlow1, FGlowTexture.FileName, 255);
+
+  FShadowMapOffset:= 0.0005;
+  FDirShadowMapOffset:= 0.008;
+  FDirShadowMapAreaSize:= 50;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLight Tz3DLightingController::CreateLight ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DLight.Create;
+  FLights.Add(Result as Iz3DBase);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightingController::z3DCreateScenarioObjects (const Tz3DCreateObjectCaller ACaller 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  CreateScenarioObjects;
+  SetEffectParams;
+  for I:= 0 to LightCount-1 do Lights[I].StartScenario;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::RenderPrecomputation ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to LightCount-1 do Lights[I].RenderPrecomputation;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::RenderLighting ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Turn on additive blending
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ALPHABLENDENABLE, iTrue);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+
+  // Set view parameters
+  Effect.Matrix['GViewMatrix']:= z3DGlobalEngine.ViewMatrix;
+
+  try
+    // Render the world affected by lighting using additive blending
+    for I:= 0 to LightCount-1 dobegin      FCurrentLight:= I;
+      Lights[I].RenderWorld;
+   end
+
+    // Render the light sources
+/*    z3DGlobalEngine.Renderer.RenderMode:= z3drm2D;
+    for I:= 0 to LightCount-1 do Lights[I].RenderSource;*/ 
+  finally
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ALPHABLENDENABLE, iFalse);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::RenderLightSources ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Turn on additive blending
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ALPHABLENDENABLE, iTrue);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+
+  try
+    // Render the light sources
+    z3DGlobalEngine.Renderer.RenderMode:= z3drm2D;
+    for I:= 0 to LightCount-1 do Lights[I].RenderSource;
+  finally
+    z3DCore_GetD3DDevice.SetRenderState(D3DRS_ALPHABLENDENABLE, iFalse);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::RenderAmbient ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Render ambient lighting
+//  if Assigned(z3DGlobalEngine.OnFrameRender) then z3DGlobalEngine.OnFrameRender(z3dfsBeforeBegin, z3dlrsStaticAmbient);
+
+  // Static ambient
+  FEffect.Color3['GAmbientColor']:= z3DGlobalScenario.Worlds[0].AmbientColor; // TEMP JP
+  FStage:= z3dlrsStaticAmbient;
+  FEffect.Technique:= 'z3DLighting_Ambient_Static';
+  for I:= 0 to z3DLightingController.Effect.Run-1 dobegin    z3DLightingController.Effect.BeginPass(I);
+    z3DGlobalEngine.NotifyLinks_z3DLightingRender;
+    z3DLightingController.Effect.EndPass;
+ end
+//  if Assigned(z3DGlobalEngine.OnFrameRender) then z3DGlobalEngine.OnFrameRender(z3dfsAfterEnd, z3dlrsStaticAmbient);
+
+  // Dynamic ambient
+//  if Assigned(z3DGlobalEngine.OnFrameRender) then z3DGlobalEngine.OnFrameRender(z3dfsBeforeBegin, z3dlrsDynamicAmbient);
+//  FEffect.Color3['GAmbientColor']:= z3DFloat3(0.2, 0.15, 0.13); // TEMP JP
+  FStage:= z3dlrsDynamicAmbient;
+  if SSAO.Enabled thenbegin    if z3DGlobalEngine.Device.EngineCaps.ShaderModel3Supported thenbegin      case SSAO.Quality of
+
+        z3dssaoqLow: FEffect.Technique:= 'z3DLighting_AmbientSSAOLQ';
+        z3dssaoqMedium: FEffect.Technique:= 'z3DLighting_AmbientSSAOMQ';
+        z3dssaoqHigh: FEffect.Technique:= 'z3DLighting_AmbientSSAOHQ';
+     end
+   endelse FEffect.Technique:= 'z3DLighting_AmbientSSAOLQ' 
+ endelse FEffect.Technique:= 'z3DLighting_Ambient' 
+  for I:= 0 to FEffect.Run-1 dobegin    FEffect.BeginPass(I);
+    z3DGlobalEngine.NotifyLinks_z3DLightingRender;
+    FEffect.EndPass;
+ end
+//  if Assigned(z3DGlobalEngine.OnFrameRender) then z3DGlobalEngine.OnFrameRender(z3dfsAfterEnd, z3dlrsDynamicAmbient);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::SetEffectParams ()
+
+/*
+var
+ FPixelWidth, FPixelHeight: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not z3DGlobalEngine.Device.Created then Exit;
+  FEffect.Param['GFarClip']:= z3DGlobalEngine.Scenario.Bounds.Radius * 2;
+  FEffect.Param['GAspectRatio']:= z3DCore_GetState.BackBufferSurfaceDesc.Width / z3DCore_GetState.BackBufferSurfaceDesc.Height;
+//  FEffect.Color3['GAmbientColor']:= z3DGlobalEngine.Scenario.AmbientColor;
+  FEffect.Texture['GGlowTexture']:= FGlowTexture;
+  FPixelWidth:= 1 / z3DCore_GetBackBufferSurfaceDesc.Width;
+  FPixelHeight:= 1 / z3DCore_GetBackBufferSurfaceDesc.Height;
+  FEffect.Float2['GPixelSize']:= z3DFloat2(FPixelWidth, FPixelHeight);
+  FEffect.Texture['GNoiseTexture']:= FNoise;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::CreateScenarioObjects ()
+{
+#ifndef DOXYGEN_SKIP
+  FGlowTexture.CreateD3DTexture;
+  FNoise.CreateD3DTexture;
+  if FDepthBuffer.D3DSurface <> nil then Exit;
+  FDepthBuffer.SetParams(DirectionalDepthMapSize, DirectionalDepthMapSize,
+  z3DCore_GetDeviceSettings.PresentParams.AutoDepthStencilFormat, D3DMULTISAMPLE_NONE, 0, True);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::CreateCubeDepthTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  if FCubeDepthMap.D3DCubeTexture <> nil then Exit;
+  FCubeDepthMap.SetCubeParams(DepthMapSize, 1, z3DGlobalEngine.Device.EngineCaps.CubeShadowMapFormat);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::CreateDepthTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  if FDepthMap.Width <> 0 then Exit; // TODO JP
+  if FUseHWShadow thenbegin    FDepthMap.Usage:= D3DUSAGE_DEPTHSTENCIL;
+    FDepthMap.SetParams(DepthMapSize, DepthMapSize, 1, z3DCore_GetDeviceSettings.PresentParams.AutoDepthStencilFormat);
+//    if FTempDepthMap.D3DTexture = nil then
+    FTempDepthMap.SetParams(DepthMapSize, DepthMapSize, 1, D3DFMT_A8R8G8B8);
+ endelse
+  FDepthMap.SetParams(DepthMapSize, DepthMapSize, 1, z3DGlobalEngine.Device.EngineCaps.ShadowMapFormat) 
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightingController::CreateDirDepthTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  if FDirDepthMap.Width <> 0 then Exit; // TODO JP
+  if FUseHWShadow thenbegin    FDirDepthMap.Usage:= D3DUSAGE_DEPTHSTENCIL;
+    FDirDepthMap.SetParams(DirectionalDepthMapSize, DirectionalDepthMapSize, 1, z3DCore_GetDeviceSettings.PresentParams.AutoDepthStencilFormat);
+//    if FTempDirDepthMap.D3DTexture = nil then
+    FTempDirDepthMap.SetParams(DirectionalDepthMapSize, DirectionalDepthMapSize, 1, D3DFMT_A8R8G8B8);
+ endelse
+  FDirDepthMap.SetParams(DirectionalDepthMapSize, DirectionalDepthMapSize, 1, z3DGlobalEngine.Device.EngineCaps.ShadowMapFormat) 
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightingController::DepthMapSize ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Min(z3DCore_GetState.Caps.MaxTextureWidth div 4, 512);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightingController::DirectionalDepthMapSize ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Min(z3DCore_GetState.Caps.MaxTextureWidth div 2, 1024);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DEffect Tz3DLightingController::GetEffect ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEffect;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DLight Tz3DLightingController::GetLights (const Integer AIndex 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLights[AIndex] as Iz3DLight;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Integer Tz3DLightingController::IndexOfLight (const Iz3DLight ALight 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLights.IndexOf(ALight as Iz3DBase);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightingController::RemoveLight (const Iz3DLight ALight 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLights.Remove(ALight);
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DLightingController::SetLights (const Integer AIndex ,
+const Iz3DLight Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLights[AIndex]:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightingController::GetLightCount ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLights.Count;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DDepthBuffer Tz3DLightingController::GetDepthBuffer ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDepthBuffer;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DCubeRenderTexture Tz3DLightingController::GetCubeDepthMap ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FCubeDepthMap;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderTexture Tz3DLightingController::GetDepthMap ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDepthMap;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderTexture Tz3DLightingController::GetDirDepthMap ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDirDepthMap;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderTexture Tz3DLightingController::GetTempDepthMap ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTempDepthMap;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DShadowQuality Tz3DLightingController::GetShadowQuality ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShadowQuality;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightingController::GetUseDynamicHWShadow ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FUseDynamicHWShadow;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightingController::GetUseStaticHWShadow ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FUseStaticHWShadow;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightingController::SetShadowQuality (const Tz3DShadowQuality Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShadowQuality:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightingController::SetUseDynamicHWShadow (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FUseHWShadow:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightingController::SetUseStaticHWShadow (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FUseStaticHWShadow:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRenderTexture Tz3DLightingController::GetTempDirDepthMap ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FTempDirDepthMap;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DTexture Tz3DLightingController::GetGlowTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGlowTexture;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DSSAO Tz3DLightingController::GetSSAO ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FSSAO;
+#endif /* DOXYGEN_SKIP */
+};
+
+/*procedure Tz3DLightingController.z3DGPUPrecomputation;
+begin
+  RenderPrecomputation;
+end;*/ 
+
+  
+Single Tz3DLightingController::GetDirShadowMapOffset ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDirShadowMapOffset;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DLightingController::GetShadowMapOffset ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShadowMapOffset;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightingController::SetDirShadowMapOffset (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDirShadowMapOffset:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightingController::SetShadowMapOffset (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShadowMapOffset:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DLightingController::GetDirShadowMapAreaSize ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDirShadowMapAreaSize;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightingController::SetDirShadowMapAreaSize (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDirShadowMapAreaSize:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DLightingRenderStage Tz3DLightingController::GetStage ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FStage;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLight Tz3DLightingController::GetCurrentLight ()
+{
+#ifndef DOXYGEN_SKIP
+  if FCurrentLight = -1 then Result:= nil else
+  Result:= FLights[FCurrentLight] as Iz3DLight;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DLightMap */ 
+
+ 
+Tz3DLightMap::Tz3DLightMap ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  GetMem(FUniqueName, 255);
+  FGenerated:= False;
+  FEnabled:= True;
+  FOptions:= Tz3DLightMapOptions.Create;
+  FRayTracer:= Tz3DRayTracer.Create;
+  SetLength(FDistribution, 0);
+  SetLength(FLightTextures, 0);
+  SetLength(FRadiosityTextures, 0);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::~Tz3DLightMap ()
+{
+#ifndef DOXYGEN_SKIP
+  FOptions:= nil;
+  FRayTracer:= nil;
+  SetLength(FDistribution, 0);
+  SetLength(FLightTextures, 0);
+  SetLength(FRadiosityTextures, 0);
+  inherited;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::BeginRadiosity ()
+
+/*
+var
+ FSurface: IDirect3DSurface9;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if GenerationNeeded and Options.EnableRadiosity then
+  RayTracer.BeginRadiosityTracing(Self);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::EndRadiosity ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if GenerationNeeded and Options.EnableRadiosity thenbegin    RayTracer.EndRadiosityTracing;
+
+    // Blur and save the radiosity textures
+    for I:= 0 to z3DLightingController.LightCount-1 do
+    if z3DLightingController[I].Static then
+    BlurAndSave(FRadiosityTextures[I]);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+          
+Tz3DLightMap::Blur (const TD3DLockedRect ARect ,
+const Integer AOffsetU ,
+const Integer AOffsetV ,
+const Integer AWidth ,
+const Integer AHeight 
+)
+
+/*
+var
+ FU, FV: Integer;
+    FBits: PSingleArray;
+    FBlurColor, FBlurColor1, FBlurColor2, FBlurColor3, FBlurColor4: TD3DXColor;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Blur the current lightmap plane avoiding the edges for filtering
+  for FU:= AOffsetU to AOffsetU+AWidth do
+  for FV:= AOffsetV to AOffsetV+AHeight dobegin    FBits:= @ARect.pBits;
+    FBlurColor:= D3DXColorFromDWord(FBits^[FV * ARect.Pitch div 4 + FU]);
+    FBlurColor1:= D3DXColorFromDWord(FBits^[FV * ARect.Pitch div 4 + Max(AOffsetU, FU-1)]);
+    FBlurColor2:= D3DXColorFromDWord(FBits^[Max(AOffsetV, FV-1) * ARect.Pitch div 4 + FU]);
+    FBlurColor3:= D3DXColorFromDWord(FBits^[Min(AOffsetV+AHeight, FV+1) * ARect.Pitch div 4 + FU]);
+    FBlurColor4:= D3DXColorFromDWord(FBits^[FV * ARect.Pitch div 4 + Min(AOffsetU+AWidth, FU+1)]);
+    FBits^[FV * ARect.Pitch div 4 + FU]:=
+    D3DCOLOR_COLORVALUE((FBlurColor.r+FBlurColor1.r+FBlurColor2.r+FBlurColor3.r+FBlurColor4.r) / 5,
+    (FBlurColor.g+FBlurColor1.g+FBlurColor2.g+FBlurColor3.g+FBlurColor4.g) / 5,
+    (FBlurColor.b+FBlurColor1.b+FBlurColor2.b+FBlurColor3.b+FBlurColor4.b) / 5, 1);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::BlurTextures ()
+
+
+           
+BlurTexture (const Iz3DTexture ATexture ,
+const TRect ACoords ,
+const Integer ASteps 
+)
+
+/*
+var
+ I: Integer;
+  */
+{
+#ifndef DOXYGEN_SKIP
+
+    for I:= 0 to ASteps-1 do
+    Blur(ATexture.LockedRect, ACoords.Left, ACoords.Top, ACoords.Right, ACoords.Bottom);
+ 
+#endif /* DOXYGEN_SKIP */
+};
+/*
+var
+ I, J: Integer;
+    FRect: TRect;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  for I:= 0 to Length(Distribution)-1 dobegin    FRect:= Rect(Trunc(Distribution[I].OffsetU) - Offset + 1,
+    Trunc(Distribution[I].OffsetV) - Offset + 1,
+    Trunc(Distribution[I].Width) + Offset * 2 - 2,
+    Trunc(Distribution[I].Height) + Offset * 2 - 2);
+
+    // Blur the final lightmaps
+    if Options.EnableAmbient and not AmbientTexture.Loaded then BlurTexture(AmbientTexture.Texture, FRect, Options.BlurSteps+2);
+
+    for J:= 0 to z3DLightingController.LightCount-1 do
+    if z3DLightingController[J].Static thenbegin      if not LightTextures[J].Loaded then BlurTexture(LightTextures[J].Texture, FRect, Options.BlurSteps);
+
+      if Options.EnableRadiosity and not RadiosityTextures[J].Loaded then
+      BlurTexture(RadiosityTextures[J].Texture, FRect, Options.BlurSteps+4);
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMap::BlurAndSave (Tz3DLightMapTexture &ATexture 
+)
+
+
+           
+BlurTexture (const Iz3DTexture ATexture ,
+const TRect ACoords ,
+const Integer ASteps 
+)
+
+/*
+var
+ I: Integer;
+  */
+{
+#ifndef DOXYGEN_SKIP
+
+    for I:= 0 to ASteps-1 do
+    Blur(ATexture.LockedRect, ACoords.Left, ACoords.Top, ACoords.Right, ACoords.Bottom);
+ 
+#endif /* DOXYGEN_SKIP */
+};
+/*
+var
+ I, J: Integer;
+    FRect: TRect;
+    FFile: PWideChar;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not ATexture.Created or ATexture.Loaded or ATexture.Saved then Exit;
+
+  for I:= 0 to Length(Distribution)-1 dobegin    FRect:= Rect(Trunc(Distribution[I].OffsetU) - Offset + 1,
+    Trunc(Distribution[I].OffsetV) - Offset + 1,
+    Trunc(Distribution[I].Width) + Offset * 2 - 2,
+    Trunc(Distribution[I].Height) + Offset * 2 - 2);
+
+    // Blur the final lightmap
+    BlurTexture(ATexture.Texture, FRect, Options.BlurSteps);
+
+    // Save the lightmap
+    FFile:= z3DLightMapController.GetTextureFileName(ATexture.Name);
+    ATexture.Texture.EndDraw;
+    D3DXSaveTextureToFileW(FFile, D3DXIFF_DDS, ATexture.Texture.D3DBaseTexture, nil);
+    ATexture.Texture.BeginDraw;
+    ATexture.Saved:= True;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::CopyRadiosityToTextures ()
+
+/*
+var
+ FColor: Iz3DFloat3;
+    I, J, L, X, Y: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not Options.EnableRadiosity then Exit;
+  EXIT;
+
+  FColor:= z3DFloat3;
+
+  // Iterate through the distribution list
+  for I:= 0 to Length(Distribution)-1 do
+
+  // Iterate through the luxels
+  for X:= 0 to Length(Distribution[I].Luxels)-1 do
+  for Y:= 0 to Length(Distribution[I].Luxels[X])-1 do
+
+  // Iterate through the static lights
+  for J:= 0 to z3DLightingController.LightCount-1 do
+  if z3DLightingController[J].Static and not RadiosityTextures[J].Loaded thenbegin    FColor.Identity;
+    for L:= 0 to Options.RadiosityBounces-1 do
+    FColor.Add(Distribution[I].Luxels[X][Y].RadiosityColors[L][J]);
+    FColor.Saturate;
+    RadiosityTextures[J].Texture.SetPixel(X + Trunc(Distribution[I].OffsetU) - Offset,
+    Y + Trunc(Distribution[I].OffsetV) - Offset, FColor);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                 
+Tz3DLightMap::GeneratePlanarMapping (const Pointer AVB ,
+const PWordArray AIB ,
+const Integer AFaceCount ,
+const Pz3DDWordArray AAdjacency ,
+const Boolean AComputeCoords 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var I, K, L, FNormalSource: Integer;
+    FNormal, FNormalAdj: Iz3DFloat3;
+    FVB: Pz3DStaticModelVertexArray;
+    FL1, Fl2, Fl3: Single;
+    FWorldU, FWorldV, FUMin, FVMin, FUMax, FVMax, FUDelta, FVDelta: Single;
+    FAdjacent: Boolean;
+    L1, L2, L3: Single;
+    FEmptyArray: Tz3DFloat2Array;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Reset the distribution list
+  SetLength(FDistribution, 0);
+  SetLength(FDistributionIndices, 0);
+  FVB:= Pz3DStaticModelVertexArray(AVB);
+
+
+  for I:= 0 to AFaceCount-1 dobegin    L:= -1;
+    FAdjacent:= False;
+    FNormal:= z3DGetNormal(z3DFloat3.From(FVB[AIB[I*3]].Position), z3DFloat3.From(FVB[AIB[I*3+1]].Position), z3DFloat3.From(FVB[AIB[I*3+2]].Position));
+    if FNormal.Dot(z3DFloat3.From(FVB[AIB[I*3]].Normal)) < 0 then FNormal.Negate;
+    FNormal.Normalize;
+
+    // Find any other triangle sharing the same plane
+    if AAdjacency <> nil thenbegin      for K:= 0 to 2 dobegin        if not (AAdjacency^[I*3+K] < I) then Continue;
+
+        FNormalAdj:= z3DGetNormal(z3DFloat3.From(FVB[AIB[AAdjacency^[I*3+K]*3]].Position),
+        z3DFloat3.From(FVB[AIB[AAdjacency^[I*3+K]*3+1]].Position), z3DFloat3.From(FVB[AIB[AAdjacency^[I*3+K]*3+2]].Position));
+        if FNormalAdj.Dot(z3DFloat3.From(FVB[AIB[AAdjacency^[I*3+K]*3]].Normal)) < 0 then FNormalAdj.Negate;
+        FNormalAdj.Normalize.Subtract(FNormal);
+        if (FDistribution[FDistributionIndices[AAdjacency^[I*3+K]]].RefCount < 2) and
+        (FNormalAdj.Length < FEpsilon) thenbegin          FAdjacent:= True;
+          L:= FDistributionIndices[AAdjacency^[I*3+K]];
+          Break;
+       end
+     end
+   end
+    if L = -1 thenbegin      SetLength(FDistribution, Length(FDistribution)+1);
+      L:= Length(FDistribution)-1;
+   end
+    SetLength(FDistributionIndices, Length(FDistributionIndices)+1);
+    FDistributionIndices[Length(FDistributionIndices)-1]:= L;
+
+    // Project the vertex into the plane
+    if (Abs(FNormal.X) > Abs(FNormal.Y)) and (Abs(FNormal.X) > Abs(FNormal.Z)) thenbegin      FNormalSource:= 1;
+      if AComputeCoords thenbegin        FVB[AIB[I*3]].LightCoord.x:= FVB[AIB[I*3]].Position.y;
+        FVB[AIB[I*3]].LightCoord.y:= FVB[AIB[I*3]].Position.z;
+        FVB[AIB[I*3+1]].LightCoord.x:= FVB[AIB[I*3+1]].Position.y;
+        FVB[AIB[I*3+1]].LightCoord.y:= FVB[AIB[I*3+1]].Position.z;
+        FVB[AIB[I*3+2]].LightCoord.x:= FVB[AIB[I*3+2]].Position.y;
+        FVB[AIB[I*3+2]].LightCoord.y:= FVB[AIB[I*3+2]].Position.z;
+     end
+   endelse
+    if (Abs(FNormal.Y) > Abs(FNormal.X)) and (Abs(FNormal.Y) > Abs(FNormal.Z)) thenbegin      FNormalSource:= 2 
+      if AComputeCoords thenbegin        FVB[AIB[I*3]].LightCoord.x:= FVB[AIB[I*3]].Position.x;
+        FVB[AIB[I*3]].LightCoord.y:= FVB[AIB[I*3]].Position.z;
+        FVB[AIB[I*3+1]].LightCoord.x:= FVB[AIB[I*3+1]].Position.x;
+        FVB[AIB[I*3+1]].LightCoord.y:= FVB[AIB[I*3+1]].Position.z;
+        FVB[AIB[I*3+2]].LightCoord.x:= FVB[AIB[I*3+2]].Position.x;
+        FVB[AIB[I*3+2]].LightCoord.y:= FVB[AIB[I*3+2]].Position.z;
+     end
+   endelsebegin      FNormalSource:= 3 
+      if AComputeCoords thenbegin        FVB[AIB[I*3]].LightCoord.x:= FVB[AIB[I*3]].Position.x;
+        FVB[AIB[I*3]].LightCoord.y:= FVB[AIB[I*3]].Position.y;
+        FVB[AIB[I*3+1]].LightCoord.x:= FVB[AIB[I*3+1]].Position.x;
+        FVB[AIB[I*3+1]].LightCoord.y:= FVB[AIB[I*3+1]].Position.y;
+        FVB[AIB[I*3+2]].LightCoord.x:= FVB[AIB[I*3+2]].Position.x;
+        FVB[AIB[I*3+2]].LightCoord.y:= FVB[AIB[I*3+2]].Position.y;
+     end
+   end
+
+    if not FAdjacent thenbegin      SetLength(FacePlane[I].Lights, 3);
+      FacePlane[I].Lights[0]:= z3DFloat2.From(FVB[AIB[I*3]].LightCoord);
+      FacePlane[I].Lights[1]:= z3DFloat2.From(FVB[AIB[I*3+1]].LightCoord);
+      FacePlane[I].Lights[2]:= z3DFloat2.From(FVB[AIB[I*3+2]].LightCoord);
+      // Obtain the absolute lightcoords
+      GetCoords(FacePlane[I].Lights[0], FacePlane[I].Lights[1], FacePlane[I].Lights[2], FEmptyArray,
+      FacePlane[I].FUMin, FacePlane[I].FUMax, FacePlane[I].FVMin, FacePlane[I].FVMax, FacePlane[I].FUDelta, FacePlane[I].FVDelta);
+
+      // Measure the individual lightmap dimensions
+      case FNormalSource of
+
+        1:begin          FWorldU:= WorldScale.y;
+          FWorldV:= WorldScale.z;
+       end
+        2:begin          FWorldU:= WorldScale.x;
+          FWorldV:= WorldScale.z;
+       end
+        3:begin          FWorldU:= WorldScale.x;
+          FWorldV:= WorldScale.y;
+       end
+     end
+      FacePlane[I].Width:= Trunc(Max(2, FacePlane[I].FUDelta * FWorldU));
+      FacePlane[I].Height:= Trunc(Max(2, FacePlane[I].FVDelta * FWorldV));
+      FacePlane[I].Normal:= z3DFloat3.From(FNormal);
+   endelsebegin      // Obtain the absolute lightcoords
+      GetCoords(z3DFloat2.From(FVB[AIB[I*3]].LightCoord), z3DFloat2.From(FVB[AIB[I*3+1]].LightCoord),
+      z3DFloat2.From(FVB[AIB[I*3+2]].LightCoord), FacePlane[I].Lights,
+      FacePlane[I].FUMin, FacePlane[I].FUMax, FacePlane[I].FVMin, FacePlane[I].FVMax, FacePlane[I].FUDelta, FacePlane[I].FVDelta) 
+
+      // Measure the individual lightmap dimensions
+      case FNormalSource of
+
+        1:begin          FWorldU:= WorldScale.y;
+          FWorldV:= WorldScale.z;
+       end
+        2:begin          FWorldU:= WorldScale.x;
+          FWorldV:= WorldScale.z;
+       end
+        3:begin          FWorldU:= WorldScale.x;
+          FWorldV:= WorldScale.y;
+       end
+     end
+      FacePlane[I].Width:= Trunc(Max(2, FacePlane[I].FUDelta * FWorldU));
+      FacePlane[I].Height:= Trunc(Max(2, FacePlane[I].FVDelta * FWorldV));
+      FacePlane[I].Normal:= z3DFloat3.From(FNormal);
+   end
+    FacePlane[I].RefCount:= FacePlane[I].RefCount + 1;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                 
+Tz3DLightMap::GetCoords (const Iz3DFloat2 AV1 ,
+const Iz3DFloat2 AV2 ,
+const Iz3DFloat2 AV3 ,
+const Tz3DFloat2Array AAditional ,
+Single &AMinU ,
+Single &AMaxU ,
+Single &AMinV ,
+Single &AMaxV ,
+Single &ADeltaU ,
+Single &ADeltaV 
+)
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Get the lightmap min and max coordinates
+  AMinU:= AV1.x;
+  AMaxU:= AMinU;
+  AMinV:= AV1.y;
+  AMaxV:= AMinV;
+  if AV2.x < AMinU then AMinU:= AV2.x;
+  if AV2.y < AMinV then AMinV:= AV2.y;
+  if AV2.x > AMaxU then AMaxU:= AV2.x;
+  if AV2.y > AMaxV then AMaxV:= AV2.y;
+  if AV3.x < AMinU then AMinU:= AV3.x;
+  if AV3.y < AMinV then AMinV:= AV3.y;
+  if AV3.x > AMaxU then AMaxU:= AV3.x;
+  if AV3.y > AMaxV then AMaxV:= AV3.y;
+
+  for I:= 0 to Length(AAditional)-1 dobegin    if AAditional[I].x < AMinU then AMinU:= AAditional[I].x;
+    if AAditional[I].y < AMinV then AMinV:= AAditional[I].y;
+    if AAditional[I].x > AMaxU then AMaxU:= AAditional[I].x;
+    if AAditional[I].y > AMaxV then AMaxV:= AAditional[I].y;
+ end
+
+  ADeltaU:= (AMaxU - AMinU);
+  ADeltaV:= (AMaxV - AMinV);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DLightMapDistribution Tz3DLightMap::GetDistribution ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDistribution;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightMap::GetOffset ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Options.BlurSteps+1;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLightMapOptions Tz3DLightMap::GetOptions ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FOptions;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DRayTracer Tz3DLightMap::GetRayTracer ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRayTracer;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightMap::GetSize ()
+
+/*
+var
+ FTexArea: Integer;
+    I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Return an approximate size for the lightmap
+  FTexArea:= 0;
+  for I:= 0 to Length(FDistribution)-1 do
+    FTexArea:= FTexArea + (FDistribution[I].Width + Offset * 2) * (FDistribution[I].Height + Offset * 2);
+  Result:= Min(z3DLightMapController.MaxTextureSize, Ceil(Power(2, Ceil(Log10(Sqrt(FTexArea * eaFactor)) / Log10(2)))) div 2);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DLightMap::GetUniqueName ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FUniqueName;
+#endif /* DOXYGEN_SKIP */
+};
+
+              
+Tz3DLightMap::GetWorldPlane (const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 APointOnPlane ,
+const Single AMinU ,
+const Single AMaxU ,
+const Single AMinV ,
+const Single AMaxV ,
+Tz3DTriangle &APlane 
+)
+
+/*
+var
+ FDistance: Single;
+    FNormalSource: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FDistance:= -(ANormal.x * APointOnPlane.x + ANormal.y * APointOnPlane.y + ANormal.z * APointOnPlane.z);
+  if (Abs(ANormal.X) > Abs(ANormal.Y)) and (Abs(ANormal.X) > Abs(ANormal.Z)) then FNormalSource:= 1 else
+  if (Abs(ANormal.Y) > Abs(ANormal.X)) and (Abs(ANormal.Y) > Abs(ANormal.Z)) then FNormalSource:= 2 else
+  FNormalSource:= 3;
+
+  // Get the world space vertices of the lightmap plane
+  case FNormalSource of
+
+    1:begin      APlane[0].x:= -(ANormal.y * AMinU + ANormal.z * AMinV + FDistance) / ANormal.x;
+      APlane[0].y:= AMinU;
+      APlane[0].z:= AMinV;
+      APlane[1].x:= -(ANormal.y * AMaxU + ANormal.z * AMinV + FDistance) / ANormal.x;
+      APlane[1].y:= AMaxU;
+      APlane[1].z:= AMinV;
+      APlane[2].x:= -(ANormal.y * AMinU + ANormal.z * AMaxV + FDistance) / ANormal.x;
+      APlane[2].y:= AMinU;
+      APlane[2].z:= AMaxV;
+   end
+    2:begin      APlane[0].x:= AMinU;
+      APlane[0].y:= -(ANormal.x * AMinU + ANormal.z * AMinV + FDistance) / ANormal.y;
+      APlane[0].z:= AMinV;
+      APlane[1].x:= AMaxU;
+      APlane[1].y:= -(ANormal.x * AMaxU + ANormal.z * AMinV + FDistance) / ANormal.y;
+      APlane[1].z:= AMinV;
+      APlane[2].x:= AMinU;
+      APlane[2].y:= -(ANormal.x * AMinU + ANormal.z * AMaxV + FDistance) / ANormal.y;
+      APlane[2].z:= AMaxV;
+   end
+    3:begin      APlane[0].x:= AMinU;
+      APlane[0].y:= AMinV;
+      APlane[0].z:= -(ANormal.x * AMinU + ANormal.y * AMinV + FDistance) / ANormal.z;
+      APlane[1].x:= AMaxU;
+      APlane[1].y:= AMinV;
+      APlane[1].z:= -(ANormal.x * AMaxU + ANormal.y * AMinV + FDistance) / ANormal.z;
+      APlane[2].x:= AMinU;
+      APlane[2].y:= AMaxV;
+      APlane[2].z:= -(ANormal.x * AMinU + ANormal.y * AMaxV + FDistance) / ANormal.z;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DFloat3 Tz3DLightMap::GetWorldScale ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= z3DFloat3.From(FObjectSize).Scale(Options.DetailFactor);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::CreateTextures ()
+
+
+               
+CreateTexture (Tz3DLightMapTexture &ATexture ,
+const PWideChar AName ,
+const PWideChar AFileName ,
+const Iz3DFloat3 ADefaultColor 
+)
+
+/*
+var
+ X, Y: Integer;
+  */
+{
+#ifndef DOXYGEN_SKIP
+
+    ATexture.Created:= True;
+    GetMem(ATexture.Name, 255);
+    StringToWideChar(WideCharToString(AName), ATexture.Name, 255);
+    if FileExists(AFileName) thenbegin      ATexture.Texture:= z3DCreateTexture;
+      ATexture.Texture.Source:= z3dtsFileName;
+      StringToWideChar(AFileName, ATexture.Texture.FileName, 255);
+      ATexture.Texture.CreateD3DTexture;
+      ATexture.Loaded:= True;
+      ATexture.Saved:= True;
+   endelsebegin      ATexture.Loaded:= False 
+      ATexture.Saved:= False;
+      ATexture.Texture:= z3DCreateTexture;
+      ATexture.Texture.SetParams(Size, Size, 1, D3DFMT_X8R8G8B8);
+      ATexture.Texture.BeginDraw;
+      try
+        for X:= 0 to Size-1 do
+        for Y:= 0 to Size-1 dobegin          if (X + Y) mod 2 = 0 then ATexture.Texture.SetPixel(X, Y, ADefaultColor) else
+          ATexture.Texture.SetPixel(X, Y, z3DFloat3);
+       end
+      finally
+        ATexture.Texture.EndDraw;
+     end
+   end
+ 
+#endif /* DOXYGEN_SKIP */
+};
+/*
+var
+ I: Integer;
+    FName: PWideChar;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  GetMem(FName, 255);
+  // Create the texture for the ambient lighting
+  if Options.EnableAmbient thenbegin    StringToWideChar(Format(z3DLightMapController.AOFileMask, [WideCharToString(UniqueName)]), FName, 255);
+    CreateTexture(FAmbientTexture, FName, z3DLightMapController.GetTextureFileName(FName),
+    z3DFloat3(0, 0.5, 0));
+ end
+
+  SetLength(FLightTextures, 0);
+  SetLength(FLightTextures, z3DLightingController.LightCount);
+  SetLength(FRadiosityTextures, 0);
+  SetLength(FRadiosityTextures, z3DLightingController.LightCount);
+
+  // Create the direct and radiosity textures for each static light
+  for I:= 0 to z3DLightingController.LightCount-1 do
+  if z3DLightingController[I].Static thenbegin    StringToWideChar(Format(z3DLightMapController.LightFileMask, [WideCharToString(UniqueName), I]), FName, 255);
+    CreateTexture(FLightTextures[I], FName, z3DLightMapController.GetTextureFileName(FName),
+    z3DFloat3(0.5, 0, 0));
+
+    if Options.EnableRadiosity thenbegin      StringToWideChar('R_'+Format(z3DLightMapController.LightFileMask, [WideCharToString(UniqueName), I]), FName, 255);
+      CreateTexture(FRadiosityTextures[I], FName, z3DLightMapController.GetTextureFileName(FName),
+      z3DFloat3);
+   end
+ end
+  FreeMem(FName);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMap::SetUniqueName (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  StringToWideChar(Value, FUniqueName, 255);
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Iz3DLightMapPackNode Tz3DLightMap::AddPackNode (const Iz3DLightMapPackNode ANode ,
+const Tz3DLightMapPlane APlane 
+)
+
+/*
+var
+ FNewNode: Iz3DLightMapPackNode;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Search for the right place to put a new node
+  Result:= nil;
+  if (ANode.Childs[0] <> nil) and (ANode.Childs[1] <> nil) thenbegin    FNewNode:= AddPackNode(ANode.Childs[0], APlane);
+    if FNewNode <> nil thenbegin      FNewNode.ID:= APlane.ID;
+      Result:= FNewNode;
+      Exit;
+   end
+    Result:= AddPackNode(ANode.Childs[1], APlane);
+    Exit;
+ endelsebegin    if ANode.ID > -1 thenbegin      Result:= nil 
+      Exit;
+   end
+    if ((APlane.Width+Offset*2) > (ANode.Rect.Right-ANode.Rect.Left)) or
+    ((APlane.Height+Offset*2) > (ANode.Rect.Bottom-ANode.Rect.Top)) thenbegin      Result:= nil;
+      Exit;
+   end
+    if ((APlane.Width+Offset*2) = (ANode.Rect.Right-ANode.Rect.Left)) and
+    ((APlane.Height+Offset*2) = (ANode.Rect.Bottom-ANode.Rect.Top)) thenbegin      Result:= ANode;
+      ANode.ID:= APlane.ID;
+      Exit;
+   end
+    ANode.Childs[0]:= Tz3DLightMapPackNode.Create;
+    ANode.Childs[1]:= Tz3DLightMapPackNode.Create;
+    if (ANode.Rect.Right-ANode.Rect.Left)-APlane.Width > (ANode.Rect.Bottom-ANode.Rect.Top)-APlane.Height thenbegin      ANode.Childs[0].Rect:= Rect(ANode.Rect.Left, ANode.Rect.Top, ANode.Rect.Left+APlane.Width+Offset*2, ANode.Rect.Bottom);
+      ANode.Childs[1].Rect:= Rect(ANode.Rect.Left+APlane.Width+Offset*2, ANode.Rect.Top, ANode.Rect.Right, ANode.Rect.Bottom);
+   endelsebegin      ANode.Childs[0].Rect:= Rect(ANode.Rect.Left, ANode.Rect.Top, ANode.Rect.Right, ANode.Rect.Top+APlane.Height+Offset*2) 
+      ANode.Childs[1].Rect:= Rect(ANode.Rect.Left, ANode.Rect.Top+APlane.Height+Offset*2, ANode.Rect.Right, ANode.Rect.Bottom);
+   end
+    Result:= AddPackNode(ANode.Childs[0], APlane);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+             
+Tz3DLightMap::Distribute (const Pointer AVB ,
+const PWordArray AIB ,
+const Integer AFaceCount ,
+const Boolean AComputeCoords 
+)
+
+/*
+var
+ I, J: Integer;
+    FVB: Pz3DStaticModelVertexArray;
+    FPlane: Tz3DTriangle;
+    FTemp: Iz3DFloat3;
+    FRoot, FNode: Iz3DLightMapPackNode;
+    FPackingNeeded: Boolean;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FPackingNeeded:= True;
+  FVB:= Pz3DStaticModelVertexArray(AVB);
+  FPlane:= z3DTriangle;
+
+  // Generate a tree to optimize the lightmap packing
+  while FPackingNeeded dobegin    FRoot:= Tz3DLightMapPackNode.Create;
+    FRoot.Rect:= Rect(0, 0, Size-1, Size-1);
+    for I:= 0 to Length(FDistribution)-1 dobegin      FNode:= AddPackNode(FRoot, FDistribution[I]);
+      if z3DTraceCondition(FNode = nil, 'Lightmap generation failed: Insufficient texture size. Trying to repack from a bigger area', z3DtkInformation) thenbegin        if Size = z3DLightMapController.MaxTextureSize thenbegin          z3DTrace('Lightmap generation failed: The resulting lightmap is too large for the current detail factor and/or object size', z3dtkWarning);
+          Exit;
+       end
+        eaFactor:= eaFactor+0.25;
+        FPackingNeeded:= True;
+        Break;
+     end
+      FDistribution[I].OffsetU:= FNode.Rect.Left+Offset;
+      FDistribution[I].OffsetV:= FNode.Rect.Top+Offset;
+      FPackingNeeded:= False;
+   end
+    FRoot:= nil;
+ end
+
+  for I:= 0 to AFaceCount-1 dobegin
+    // Distribute the lightmaps into the main texture
+    if AComputeCoords thenbegin      for J:= 0 to 2 dobegin        FVB[AIB[I*3+J]].LightCoord.x:= (FVB[AIB[I*3+J]].LightCoord.x - FacePlane[I].FUMin) / FacePlane[I].FUDelta;
+        FVB[AIB[I*3+J]].LightCoord.y:= (FVB[AIB[I*3+J]].LightCoord.y - FacePlane[I].FVMin) / FacePlane[I].FVDelta;
+        FVB[AIB[I*3+J]].LightCoord.x:= (FVB[AIB[I*3+J]].LightCoord.x *
+          (FacePlane[I].Width / Size)) + (FacePlane[I].OffsetU / Size);
+        FVB[AIB[I*3+J]].LightCoord.y:= (FVB[AIB[I*3+J]].LightCoord.y *
+          (FacePlane[I].Height / Size)) + (FacePlane[I].OffsetV / Size);
+     end
+   end
+
+    // Transform the plane into world space
+    if not FacePlane[I].Generated thenbegin      GetWorldPlane(FacePlane[I].Normal, z3DFloat3.From(FVB[AIB[I*3]].Position),
+      FacePlane[I].FUMin, FacePlane[I].FUMax, FacePlane[I].FVMin, FacePlane[I].FVMax, FPlane);
+      FacePlane[I].Origin:= z3DFloat3.From(FPlane[0]);
+      FacePlane[I].Edge1:= z3DFloat3.From(FPlane[1]).Subtract(FPlane[0]);
+      FacePlane[I].Edge2:= z3DFloat3.From(FPlane[2]).Subtract(FPlane[0]);
+      FacePlane[I].Generated:= True;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+               
+Boolean Tz3DLightMap::BeginGeneration (const Iz3DScenarioStaticObject AObject ,
+const Pz3DDWordArray AAdjacency = nil ,
+const Boolean AComputeCoords = False 
+)
+
+/*
+var
+ FInstance: Iz3DModelStaticInstance;
+    FVB: Pz3DStaticModelVertexArray;
+    FIB: PWordArray;
+    I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= False;
+  if not z3DSupports(AObject, Iz3DModelStaticInstance) then Exit;
+  FInstance:= AObject as Iz3DModelStaticInstance;
+  FObject:= AObject;
+  if not Generated thenbegin    eaFactor:= 1;
+    FObjectSize:= z3DFloat3.From(FInstance.Model.Scale);
+    FVB:= FInstance.Model.LockVertices;
+    FIB:= FInstance.Model.LockIndices;
+    try
+
+      // Generate the individual lightmaps and pack them
+      GeneratePlanarMapping(FVB, FIB, FInstance.Model.FaceCount, AAdjacency, AComputeCoords);
+      Distribute(FVB, FIB, FInstance.Model.FaceCount, AComputeCoords);
+      CreateTextures;
+    finally
+      FInstance.Model.UnlockVertices;
+      FInstance.Model.UnlockIndices;
+   end
+
+    if GenerationNeeded then BeginDraw;
+
+    // Call the ray tracer to perform the direct lighting
+    // and ambient occlusion operations
+    RayTracer.RayTraceLightMap(Self);
+
+    // Save the generated lightmaps
+    if Options.EnableAmbient then BlurAndSave(FAmbientTexture);
+    for I:= 0 to z3DLightingController.LightCount-1 do
+    if z3DLightingController[I].Static then
+    BlurAndSave(FLightTextures[I]);
+
+    // Prepare for radiosity if enabled
+    FRadiosityLevel:= 0;
+    Result:= True;
+
+ endelse CreateTextures 
+#endif /* DOXYGEN_SKIP */
+};
+
+         
+Tz3DLightMap::GenerateLightCoords (const Iz3DBase AObject ,
+const Pz3DDWordArray AAdjacency = nil 
+)
+
+/*
+var
+ FModel: Iz3DStaticModel;
+    FVB: Pz3DStaticModelVertexArray;
+    FIB: PWordArray;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if not z3DSupports(AObject, Iz3DStaticModel) or Generated then Exit;
+  FModel:= AObject as Iz3DStaticModel;
+  eaFactor:= 1;
+  FObjectSize:= z3DFloat3.From(FModel.Scale);
+  FVB:= FModel.LockVertices;
+  FIB:= FModel.LockIndices;
+  try
+    // Generate the lightmap coordinates
+    GeneratePlanarMapping(FVB, FIB, FModel.FaceCount, AAdjacency, True);
+    Distribute(FVB, FIB, FModel.FaceCount, True);
+  finally
+    FModel.UnlockVertices;
+    FModel.UnlockIndices;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightMap::PerformRadiosityBounce ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= False;
+  if not Generated and Options.EnableRadiosity and (Options.RadiosityBounces > FRadiosityLevel) thenbegin
+    // Call the ray tracer to perform the current radiosity bounce operation
+    if GenerationNeeded then
+    RayTracer.RayTraceLightMapRadiosity_GPU(Self, FRadiosityLevel);
+    Result:= True;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::EndRadiosityBounce ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Generated and Options.EnableRadiosity and (Options.RadiosityBounces > FRadiosityLevel) thenbegin
+    // Call the ray tracer to perform the current radiosity bounce operation
+/*    if GenerationNeeded then
+    RayTracer.NormalizeLightMapRadiosity(Self, FRadiosityLevel);*/ 
+    Inc(FRadiosityLevel);
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightMap::EndGeneration ()
+{
+#ifndef DOXYGEN_SKIP
+  if not Generated thenbegin  
+    // End drawing and release pointers
+    if GenerationNeeded then EndDraw;
+    FGenerated:= True;
+    Result:= True;
+    SetLength(FDistribution, 0);
+    FObject:= nil;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightMap::GetEnabled ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnabled;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMap::SetEnabled (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnabled:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::SaveTextures ()
+
+/*
+var
+ I: Integer;
+    FFile: PWideChar;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Save the ambient occlusion texture
+  if Options.EnableAmbient and FAmbientTexture.Created and not FAmbientTexture.Loaded and not FAmbientTexture.Saved thenbegin    FFile:= z3DLightMapController.GetTextureFileName(FAmbientTexture.Name);
+    D3DXSaveTextureToFileW(FFile,
+    D3DXIFF_DDS, FAmbientTexture.Texture.D3DBaseTexture, nil);
+    FAmbientTexture.Saved:= True;
+ end
+
+  for I:= 0 to Length(FLightTextures)-1 dobegin    // Save the direct lighting texture
+    if FLightTextures[I].Created and not FLightTextures[I].Loaded and not FLightTextures[I].Saved thenbegin      FFile:= z3DLightMapController.GetTextureFileName(FLightTextures[I].Name);
+      D3DXSaveTextureToFileW(FFile,
+      D3DXIFF_DDS, FLightTextures[I].Texture.D3DBaseTexture, nil);
+      FLightTextures[I].Saved:= True;
+   end
+
+    // Save the radiosity lighting texture
+    if Options.EnableRadiosity and FRadiosityTextures[I].Created and not FRadiosityTextures[I].Loaded
+    and not FRadiosityTextures[I].Saved thenbegin      FFile:= z3DLightMapController.GetTextureFileName(FRadiosityTextures[I].Name);
+      D3DXSaveTextureToFileW(FFile,
+      D3DXIFF_DDS, FRadiosityTextures[I].Texture.D3DBaseTexture, nil);
+      FRadiosityTextures[I].Saved:= True;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DDistributionIndices Tz3DLightMap::GetDistributionIndices ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDistributionIndices;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Pz3DLightMapPlane Tz3DLightMap::GetFacePlane (const Integer AFace 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= @FDistribution[FDistributionIndices[AFace]];
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightMap::GetGenerated ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGenerated;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DLightMapTexture Tz3DLightMap::GetAmbientTexture ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAmbientTexture;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DLightMapTextures Tz3DLightMap::GetLightTextures ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLightTextures;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Tz3DLightMapTextures Tz3DLightMap::GetRadiosityTextures ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRadiosityTextures;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::BeginDraw ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if Options.EnableAmbient then FAmbientTexture.Texture.BeginDraw;
+  for I:= 0 to z3DLightingController.LightCount-1 do
+  if z3DLightingController[I].Static thenbegin    FLightTextures[I].Texture.BeginDraw;
+    if Options.EnableRadiosity then FRadiosityTextures[I].Texture.BeginDraw;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DLightMap::EndDraw ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  if Options.EnableAmbient then FAmbientTexture.Texture.EndDraw;
+  for I:= 0 to z3DLightingController.LightCount-1 do
+  if z3DLightingController[I].Static thenbegin    FLightTextures[I].Texture.EndDraw;
+    if Options.EnableRadiosity then FRadiosityTextures[I].Texture.EndDraw;
+ end
+  SetLength(FDistribution, 0);
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightMap::GenerationNeeded ()
+
+/*
+var
+ I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= Options.EnableAmbient and not FAmbientTexture.Loaded;
+  if Result then Exit;
+  for I:= 0 to z3DLightingController.LightCount-1 do
+  if z3DLightingController[I].Static and (not FLightTextures[I].Loaded or
+  (Options.EnableRadiosity and not FRadiosityTextures[I].Loaded)) thenbegin    Result:= True;
+    Exit;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DScenarioStaticObject Tz3DLightMap::GetCurrentObject ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FObject;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DRayTracer */ 
+
+ 
+Tz3DRayTracer::Tz3DRayTracer ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FNormalLerp:= False;
+  FNormalLerpExponent:= 5;
+  FShadows:= True;
+  FPenumbra:= True;
+  FPenumbraDetailFactor:= 12;
+  FRadiositySamples:= 24;
+  FAOSamples:= 24;
+  FGPUTarget:= z3DCreateSurface;
+  FGPURadiosityBuffer[0]:= z3DCreateTexture;
+  FGPURadiosityBuffer[0].Format:= D3DFMT_X8R8G8B8;
+  FGPURadiosityBuffer[0].Enabled:= False;
+  FGPURadiosityBuffer[1]:= z3DCreateTexture;
+  FGPURadiosityBuffer[1].Format:= D3DFMT_X8R8G8B8;
+  FGPURadiosityBuffer[1].Enabled:= False;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRayTracer::BeginAOTracing ()
+
+/*
+var
+ FSurface: IDirect3DSurface9;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Create the GPU target for the luxel point of view rendering
+  z3DCore_GetD3DDevice.CreateRenderTarget(AOSamples, AOSamples,
+  D3DFMT_X8R8G8B8, D3DMULTISAMPLE_NONE, 0, True, FSurface, nil);
+  FGPUTarget.D3DSurface:= FSurface;
+  BeginGPUTracing(True);
+  FGPUTarget.SetRenderTarget(0, True);
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRayTracer::EndAOTracing ()
+{
+#ifndef DOXYGEN_SKIP
+  EndGPUTracing(True);
+  FGPUTarget.RestoreRenderTarget;
+  FGPUTarget.D3DSurface:= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::BeginRadiosityTracing (const Iz3DLightMap ALightMap 
+)
+
+/*
+var
+ FSurface: IDirect3DSurface9;
+    I, FWidth, FHeight: Integer;
+    FFormat: TD3DFormat;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Create the GPU target for the luxel point of view rendering
+  z3DCore_GetD3DDevice.CreateRenderTarget(RadiositySamples, RadiositySamples,
+  D3DFMT_X8R8G8B8, D3DMULTISAMPLE_NONE, 0, True, FSurface, nil);
+  FGPUTarget.D3DSurface:= FSurface;
+
+  // Create the buffers for the previous and actual radiosity bounce
+  for I:= 0 to Length(ALightMap.RadiosityTextures)-1 dobegin    if ALightMap.RadiosityTextures[I].Created thenbegin      FWidth:= ALightMap.RadiosityTextures[I].Texture.Width;
+      FHeight:= ALightMap.RadiosityTextures[I].Texture.Height;
+      FFormat:= ALightMap.RadiosityTextures[I].Texture.Format;
+      Break;
+   end
+ end
+  FGPURadiosityBuffer[0].Enabled:= True;
+  FGPURadiosityBuffer[0].SetParams(FWidth, FHeight, 1, FFormat);
+  FGPURadiosityBuffer[1].Enabled:= True;
+  FGPURadiosityBuffer[1].SetParams(FWidth, FHeight, 1, FFormat);
+  BeginGPUTracing;
+#endif /* DOXYGEN_SKIP */
+};
+
+ 
+Tz3DRayTracer::EndRadiosityTracing ()
+{
+#ifndef DOXYGEN_SKIP
+  EndGPUTracing;
+  FGPUTarget.D3DSurface:= nil;
+  FGPURadiosityBuffer[0].D3DTexture:= nil;
+  FGPURadiosityBuffer[0].D3DBaseTexture:= nil;
+  FGPURadiosityBuffer[1].D3DTexture:= nil;
+  FGPURadiosityBuffer[1].D3DBaseTexture:= nil;
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Tz3DRayTracer::BeginGPUTracing (const Boolean ASetCull = False 
+)
+{
+#ifndef DOXYGEN_SKIP
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZENABLE, iTrue);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iTrue);
+  if ASetCull then z3DCore_GetD3DDevice.SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+#endif /* DOXYGEN_SKIP */
+};
+
+     
+Tz3DRayTracer::EndGPUTracing (const Boolean ASetCull = False 
+)
+{
+#ifndef DOXYGEN_SKIP
+  if ASetCull then z3DCore_GetD3DDevice.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZENABLE, iFalse);
+  z3DCore_GetD3DDevice.SetRenderState(D3DRS_ZWRITEENABLE, iFalse);
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::RayTraceLightMap (const Iz3DLightMap ALightMap 
+)
+
+/*
+var
+ I, J, K, L, X, Y, FLeft, FTop, FRight, FBottom: Integer;
+    FLerpEdge1, FLerpEdge2, FLuxel: Iz3DFloat3;
+    A2, A3, FNormal: Iz3DFloat3;
+    FColor, FPrevColor: Iz3DFloat3;
+    FInstance: Iz3DModelStaticInstance;
+    FCollision: Boolean;
+    F, M, FT1, FT2: Single;
+    FSurface: IDirect3DSurface9;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FInstance:= ALightMap.CurrentObject as Iz3DModelStaticInstance;
+
+
+  // Begin GPU ray tracing if enabled
+  if ALightMap.Options.EnableAmbient and not
+  ALightMap.AmbientTexture.Loaded then BeginAOTracing;
+
+  FLerpEdge1:= z3DFloat3;
+  FLerpEdge2:= z3DFloat3;
+  FLuxel:= z3DFloat3;
+  A2:= z3DFloat3;
+  A3:= z3DFloat3;
+  FNormal:= z3DFloat3;
+
+  // Iterate through the distribution list
+  for I:= 0 to Length(ALightMap.Distribution)-1 dobegin
+    // Offset the edges of the lightmap for blurring and linear filtering
+    FLeft:= Trunc(ALightMap.Distribution[I].OffsetU) - ALightMap.Offset;
+    FTop:= Trunc(ALightMap.Distribution[I].OffsetV) - ALightMap.Offset;
+    FRight:= FLeft + Trunc(ALightMap.Distribution[I].Width) + ALightMap.Offset * 2;
+    FBottom:= FTop + Trunc(ALightMap.Distribution[I].Height) + ALightMap.Offset * 2;
+
+    // Create the empty luxels
+    SetLength(ALightMap.Distribution[I].Luxels, FRight-FLeft);
+    for J:= 0 to Length(ALightMap.Distribution[I].Luxels)-1 do
+    SetLength(ALightMap.Distribution[I].Luxels[J], FBottom-FTop);
+
+    // Iterate through the luxels
+    for X:= FLeft to FRight-1 do
+    for Y:= FTop to FBottom-1 dobegin
+      // Get the position and normal for the luxel
+      FNormal.From(ALightMap.Distribution[I].Normal);
+      FLerpEdge1.From(ALightMap.Distribution[I].Edge1).Scale((X - FLeft - ALightMap.Offset + 0.5) / (FRight - FLeft - ALightMap.Offset * 2));
+      FLerpEdge2.From(ALightMap.Distribution[I].Edge2).Scale((Y - FTop - ALightMap.Offset + 0.5) / (FBottom - FTop - ALightMap.Offset * 2));
+      FLuxel.From(ALightMap.Distribution[I].Origin).Add(FLerpEdge1).Add(FLerpEdge2);
+
+      // Transform to world space
+      FLuxel.TransformC(FInstance.WorldMatrix);
+      FNormal.TransformN(FInstance.WorldMatrix).Normalize;
+
+      // Get the ambient color for the luxel
+      if ALightMap.Options.EnableAmbient thenbegin        if not ALightMap.AmbientTexture.Loaded thenbegin          FColor:= RayTraceAO_GPU(FInstance, FLuxel, FNormal, ALightMap.Distribution[I].Origin,
+          ALightMap.Distribution[I].Edge1, ALightMap.Distribution[I].Edge2, FCollision);
+          ALightMap.AmbientTexture.Texture.SetPixel(X, Y, z3DFloat3.From(FColor));
+       end
+     end
+
+      // Get the direct lighting color for the luxel
+      for J:= 0 to z3DLightingController.LightCount-1 do
+      if z3DLightingController[J].Static thenbegin        if not ALightMap.LightTextures[J].Loaded thenbegin          FColor:= RayTraceLight(FInstance, FLuxel, FNormal, J);
+          ALightMap.LightTextures[J].Texture.SetPixel(X, Y, FColor);
+       end
+     end
+
+      // Save the world representation of the luxel
+      ALightMap.Distribution[I].Luxels[X-FLeft][Y-FTop].Position:= z3DFloat3.From(FLuxel);
+      ALightMap.Distribution[I].Luxels[X-FLeft][Y-FTop].Normal:= z3DFloat3.From(FNormal);
+
+   end
+ end
+
+  if ALightMap.Options.EnableAmbient and not
+  ALightMap.AmbientTexture.Loaded then EndAOTracing;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DRayTracer::RayTraceLightMapRadiosity (const Iz3DLightMap ALightMap ,
+const Integer ALevel 
+)
+
+/*
+var
+ FLeft, FTop, I, K, X, Y: Integer;
+    FLightVec, FLightPos, FColor: Iz3DFloat3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FLightVec:= z3DFloat3;
+  FLightPos:= z3DFloat3;
+  FColor:= z3DFloat3;
+  
+  // Iterate through the distribution list
+  for I:= 0 to Length(ALightMap.Distribution)-1 dobegin
+    FLeft:= Trunc(ALightMap.Distribution[I].OffsetU) - ALightMap.Offset;
+    FTop:= Trunc(ALightMap.Distribution[I].OffsetV) - ALightMap.Offset;
+
+    // Iterate through the luxels
+    for X:= 0 to Length(ALightMap.Distribution[I].Luxels)-1 do
+    for Y:= 0 to Length(ALightMap.Distribution[I].Luxels[X])-1 dobegin
+      // Use the ambient color to ignore luxels without collisions
+      if ALightMap.Options.EnableAmbient thenbegin        if SameValue(D3DXVec3Length(ALightMap.AmbientTexture.Texture.GetPixel(FLeft + X, FTop + Y).RGB),
+        D3DXVec3Length(ALightMap.CurrentObject.Subsets[0].Material.ColorDiffuse.RGB), 0.0001) then
+        Continue;
+     end
+
+      // Spread the radiosity color to affected luxels
+      for K:= 0 to z3DLightingController.LightCount-1 do
+      if z3DLightingController[K].Static and not ALightMap.RadiosityTextures[K].Loaded thenbegin
+        if ALevel = 0 thenbegin
+          // Get the final color by scaling by the N dot L result
+          if z3DLightingController[K].Style = z3DlsDirectional then
+          FLightPos.From(z3DLightingController[K].Direction).Normalize.Scale(-z3DLightingController[K].Range)
+          else FLightPos.From(z3DLightingController[K].Position);
+          FLIghtVec.From(FLightPos).Subtract(ALightMap.Distribution[I].Luxels[X][Y].Position).Normalize;
+          FColor.From(ALightMap.LightTextures[K].Texture.GetPixel(FLeft + X, FTop + Y).Scale(
+            z3DLightingDiffuseDirectional(ALightMap.Distribution[I].Luxels[X][Y].Normal, FLightVec)).RGB);
+       endelse
+        FColor.From(ALightMap.Distribution[I].Luxels[X][Y].RadiosityColors[ALevel-1][K]) 
+
+        // Radiosity the current color to the environment
+        RayTraceRadiosity(ALightMap.CurrentObject, ALightMap.Distribution[I].Luxels[X][Y],
+        ALightMap.Distribution[I].Luxels[X][Y].Position, ALightMap.Distribution[I].Luxels[X][Y].Normal,
+        ALightMap.Distribution[I].Origin, ALightMap.Distribution[I].Edge1,
+        ALightMap.Distribution[I].Edge2, FColor, K, ALevel);
+
+     end
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DRayTracer::RayTraceLightMapRadiosity_GPU (const Iz3DLightMap ALightMap ,
+const Integer ALevel 
+)
+
+/*
+var
+ FLeft, FTop, I, K, X, Y: Integer;
+    FLightVec, FLightPos, FColor: Iz3DFloat3;
+    FContinue: Boolean;
+    FTemp: Iz3DTexture;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FLightVec:= z3DFloat3;
+  FLightPos:= z3DFloat3;
+  FColor:= z3DFloat3;
+  FGPURadiosityBuffer[1].BeginDraw;
+  FGPUTarget.SetRenderTarget(0, True);
+
+  // Iterate through the distribution list
+  for I:= 0 to Length(ALightMap.Distribution)-1 dobegin
+    FLeft:= Trunc(ALightMap.Distribution[I].OffsetU) - ALightMap.Offset;
+    FTop:= Trunc(ALightMap.Distribution[I].OffsetV) - ALightMap.Offset;
+
+    // Iterate through the luxels
+    for X:= 0 to Length(ALightMap.Distribution[I].Luxels)-1 do
+    for Y:= 0 to Length(ALightMap.Distribution[I].Luxels[X])-1 dobegin
+      FContinue:= False;
+      // Use the ambient color to ignore luxels without collisions
+      if ALightMap.Options.EnableAmbient thenbegin        if SameValue(ALightMap.AmbientTexture.Texture.GetPixel(X + FLeft, Y + FTop).Length,
+        ALightMap.CurrentObject.Subsets[0].Material.ColorDiffuse.Length, 0.00001) then
+        FContinue:= True;
+     end
+
+      // Spread the radiosity color to affected luxels
+      for K:= 0 to z3DLightingController.LightCount-1 do
+      if z3DLightingController[K].Static and not ALightMap.RadiosityTextures[K].Loaded thenbegin
+        if not FContinue thenbegin          // Radiosity the current color from the environment
+          FColor.From(RayTraceRadiosity_GPU(ALightMap.CurrentObject, ALightMap.Distribution[I].Luxels[X][Y],
+          ALightMap.Distribution[I].Luxels[X][Y].Position, ALightMap.Distribution[I].Luxels[X][Y].Normal,
+          ALightMap.Distribution[I].Origin, ALightMap.Distribution[I].Edge1,
+          ALightMap.Distribution[I].Edge2, FColor, K, ALevel));
+       endelse FColor.Identity 
+
+        FGPURadiosityBuffer[1].SetPixel(X + FLeft, Y + FTop, FColor);
+        ALightMap.RadiosityTextures[K].Texture.SetPixel(X + FLeft, Y + FTop,
+        FColor.Add(ALightMap.RadiosityTextures[K].Texture.GetPixel(X + FLeft, Y + FTop).RGB).Saturate);
+     end
+   end
+ end
+  FGPUTarget.RestoreRenderTarget;
+  FGPURadiosityBuffer[1].EndDraw;
+  FTemp:= FGPURadiosityBuffer[0];
+  FGPURadiosityBuffer[0]:= FGPURadiosityBuffer[1];
+  FGPURadiosityBuffer[1]:= FTemp;
+#endif /* DOXYGEN_SKIP */
+};
+
+       
+Tz3DRayTracer::NormalizeLightMapRadiosity (const Iz3DLightMap ALightMap ,
+const Integer ALevel 
+)
+
+/*
+var
+ I, K, X, Y: Integer;
+    FColor: Iz3DFloat3;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FColor:= z3DFloat3;
+
+  // Iterate through the distribution list
+  for I:= 0 to Length(ALightMap.Distribution)-1 dobegin
+    // Iterate through the luxels
+    for X:= 0 to Length(ALightMap.Distribution[I].Luxels)-1 do
+    for Y:= 0 to Length(ALightMap.Distribution[I].Luxels[X])-1 dobegin
+      // Normalize the radiosity color
+      for K:= 0 to z3DLightingController.LightCount-1 do
+      if z3DLightingController[K].Static and not ALightMap.RadiosityTextures[K].Loaded thenbegin        if Round(ALightMap.Distribution[I].Luxels[X][Y].RadiositySamples[ALevel][K]) = 0 then
+        FColor.Identity else
+        FColor.From(ALightMap.Distribution[I].Luxels[X][Y].RadiosityColors[ALevel][K]).Scale(
+        2 / ALightMap.Distribution[I].Luxels[X][Y].RadiositySamples[ALevel][K]);
+        ALightMap.Distribution[I].Luxels[X][Y].RadiosityColors[ALevel][K].From(FColor);
+     end
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                    
+Iz3DFloat3 Tz3DRayTracer::RayTraceRadiosity (const Iz3DScenarioObject AObject ,
+Tz3DLightMapLuxel &ALumel ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 AEdge1 ,
+const Iz3DFloat3 AEdge2 ,
+const Iz3DFloat3 AColor ,
+const Integer ALight ,
+const Integer ALevel 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var FSpread, I, J, K, LX, LY, X, Y: Integer;
+    FLN, FExcidentColor, FColor, FEdge1, FEdge2, FTemp1, FTemp2, FTempVec, FRayVec, FRayVecN: Iz3DFloat3;
+    AO, AE1, AE2: Iz3DFloat3;
+    FAmount, FDet, FDistance, FDistance2, FLerpI, FLerpJ: Single;
+    FObjectCol: Iz3DScenarioObject;
+    FModelCol: Iz3DModelStaticInstance;
+    FPlaneIndex, FNormalSource: Integer;
+    FTested, FCollision: Boolean;
+    FMesh: Iz3DModelStaticInstance;
+    FRay: Tz3DRay;
+    FTriangle: Tz3DTriangle;
+    FDestLuxel: Pz3DLightMapLuxel;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Ignore luxels with almost no lighting
+  FExcidentColor:= z3DFloat3.From(AColor).Scale(AObject.Subsets[0].Material.Reflectivity);
+  if FExcidentColor.Length < FEpsilon then Exit;
+
+  FTested:= ALumel.CollisionTested;
+  FEdge1:= z3DFloat3.From(AEdge1).Normalize;
+  FEdge2:= z3DFloat3.From(AEdge2).Normalize;
+  FRay.Origin:= z3DFloat3.From(ACenter);
+  FRayVec:= z3DFloat3;
+  FRayVecN:= z3DFloat3;
+  FLN:= z3DFloat3;
+  AO:= z3DFloat3;
+  AE1:= z3DFloat3;
+  AE2:= z3DFloat3;
+  FTriangle:= z3DTriangle;
+  FColor:= z3DFloat3;
+
+  // Create the radiosity structure if empty
+  if not FTested thenbegin    SetLength(ALumel.Collisions, RadiositySamples);
+    for I:= 0 to RadiositySamples-1 do SetLength(ALumel.Collisions[I], RadiositySamples);
+    ALumel.CollisionTested:= True;
+ end
+
+  // Perform a spheric interpolation between the normal and the edges to
+  // sample the radiosity from the center point to the surrounding world
+  for I:= 0 to RadiositySamples-1 do
+  for J:= 0 to RadiositySamples-1 dobegin
+    // If the collision test was saved on a previous level, reuse it
+    if FTested thenbegin      FCollision:= ALumel.Collisions[I][J].Collision;
+      if not FCollision or (ALumel.Collisions[I][J].PlaneIndex = -1) then Continue;
+      FObjectCol:= ALumel.Collisions[I][J].Target as Iz3DModelStaticInstance;
+      FMesh:= FObjectCol as Iz3DModelStaticInstance;
+      if not FMesh.LightMap.Options.EnableRadiosity or
+      (FMesh.LightMap.Options.RadiosityBounces < ALevel) then Continue;
+      FDistance:= ALumel.Collisions[I][J].Distance;
+      FPlaneIndex:= ALumel.Collisions[I][J].PlaneIndex;
+      FDet:= ALumel.Collisions[I][J].Determinant;
+      FDestLuxel:= ALumel.Collisions[I][J].Luxel;
+   endelse
+
+    // If the collision test was not saved, test it nowbegin      // Create the ray structure
+      FDet:= z3DPlaneRaySHLerp(ANormal, FEdge1, FEdge2, I, J, AOSamples, FRayVecN) 
+      FRay.Length:= z3DGlobalEngine.Scenario.Bounds.Radius * 2 * 0.1;
+
+      FRayVec.From(FRayVecN).Scale(FRay.Length);
+      FRay.Direction:= FRayVecN;
+
+      // Perform a collision test for this ray
+      FCollision:= RayCollision(AObject, FRay, FAmount, FObjectCol, FDistance, False);
+      ALumel.Collisions[I][J].Collision:= FCollision;
+      if not FCollision then Continue;
+      if not z3DSupports(FObjectCol, Iz3DModelStaticInstance) then Continue;
+      FModelCol:= FObjectCol as Iz3DModelStaticInstance;         
+      ALumel.Collisions[I][J].Target:= FObjectCol as Iz3DScenarioStaticObject;
+      ALumel.Collisions[I][J].Distance:= FDistance;
+      ALumel.Collisions[I][J].Determinant:= FDet;
+      FMesh:= FObjectCol as Iz3DModelStaticInstance;
+      if not FMesh.LightMap.Options.EnableRadiosity or
+      (FMesh.LightMap.Options.RadiosityBounces < ALevel) then Continue;
+
+      // If a collision was found, search for the target lightmap plane
+      FPlaneIndex:= -1;
+      for K:= 0 to Length(FMesh.LightMap.Distribution)-1 dobegin
+        // Ignore the plane if its facing away from the ray
+        FLN.From(FMesh.LightMap.Distribution[K].Normal).TransformN(FModelCol.WorldMatrix).Normalize;
+        if FLN.Dot(FRay.Direction) < FEpsilon then Continue;
+
+        // Ignore the plane if theres a near plane or no intersection found
+        FTriangle[0].From(FMesh.LightMap.Distribution[K].Origin).TransformC(FModelCol.WorldMatrix);
+        FTriangle[1].From(FMesh.LightMap.Distribution[K].Edge1).Add(FMesh.LightMap.Distribution[K].Origin).TransformC(FModelCol.WorldMatrix);
+        FTriangle[2].From(FMesh.LightMap.Distribution[K].Edge2).Add(FMesh.LightMap.Distribution[K].Origin).TransformC(FModelCol.WorldMatrix);
+        if not RayIntersectPlane(FRay, FTriangle, FDistance2) or (FDistance2 > FDistance) then Continue;
+
+        FPlaneIndex:= K;
+
+        // The plane was found, now search for the right luxel
+        // using this formula:
+        //
+        // Destination luxel = (tVec - FirstLuxel) * LuxelCount / (LastLuxel - FirstLuxel)
+        // where
+        // tVec: -RayDirection * Distance + RayOrigin
+        AO.From(FRay.Direction).Scale(-FDistance).Add(FRay.Origin);
+        AE1.From(AO).Subtract(FMesh.LightMap.Distribution[K].Luxels[0][0].Position);
+        AE1.From(FMesh.LightMap.Distribution[K].Luxels[Length(FMesh.LightMap.Distribution[K].Luxels)-1]
+        [Length(FMesh.LightMap.Distribution[K].Luxels[Length(FMesh.LightMap.Distribution[K].Luxels)-1])-1].Position).
+        Subtract(FMesh.LightMap.Distribution[K].Luxels[0][0].Position);
+        if (Abs(FLN.X) > Abs(FLN.Y)) and (Abs(FLN.X) > Abs(FLN.Z)) thenbegin          X:= Round((AE1.y * Length(FMesh.LightMap.Distribution[K].Luxels)) / AE2.y);
+          Y:= Round((AE1.z * Length(FMesh.LightMap.Distribution[K].Luxels[Length(FMesh.LightMap.Distribution[K].Luxels)-1])) / AE2.z);
+       endelse
+        if (Abs(FLN.Y) > Abs(FLN.X)) and (Abs(FLN.Y) > Abs(FLN.Z)) thenbegin          X:= Round((AE1.x * Length(FMesh.LightMap.Distribution[K].Luxels)) / AE2.x) 
+          Y:= Round((AE1.z * Length(FMesh.LightMap.Distribution[K].Luxels[Length(FMesh.LightMap.Distribution[K].Luxels)-1])) / AE2.z);
+       endelsebegin          X:= Round((AE1.x * Length(FMesh.LightMap.Distribution[K].Luxels)) / AE2.x) 
+          Y:= Round((AE1.y * Length(FMesh.LightMap.Distribution[K].Luxels[Length(FMesh.LightMap.Distribution[K].Luxels)-1])) / AE2.y);
+       end
+
+        // Clamp the luxel to the distribution plane
+        X:= Max(0, Min(X, Length(FMesh.LightMap.Distribution[K].Luxels)-1));
+        Y:= Max(0, Min(Y, Length(FMesh.LightMap.Distribution[K].Luxels[X])-1));
+        FDestLuxel:= @FMesh.LightMap.Distribution[FPlaneIndex].Luxels[X][Y];
+        ALumel.Collisions[I][J].Luxel:= FDestLuxel;
+
+        // The destination luxel was found, so stop searching
+        Break;
+     end
+   end
+
+    // If no plane was found, ignore this ray
+    ALumel.Collisions[I][J].PlaneIndex:= FPlaneIndex;
+    if FPlaneIndex = -1 then Continue;
+
+    // Find the destination color
+    FDistance2:= 1 + FDistance;
+    FDet:= Saturate(Power(FDet, 0.25));
+    FColor.x:= (FExcidentColor.x * FObjectCol.Subsets[0].Material.ColorDiffuse.R * FDet) / FDistance2;
+    FColor.y:= (FExcidentColor.y * FObjectCol.Subsets[0].Material.ColorDiffuse.G * FDet) / FDistance2;
+    FColor.z:= (FExcidentColor.z * FObjectCol.Subsets[0].Material.ColorDiffuse.B * FDet) / FDistance2;
+    if FColor.Length < FEpsilon then Continue;
+
+    // Add the radiosity color to the destination luxel
+    FDestLuxel.RadiosityColors[ALevel][ALight].Add(FColor);
+    FDestLuxel.RadiositySamples[ALevel][ALight]:= FDestLuxel.RadiositySamples[ALevel][ALight] + 1;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                    
+Iz3DFloat3 Tz3DRayTracer::RayTraceRadiosity_GPU (const Iz3DScenarioObject AObject ,
+Tz3DLightMapLuxel &ALumel ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 AEdge1 ,
+const Iz3DFloat3 AEdge2 ,
+const Iz3DFloat3 AColor ,
+const Integer ALight ,
+const Integer ALevel 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var I, J: Integer;
+    FEdge1, FEdge2, FRayVec, FRayVecN: Iz3DFloat3;
+    FDet, FDistance, FLerpI, FLerpJ, FAmount: Single;
+    FObjectCol: Iz3DScenarioObject;
+    FInstance: Iz3DModelStaticInstance;
+    FView: Iz3DMatrix;
+    FProj: Iz3DMatrix;
+    FWorldView: Iz3DMatrix;
+    FRay: Tz3DRay;
+    HR: HRESULT;
+    FDesc: TD3DSurfaceDesc;
+    FScaleX, FScaleY: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Convert the current luxel into a camera view
+  if ANormal.Y = 1 then FView:= z3DMatrix.LookAt(ACenter, z3DFloat3.From(ACenter).Add(ANormal), z3DFloat3(0, 0, -1)) else
+  if ANormal.Y = -1 then FView:= z3DMatrix.LookAt(ACenter, z3DFloat3.From(ACenter).Add(ANormal), z3DFloat3(0, 0, 1)) else
+  FView:= z3DMatrix.LookAt(ACenter, z3DFloat3.From(ACenter).Add(ANormal));
+  z3DGlobalEngine.ViewMatrix.From(FView);
+  FProj:= z3DMatrix.PerspectiveFOV(z3DPI / 1.75);
+  FWorldView:= z3DMatrix;
+
+  // Render the current view
+  z3DGlobalEngine.Renderer.Clear(z3DFloat4(0, 0, 0, 1));
+  if ALevel = 0 then
+  z3DLightingController.Effect.Technique:= 'z3DLighting_GPUStaticRadiosity0' else
+  z3DLightingController.Effect.Technique:= 'z3DLighting_GPUStaticRadiosity';
+  z3DLightingController.Lights[ALight].UpdateLightingParams;
+  for I:= 0 to z3DLightingController.Effect.Run-1 dobegin    z3DLightingController.Effect.BeginPass(I);
+    for J:= 0 to z3DGlobalScenario.EntityCount-1 do
+    if z3DSupports(z3DGlobalScenario.Entities[J], Iz3DModelStaticInstance) and
+    (z3DGlobalScenario.Entities[J] as Iz3DModelStaticInstance).LightMap.Enabled thenbegin      FInstance:= z3DGlobalScenario.Entities[J] as Iz3DModelStaticInstance;
+      FWorldView.From(FInstance.WorldMatrix).Multiply(FView);
+      z3DLightingController.Effect.Matrix['GWorldViewMatrix']:= FWorldView;
+      z3DLightingController.Effect.Matrix['GWorldViewProjectionMatrix']:= FWorldView.Multiply(FProj);
+      if ALevel = 0 then
+      z3DLightingController.Effect.Texture['GLightMapLightTexture']:= FInstance.LightMap.LightTextures[ALight].Texture else
+      z3DLightingController.Effect.Texture['GLightMapRadiosityTexture']:= FInstance.LightMap.RayTracer.RadiosityBuffer0;
+      FInstance.Model.RenderMesh(z3DLightingController.Effect, z3dmmlHigh, True, False);
+   end
+    z3DLightingController.Effect.EndPass;
+ end
+
+  // Read the result to sample the current occlusion
+  Result:= z3DFloat3;
+  FGPUTarget.BeginDraw;
+  try
+    for I:= 0 to FGPUTarget.Width-1 do
+    for J:= 0 to FGPUTarget.Height-1 dobegin      FScaleX:= (I / RadiositySamples) * (1 - (I / RadiositySamples));
+      FScaleX:= Power(FScaleX * 4, 0.5);
+      FScaleY:= (J / RadiositySamples) * (1 - (J / RadiositySamples));
+      FScaleY:= Power(FScaleY * 4, 0.5);
+      Result.Add(FGPUTarget.GetPixel(I, J).Scale((FScaleX + FScaleY) * 0.5).RGB);
+   end
+  finally
+    FGPUTarget.EndDraw;
+ end
+  Result.Scale(2 / (RadiositySamples * RadiositySamples)).Saturate;
+#endif /* DOXYGEN_SKIP */
+};
+
+            
+Iz3DFloat3 Tz3DRayTracer::RayTraceLight (const Iz3DScenarioObject AObject ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Integer ALight 
+)
+
+/*
+//const
+ FBias = 0.0001;
+      FDotBias = 0.35;
+      FX = 0.25;
+      FY = 0.01;
+      FZ = 0.25;
+var FLightPos, FLightPosLerp, FLightDir, FLightVec, FLightVecN: Iz3DFloat3;
+    FDiffuse, FAmount, FDistance: Single;
+    LX, LY, LZ, FCenterX, FCenterY, FCenterZ: Integer;
+    FPLX, FPLY, FPLZ: Single;
+    FObjectCol: Iz3DScenarioObject;
+    FRay: Tz3DRay;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FAmount:= 1;
+  if z3DLightingController[ALight].Style = z3DlsDirectional then
+  FLightPos:= z3DFloat3.From(z3DLightingController[ALight].Direction).Normalize.
+  Scale(-z3DLightingController[ALight].Range) else
+  FLightPos:= z3DFloat3.From(z3DLightingController[ALight].Position);
+
+  FLightVec:= z3DFloat3.From(FLightPos).Subtract(ACenter);
+  FDistance:= FLightVec.Length;
+  FLightVecN:= z3DFloat3.From(FLightVec).Normalize;
+
+  // N dot L and distance 
+  if z3DLightingController[ALight].Style = z3dlsDirectional then
+  FDiffuse:= Saturate(ANormal.Dot(FLightVecN) + FDotBias) else
+  FDiffuse:= Saturate(ANormal.Dot(FLightVec) + FDotBias);
+  if SameValue(FDiffuse, 0, FBias) then FDiffuse:= 0 else FDiffuse:= 1;
+  if z3DLightingController[ALight].Style <> z3dlsDirectional then
+
+  FDiffuse:= (FDiffuse) * Power(Saturate(1 - FDistance / z3DLightingController[ALight].Range), 2);
+
+  // Spot computation
+  if z3DLightingController[ALight].Style = z3dlsSpot thenbegin    FLightDir:= z3DFloat3.From(z3DLightingController[ALight].Direction).Negate.Normalize;
+    FAmount:= FAmount * z3DLightingSpot(FLightVecN, FLightDir, z3DLightingController[ALight].Angle, z3DLightingController[ALight].Sharpness);
+ end
+
+  if FDiffuse * FAmount < FBias thenbegin    Result:= z3DFloat3;
+    Exit;
+ end
+
+  // Shadow and penumbra computation
+  if Shadows and z3DLightingController[ALight].Effects.StaticShadows thenbegin    if Penumbra and z3DLightingController[ALight].Effects.StaticPenumbra thenbegin      FCenterX:= Round(Clamp((z3DLightingController[ALight].Size * PenumbraDetailFactor) / FDistance, 0, 8));
+      FCenterY:= Round(Clamp((z3DLightingController[ALight].Size * PenumbraDetailFactor) / FDistance, 0, 8));
+      FCenterZ:= Round(Clamp((z3DLightingController[ALight].Size * PenumbraDetailFactor) / FDistance, 0, 8));
+      for LX:= -FCenterX to FCenterX do
+      for LY:= -FCenterY to FCenterY do
+      for LZ:= -FCenterZ to FCenterZ dobegin        if FAmount <= FBias then Break;
+        if FCenterX = 0 then FPLX:= 0 else FPLX:= (LX + FCenterX) / (FCenterX * 2);
+        if FCenterY = 0 then FPLY:= 0 else FPLY:= (LY + FCenterY) / (FCenterY * 2);
+        if FCenterZ = 0 then FPLZ:= 0 else FPLZ:= (LZ + FCenterZ) / (FCenterZ * 2);
+        FLightPosLerp:= z3DFloat3.From(FLightPos).Add(z3DFloat3(
+        Lerp(-z3DLightingController[ALight].Size * 0.5, z3DLightingController[ALight].Size * 0.5, FPLX),
+        Lerp(-z3DLightingController[ALight].Size * 0.5, z3DLightingController[ALight].Size * 0.5, FPLY),
+        Lerp(-z3DLightingController[ALight].Size * 0.5, z3DLightingController[ALight].Size * 0.5, FPLZ)));
+        FLightVec.From(FLightPosLerp).Subtract(ACenter);
+        FLightVecN.From(FLightVec).Normalize;
+
+        FRay.Origin:= FLightPosLerp;
+        FRay.Direction:= FLightVecN;
+        FRay.Length:= FLightVec.Length;
+
+        // Check collisions for shadowing using bounds and low quality polygons
+        RayCollision(AObject, FRay, FAmount, FObjectCol, FDistance, True, False, Round(IntPower((FCenterZ*2+1), 3)));
+     end
+   endelsebegin      FRay.Origin:= FLightPos 
+      FRay.Direction:= FLightVecN;
+      FRay.Length:= FLightVec.Length;
+
+      // Check collisions for shadowing using bounds and low quality polygons
+      RayCollision(AObject, FRay, FAmount, FObjectCol, FDistance, True, False);
+   end
+ end
+
+  // Return the final color
+  Result:= z3DFloat3;
+  Result.x:= Saturate(z3DLightingController[ALight].Color.r *
+    AObject.Subsets[0].Material.ColorDiffuse.R * FDiffuse * FAmount);
+  Result.y:= Saturate(z3DLightingController[ALight].Color.g *
+    AObject.Subsets[0].Material.ColorDiffuse.G * FDiffuse * FAmount);
+  Result.z:= Saturate(z3DLightingController[ALight].Color.b *
+    AObject.Subsets[0].Material.ColorDiffuse.B * FDiffuse * FAmount); 
+#endif /* DOXYGEN_SKIP */
+};
+
+               
+Iz3DFloat3 Tz3DRayTracer::RayTraceAO (const Iz3DScenarioObject AObject ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 AEdge1 ,
+const Iz3DFloat3 AEdge2 ,
+/* out */ Boolean &ACollision 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var I, J: Integer;
+    FEdge1, FEdge2, FRayVec, FRayVecN: Iz3DFloat3;
+    FDet, FDistance, FLerpI, FLerpJ, FAmount: Single;
+    FObjectCol: Iz3DScenarioObject;
+    FRay: Tz3DRay;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  ACollision:= False;
+  FAmount:= 1;
+  FEdge1:= z3DFloat3.From(AEdge1).Normalize;
+  FEdge2:= z3DFloat3.From(AEdge2).Normalize;
+  FRayVec:= z3DFloat3;
+  FRay.Origin:= z3DFloat3.From(ACenter);
+  FRay.Direction:= z3DFloat3;
+
+  // Perform a spheric interpolation between the normal and the edges to
+  // sample the ambient lighting from the world that reaches the center point
+  for I:= 0 to AOSamples-1 do
+  for J:= 0 to AOSamples-1 dobegin    z3DPlaneRaySHLerp(ANormal, FEdge1, FEdge2, I, J, AOSamples, FRayVecN);
+    FRay.Length:= z3DGlobalEngine.Scenario.Bounds.Radius * 2 * 0.1;
+    FRayVec.From(FRayVecN).Scale(FRay.Length);
+    FRay.Direction.From(FRayVecN);
+
+    // Check collisions without vertex and distance evaluation
+    if RayCollision(AObject, FRay, FAmount, FObjectCol, FDistance, False, False,
+    AOSamples*AOSamples) then ACollision:= True;
+ end
+
+  // Return the final color
+  Result:= z3DFloat3.From(AObject.Subsets[0].Material.ColorDiffuse.RGB).Scale(FAmount).Saturate;
+#endif /* DOXYGEN_SKIP */
+};
+
+               
+Iz3DFloat3 Tz3DRayTracer::RayTraceAO_GPU (const Iz3DScenarioObject AObject ,
+const Iz3DFloat3 ACenter ,
+const Iz3DFloat3 ANormal ,
+const Iz3DFloat3 AOrigin ,
+const Iz3DFloat3 AEdge1 ,
+const Iz3DFloat3 AEdge2 ,
+/* out */ Boolean &ACollision 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var I, J: Integer;
+    FEdge1, FEdge2, FRayVec, FRayVecN: Iz3DFloat3;
+    FDet, FDistance, FLerpI, FLerpJ, FAmount: Single;
+    FObjectCol: Iz3DScenarioObject;
+    FInstance: Iz3DModelStaticInstance;
+    FView: Iz3DMatrix;
+    FProj: Iz3DMatrix;
+    FWorldViewProj: Iz3DMatrix;
+    FRay: Tz3DRay;
+    HR: HRESULT;
+    FDesc: TD3DSurfaceDesc;
+    FScaleX, FScaleY: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+
+  // Convert the current luxel into a camera view
+  if ANormal.Y = 1 then FView:= z3DMatrix.LookAt(ACenter, z3DFloat3.From(ACenter).Add(ANormal), z3DFloat3(0, 0, -1)) else
+  if ANormal.Y = -1 then FView:= z3DMatrix.LookAt(ACenter, z3DFloat3.From(ACenter).Add(ANormal), z3DFloat3(0, 0, 1)) else
+  FView:= z3DMatrix.LookAt(ACenter, z3DFloat3.From(ACenter).Add(ANormal));
+  FProj:= z3DMatrix.PerspectiveFOV(z3DPI / 1.5);
+  FWorldViewProj:= z3DMatrix;
+
+  // Render the current view
+  z3DGlobalEngine.Renderer.Clear(z3DFloat4(1, 1, 1, 1));
+  z3DLightingController.Effect.Technique:= 'z3DLighting_GPUStaticAO';
+  for I:= 0 to z3DLightingController.Effect.Run-1 dobegin    z3DLightingController.Effect.BeginPass(I);
+    for J:= 0 to z3DGlobalScenario.EntityCount-1 do
+    if z3DSupports(z3DGlobalScenario.Entities[J], Iz3DModelStaticInstance) thenbegin      FInstance:= z3DGlobalScenario.Entities[J] as Iz3DModelStaticInstance;
+      FWorldViewProj.From(FInstance.WorldMatrix).Multiply(FView).Multiply(FProj);
+      z3DLightingController.Effect.Matrix['GWorldViewProjectionMatrix']:= FWorldViewProj;
+      FInstance.Model.RenderMesh(z3DLightingController.Effect, z3dmmlHigh, False, False);
+   end
+    z3DLightingController.Effect.EndPass;
+ end
+
+  // Read the result to sample the current occlusion
+  Result:= z3DFloat3;
+  FGPUTarget.BeginDraw;
+  try
+    for I:= 0 to FGPUTarget.Width-1 do
+    for J:= 0 to FGPUTarget.Height-1 dobegin      FScaleX:= (I / AOSamples) * (1 - (I / AOSamples));
+      FScaleX:= FScaleX * 4;
+      FScaleY:= (J / AOSamples) * (1 - (J / AOSamples));
+      FScaleY:= FScaleY * 4;
+      Result.Add(FGPUTarget.GetPixel(I, J).Scale((FScaleX + FScaleY) * 0.5).RGB);
+   end
+  finally
+    FGPUTarget.EndDraw;
+ end
+  Result.Scale(2 / (AOSamples * AOSamples)).Saturate;
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+Boolean Tz3DRayTracer::RayIntersectTriangle (const Tz3DRay ARay ,
+const Tz3DTriangle ATriangle ,
+Single &ADistance 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var FEdge1, FEdge2, FT, FP, FQ: Iz3DFloat3;
+    FDistance, FDet, FInvDet, FU, FV: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= False;
+  FEdge1:= z3DFloat3.From(ATriangle[1]).Subtract(ATriangle[0]);
+  FEdge2:= z3DFloat3.From(ATriangle[2]).Subtract(ATriangle[0]);
+  FP:= z3DFloat3.From(ARay.Direction).Cross(FEdge2);
+  FDet:= FEdge1.Dot(FP);
+  if (FDet < FEpsilon) and (FDet > -FEpsilon) then Exit;
+  FInvDet:= 1 / FDet;
+  FT:= z3DFloat3.From(ARay.Origin).Subtract(ATriangle[0]);
+  FU:= FT.Dot(FP) * FInvDet;
+  if (FU < 0) or (FU > 1) then Exit;
+  FQ:= z3DFloat3.From(FT).Cross(FEdge1);
+  FV:= ARay.Direction.Dot(FQ) * FInvDet;
+  if (FV < 0) or (FU + FV > 1) then Exit;
+  FDistance:= FEdge2.Dot(FQ) * FInvDet;
+  if (FDistance < 0) and (Abs(FDistance) < ARay.Length - FEpsilon) thenbegin    Result:= True;
+    ADistance:= Abs(FDistance) + FEpsilon;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+            
+Boolean Tz3DRayTracer::RayIntersectVertex (const Iz3DScenarioObject AObject1 ,
+const Iz3DScenarioObject AObject2 ,
+const Tz3DRay ARay ,
+Single &ADistance 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var FVB: Pz3DStaticModelVertexArray;
+    FIB: PWordArray;
+    FModel: Iz3DModelStaticInstance;
+    FV31, FV32, FV33: Iz3DFloat3;
+    FTriangle: Tz3DTriangle;
+    FLOD: Tz3DModelMeshLOD;
+    I: Integer;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Perform a vertex-level intersection test
+  Result:= False;
+  if not z3DSupports(AObject2, Iz3DModelStaticInstance) then Exit;
+  FModel:= AObject2 as Iz3DModelStaticInstance;
+  if (AObject2 as Iz3DScenarioEntity).Index <> (AObject1 as Iz3DScenarioEntity).Index then
+  FLOD:= z3dmmlMid else FLOD:= z3dmmlHigh;
+  FVB:= FModel.Model.LockLODVertices(FLOD, D3DLOCK_READONLY or D3DLOCK_DONOTWAIT);
+  try
+    FIB:= FModel.Model.LockLODIndices(FLOD, D3DLOCK_READONLY or D3DLOCK_DONOTWAIT);
+    try
+      FV31:= z3DFloat3;
+      FV32:= z3DFloat3;
+      FV33:= z3DFloat3;
+      FTriangle:= z3DTriangle;
+      for I:= 0 to FModel.Model.LODFaceCount[FLOD]-1 dobegin        FTriangle[0].From(FVB[FIB[I*3]].Position).TransformC(FModel.WorldMatrix);
+        FTriangle[1].From(FVB[FIB[I*3+1]].Position).TransformC(FModel.WorldMatrix);
+        FTriangle[2].From(FVB[FIB[I*3+2]].Position).TransformC(FModel.WorldMatrix);
+        if RayIntersectTriangle(ARay, FTriangle, ADistance) and
+        (((AObject2 as Iz3DScenarioEntity).Index <> (AObject1 as Iz3DScenarioEntity).Index) or
+        (ADistance < ARay.Length - 0.1)) thenbegin          Result:= True;
+          Break;
+       end
+     end
+    finally
+      FModel.Model.UnlockLODIndices;
+   end
+  finally
+    FModel.Model.UnlockLODVertices;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+           
+Boolean Tz3DRayTracer::RayIntersectBoundingSphere (const Tz3DRay ARay ,
+const Iz3DBoundingSphere ASphere ,
+Single &ADistance 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var FQ: Iz3DFloat3;
+    FDistance, FL, FDot, FDet: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  // Perform a bounding sphere-level intersection test
+  FQ:= z3DFloat3.From(ASphere.Center).Subtract(ARay.Origin);
+  FL:= FQ.Length;
+  FDot:= FQ.Dot(ARay.Direction);
+  FDet:= ASphere.Radius * ASphere.Radius - (FL * FL - FDot * FDot);
+  if FDet < FEpsilon then Result:= False elsebegin    FDistance:= FDot + Sqrt(FDet);
+    Result:= (FDistance < 0) and (Abs(FDistance) < ARay.Length - FEpsilon);
+    if Result then ADistance:= Abs(FDistance) + FEpsilon;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+
+          
+Boolean Tz3DRayTracer::RayIntersectPlane (const Tz3DRay ARay ,
+const Tz3DTriangle APlane ,
+Single &ADistance 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var FEdge1, FEdge2, FT, FP, FQ: Iz3DFloat3;
+    FDistance, FDet, FInvDet, FU, FV: Single;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= False;
+  FEdge1:= z3DFloat3.From(APlane[1]).Subtract(APlane[0]);
+  FEdge2:= z3DFloat3.From(APlane[2]).Subtract(APlane[0]);
+  FP:= z3DFloat3.From(ARay.Direction).Cross(FEdge2);
+  FDet:= FEdge1.Dot(FP);
+  if (FDet < FEpsilon) and (FDet > -FEpsilon) then Exit;
+  FInvDet:= 1 / FDet;
+  FT:= z3DFloat3.From(ARay.Origin).Subtract(APlane[0]);
+  FU:= FT.Dot(FP) * FInvDet;
+  if (FU < 0) or (FU > 1) then Exit;
+  FQ:= z3DFloat3.From(FT).Cross(FEdge1);
+  FV:= ARay.Direction.Dot(FQ) * FInvDet;
+  if (FV < 0) or (FV > 1) then Exit;
+  FDistance:= FEdge2.Dot(FQ) * FInvDet;
+  if (FDistance < 0) and (Abs(FDistance) < ARay.Length - FEpsilon) thenbegin    Result:= True;
+    ADistance:= Abs(FDistance) + FEpsilon;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                
+Boolean Tz3DRayTracer::RayIntersectBoundingBox (const Tz3DRay ARay ,
+const Iz3DBoundingBox ABox ,
+Single &ADistance ,
+const Boolean ATEvaluation = True 
+)
+
+/*
+//const
+ FEpsilon = 1e-3;
+var FDistance, FMinX, FMinY, FMinZ, FMaxX, FMaxY, FMaxZ: Single;
+    FPlane: Tz3DTriangle;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= False;
+  ADistance:= ARay.Length;
+  FMinX:= ABox.LowerLeft.x;
+  FMinY:= ABox.LowerLeft.y;
+  FMinZ:= ABox.LowerLeft.z;
+  FMaxX:= ABox.UpperRight.x;
+  FMaxY:= ABox.UpperRight.y;
+  FMaxZ:= ABox.UpperRight.z;
+  FPlane:= z3DTriangle;
+
+  // Lower left bounds
+  FPlane[0].XYZ:= D3DXVector3(FMinX, FMinY, FMinZ);
+  FPlane[1].XYZ:= D3DXVector3(FMinX, FMaxY, FMinZ);
+  FPlane[2].XYZ:= D3DXVector3(FMinX, FMinY, FMaxZ);
+  if RayIntersectPlane(ARay, FPlane, FDistance) thenbegin    Result:= True;
+    ADistance:= Min(ADistance, FDistance);
+    if not ATEvaluation then Exit;
+ end
+  FPlane[0].XYZ:= D3DXVector3(FMinX, FMinY, FMinZ);
+  FPlane[1].XYZ:= D3DXVector3(FMaxX, FMinY, FMinZ);
+  FPlane[2].XYZ:= D3DXVector3(FMinX, FMinY, FMaxZ);
+  if RayIntersectPlane(ARay, FPlane, FDistance) thenbegin    Result:= True;
+    ADistance:= Min(ADistance, FDistance);
+    if not ATEvaluation then Exit;
+ end
+  FPlane[0].XYZ:= D3DXVector3(FMinX, FMinY, FMinZ);
+  FPlane[1].XYZ:= D3DXVector3(FMaxX, FMinY, FMinZ);
+  FPlane[2].XYZ:= D3DXVector3(FMinX, FMaxY, FMinZ);
+  if RayIntersectPlane(ARay, FPlane, FDistance) thenbegin    Result:= True;
+    ADistance:= Min(ADistance, FDistance);
+    if not ATEvaluation then Exit;
+ end
+
+  // Upper right bounds
+  FPlane[0].XYZ:= D3DXVector3(FMaxX, FMinY, FMinZ);
+  FPlane[1].XYZ:= D3DXVector3(FMaxX, FMaxY, FMinZ);
+  FPlane[2].XYZ:= D3DXVector3(FMaxX, FMinY, FMaxZ);
+  if RayIntersectPlane(ARay, FPlane, FDistance) thenbegin    Result:= True;
+    ADistance:= Min(ADistance, FDistance);
+    if not ATEvaluation then Exit;
+ end
+  FPlane[0].XYZ:= D3DXVector3(FMinX, FMaxY, FMinZ);
+  FPlane[1].XYZ:= D3DXVector3(FMaxX, FMaxY, FMinZ);
+  FPlane[2].XYZ:= D3DXVector3(FMinX, FMaxY, FMaxZ);
+  if RayIntersectPlane(ARay, FPlane, FDistance) thenbegin    Result:= True;
+    ADistance:= Min(ADistance, FDistance);
+    if not ATEvaluation then Exit;
+ end
+  FPlane[0].XYZ:= D3DXVector3(FMinX, FMinY, FMaxZ);
+  FPlane[1].XYZ:= D3DXVector3(FMaxX, FMinY, FMaxZ);
+  FPlane[2].XYZ:= D3DXVector3(FMinX, FMaxY, FMaxZ);
+  if RayIntersectPlane(ARay, FPlane, FDistance) thenbegin    Result:= True;
+    ADistance:= Min(ADistance, FDistance);
+    if not ATEvaluation then Exit;
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+                 
+Boolean Tz3DRayTracer::RayIntersectBound (const Iz3DScenarioObject AObject1 ,
+const Iz3DScenarioObject AObject2 ,
+const Tz3DRay ARay ,
+Single &ADistance ,
+const Boolean ATEvaluation = True 
+)
+{
+#ifndef DOXYGEN_SKIP
+  // Perform a bound-level intersection test
+  if (AObject1 as Iz3DScenarioEntity).Index = (AObject2 as Iz3DScenarioEntity).Index thenbegin    Result:= True;
+    Exit;
+ end
+  if AObject2.Shape = z3dsosSphere then
+  Result:= RayIntersectBoundingSphere(ARay, AObject2.BoundingSphere, ADistance) else
+  Result:= RayIntersectBoundingBox(ARay, AObject2.BoundingBox, ADistance, ATEvaluation);
+#endif /* DOXYGEN_SKIP */
+};
+
+                                 
+Boolean Tz3DRayTracer::RayCollision (const Iz3DScenarioObject ARayObject ,
+const Tz3DRay ARay ,
+Single &AResult ,
+/* out */ Iz3DScenarioObject &ACollisionObject ,
+/* out */ Single &ACollisionT ,
+const Boolean AVertexEvaluation = True ,
+const Boolean ATEvaluation = True ,
+const Integer ATotalSamples = 1 
+)
+
+/*
+var
+ I: Integer;
+    FMinDistance, FDistance: Single;
+    FObject: Iz3DScenarioObject;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  Result:= False;
+  FObject:= nil;
+
+  if ATEvaluation thenbegin    FMinDistance:= ARay.Length;
+
+    // Search for the nearest object that intersects with the ray
+    for I:= 0 to z3DGlobalScenario.EntityCount-1 do
+    if z3DSupports(z3DGlobalScenario.Entities[I], Iz3DScenarioStaticObject) and
+    ((z3DGlobalScenario.Entities[I].Index <> (ARayObject as Iz3DScenarioEntity).Index) or AVertexEvaluation) and
+    RayIntersectBound(ARayObject, z3DGlobalScenario.Entities[I] as Iz3DScenarioObject, ARay, FDistance, True) and
+    (FDistance < FMinDistance) thenbegin      FMinDistance:= FDistance;
+      FObject:= z3DGlobalScenario.Entities[I] as Iz3DScenarioObject;
+   end
+    if FObject <> nil thenbegin      if not AVertexEvaluation or RayIntersectVertex(ARayObject, FObject, ARay, FMinDistance) thenbegin        AResult:= AResult - 1 / ATotalSamples;
+        ACollisionObject:= FObject;
+        ACollisionT:= FMinDistance;
+        Result:= True;
+     end
+   end
+ endelsebegin
+    // Search for an intersection with any object in the world
+    for I:= 0 to z3DGlobalScenario.EntityCount-1 do
+    if z3DSupports(z3DGlobalScenario.Entities[I], Iz3DScenarioStaticObject) and
+    ((z3DGlobalScenario.Entities[I].Index <> (ARayObject as Iz3DScenarioEntity).Index) or AVertexEvaluation) and
+    RayIntersectBound(ARayObject, z3DGlobalScenario.Entities[I] as Iz3DScenarioObject, ARay, FDistance, False) and
+    (not AVertexEvaluation or RayIntersectVertex(ARayObject, z3DGlobalScenario.Entities[I] as Iz3DScenarioObject, ARay, FDistance)) thenbegin      AResult:= AResult - 1 / ATotalSamples 
+      ACollisionObject:= z3DGlobalScenario.Entities[I] as Iz3DScenarioObject;
+      ACollisionT:= FDistance;
+      Result:= True;
+      Exit;
+   end
+ end
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRayTracer::GetPenumbra ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPenumbra;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRayTracer::GetShadows ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FShadows;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::SetPenumbra (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FPenumbra:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::SetShadows (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FShadows:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRayTracer::GetAOSamples ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAOSamples;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::SetAOSamples (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAOSamples:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DRayTracer::GetNormalLerp ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FNormalLerp;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Single Tz3DRayTracer::GetNormalLerpExponent ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FNormalLerpExponent;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::SetNormalLerp (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FNormalLerp:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::SetNormalLerpExponent (const Single Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FNormalLerpExponent:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRayTracer::GetRadiositySamples ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRadiositySamples;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::SetRadiositySamples (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRadiositySamples:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DRayTracer::GetPenumbraDetailFactor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FPenumbraDetailFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DRayTracer::SetPenumbraDetailFactor (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FPenumbraDetailFactor:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DTexture Tz3DRayTracer::GetRadiosityBuffer0 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGPURadiosityBuffer[0];
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DTexture Tz3DRayTracer::GetRadiosityBuffer1 ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FGPURadiosityBuffer[1];
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DLightMapPackNode */ 
+
+ 
+Tz3DLightMapPackNode::Tz3DLightMapPackNode ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FChilds[0]:= nil;
+  FChilds[1]:= nil;
+  FRect:= Classes.Rect(0, 0, 0, 0);
+  FID:= -1;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+Iz3DLightMapPackNode Tz3DLightMapPackNode::GetChilds (const Integer I 
+)
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FChilds[I];
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightMapPackNode::GetID ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FID;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+TRect Tz3DLightMapPackNode::GetRect ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRect;
+#endif /* DOXYGEN_SKIP */
+};
+
+      
+Tz3DLightMapPackNode::SetChilds (const Integer I ,
+const Iz3DLightMapPackNode Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FChilds[I]:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapPackNode::SetID (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FID:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapPackNode::SetRect (const TRect Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRect:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DLightMapOptions */ 
+
+ 
+Tz3DLightMapOptions::Tz3DLightMapOptions ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FBlurSteps:= 1;
+  FEnableAmbient:= False;
+  FEnableRadiosity:= False;
+  FRadiosityBounces:= 4;
+  FDetailFactor:= 12;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightMapOptions::GetDetailFactor ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FDetailFactor;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightMapOptions::GetBlurSteps ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FBlurSteps;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightMapOptions::GetEnableAmbient ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableAmbient;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Boolean Tz3DLightMapOptions::GetEnableRadiosity ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FEnableRadiosity;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightMapOptions::GetRadiosityBounces ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FRadiosityBounces;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapOptions::SetBlurSteps (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FBlurSteps:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapOptions::SetEnableAmbient (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableAmbient:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapOptions::SetDetailFactor (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FDetailFactor:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapOptions::SetEnableRadiosity (const Boolean Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FEnableRadiosity:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapOptions::SetRadiosityBounces (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FRadiosityBounces:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+/* Tz3DLightMapController */ 
+
+ 
+Tz3DLightMapController::Tz3DLightMapController ()
+{
+#ifndef DOXYGEN_SKIP
+  inherited;
+  FFolderName:= 'Lightmaps';
+  FAOFileMask:= '%s_AO';
+  FLightFileMask:= '%s_%d';
+  FMaxTextureSize:= 1024;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DLightMapController::GetFolderName ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FFolderName;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Integer Tz3DLightMapController::GetMaxTextureSize ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FMaxTextureSize;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DLightMapController::GetAOFileMask ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FAOFileMask;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+PWideChar Tz3DLightMapController::GetLightFileMask ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= FLightFileMask;
+#endif /* DOXYGEN_SKIP */
+};
+
+    
+PWideChar Tz3DLightMapController::GetTextureFileName (const PWideChar ATextureName 
+)
+
+/*
+var
+ FPath: string;
+*/
+{
+#ifndef DOXYGEN_SKIP
+
+  FPath:= WideCharToString(z3DFileSystemController.RootPath)+WideCharToString(z3DCore_GetState.CurrentApp)+'\'+FFolderName;
+  if FFolderName <> '' then FPath:= FPath + '\';
+  StringToWideChar(Format('%s%s.%s', [FPath, WideCharToString(ATextureName), 'dds']), z3DWideBuffer, 255);
+  Result:= z3DWideBuffer;
+  if not DirectoryExists(ExtractFileDir(Result)) then CreateDir(ExtractFileDir(Result));
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapController::SetFolderName (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FFolderName:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapController::SetMaxTextureSize (const Integer Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FMaxTextureSize:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapController::SetAOFileMask (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FAOFileMask:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+   
+Tz3DLightMapController::SetLightFileMask (const PWideChar Value 
+)
+{
+#ifndef DOXYGEN_SKIP
+  FLightFileMask:= Value;
+#endif /* DOXYGEN_SKIP */
+};
+
+  
+Iz3DLightMap Tz3DLightMapController::CreateLightMap ()
+{
+#ifndef DOXYGEN_SKIP
+  Result:= Tz3DLightMap.Create;
+#endif /* DOXYGEN_SKIP */
+};
+
+// finished
+
